@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import Login from './components/login'
 import App from './App.jsx'
 import './index.css'
 import {
@@ -12,7 +13,7 @@ import {
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route >
-        <Route path="/" element={<App />} />
+        <Route path="/" element={<Login/>} />
         {/* <Route path="/" element={<LandingPage />} />
         <Route path="/admin" element={<AdminRoot/>} >
           <Route path="dashboard" element={<Dashboard />} />
