@@ -7,7 +7,7 @@ export default {
       dekstop: '1248px',
     },
     colors: {
-      white: 'Custom Design System to Tailwind CSS',
+      white: '#FFFFFF',
       black: '#111827',
       warning: '#FACC15',
       'gray-50': '#EEF2F6',
