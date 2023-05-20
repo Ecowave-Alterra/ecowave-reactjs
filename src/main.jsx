@@ -16,11 +16,11 @@ import Login from "./pages/Login";
 import LandingPage from "./pages/LandingPage";
 import NotFound from "./pages/NotFound";
 
-import Dashboard from "./pages/admin/dashboard/Dashboard";
-import Pesanan from "./pages/admin/pesanan/Pesanan";
-import Ulasan from "./pages/admin/ulasan/Ulasan";
-import Informasi from "./pages/admin/dataInduk/informasi/Informasi";
-import Product from "./pages/admin/dataInduk/produk/Product";
+import Dashboard from "./pages/admin/dashboard";
+import Pesanan from "./pages/admin/pesanan";
+import Ulasan from "./pages/admin/ulasan";
+import Informasi from "./pages/admin/dataInduk/informasi";
+import Produk from "./pages/admin/dataInduk/produk";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -29,7 +29,7 @@ const router = createBrowserRouter(
             <Route path="/admin" element={<AdminRoot />}>
                 <Route index element={<Dashboard />} />
                 <Route path="informasi" element={<Informasi />} />
-                <Route path="produk" element={<Product />} />
+                <Route path="produk" element={<Produk />} />
                 <Route path="pesanan" element={<Pesanan />} />
                 <Route path="ulasan" element={<Ulasan />} />
             </Route>
