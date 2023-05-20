@@ -11,6 +11,7 @@ import {
 } from "@heroicons/react/24/outline";
 import Logo from "../assets/img/logo.jpg";
 import { Outlet } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function AdminRoot() {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
@@ -45,10 +46,12 @@ export default function AdminRoot() {
             <div className="mb-9 mx-8 bg-green-400 h-[1px]"></div>
 
             {/* Navigation Start */}
-            <div className="flex items-center rounded-md my-2 mx-8 p-3 duration-300 cursor-pointer text-gray-600 hover:bg-green-500 hover:text-white hover:border-[1px] hover:border-black">
-              <ChartBarSquareIcon className="w-5 h-5" />
-              <span className="ml-2 text-p2">Dashboard</span>
-            </div>
+            <Link to="/admin">
+              <div className="flex items-center rounded-md my-2 mx-8 p-3 duration-300 cursor-pointer text-gray-600 hover:bg-green-500 hover:text-white hover:border-[1px] hover:border-black">
+                <ChartBarSquareIcon className="w-5 h-5" />
+                <span className="ml-2 text-p2">Dashboard</span>
+              </div>
+            </Link>
 
             <div
               className="flex items-center rounded-md my-2 mx-8 p-3 duration-300 cursor-pointer text-gray-600 hover:bg-green-500 hover:text-white hover:border-[1px] hover:border-black "
@@ -71,21 +74,29 @@ export default function AdminRoot() {
               }`}
               id="submenu"
             >
-              <h1 className="cursor-pointer rounded-md py-3 ps-[62px] hover:text-green-500">
-                Produk
-              </h1>
-              <h1 className="cursor-pointer rounded-md py-3 ps-[62px] hover:text-green-500">
-                Informasi
-              </h1>
+              <Link to="/admin/produk">
+                <h1 className="cursor-pointer rounded-md py-3 ps-[62px] hover:text-green-500">
+                  Produk
+                </h1>
+              </Link>
+              <Link to="/admin/informasi">
+                <h1 className="cursor-pointer rounded-md py-3 ps-[62px] hover:text-green-500">
+                  Informasi
+                </h1>
+              </Link>
             </div>
-            <div className="flex items-center rounded-md my-2 mx-8 p-3 duration-300 cursor-pointer text-gray-600 hover:bg-green-500 hover:text-white hover:border-[1px] hover:border-black ">
-              <InboxStackIcon className="w-5 h-5 " />
-              <span className="ml-2 text-p2 ">Pesanan</span>
-            </div>
-            <div className="flex items-center rounded-md my-2 mx-8 p-3 duration-300 cursor-pointer text-gray-600 hover:bg-green-500 hover:text-white hover:border-[1px] hover:border-black ">
-              <ChatBubbleLeftRightIcon className="w-5 h-5 " />
-              <span className="ml-2 text-p2 ">Ulasan</span>
-            </div>
+            <Link to="/admin/pesanan">
+              <div className="flex items-center rounded-md my-2 mx-8 p-3 duration-300 cursor-pointer text-gray-600 hover:bg-green-500 hover:text-white hover:border-[1px] hover:border-black ">
+                <InboxStackIcon className="w-5 h-5 " />
+                <span className="ml-2 text-p2 ">Pesanan</span>
+              </div>
+            </Link>
+            <Link to="/admin/ulasan">
+              <div className="flex items-center rounded-md my-2 mx-8 p-3 duration-300 cursor-pointer text-gray-600 hover:bg-green-500 hover:text-white hover:border-[1px] hover:border-black ">
+                <ChatBubbleLeftRightIcon className="w-5 h-5 " />
+                <span className="ml-2 text-p2 ">Ulasan</span>
+              </div>
+            </Link>
           </div>
           {/* Admin Section */}
           <div className=" flex justify-between items-center w-full mt-6 p-8">
@@ -120,7 +131,9 @@ export default function AdminRoot() {
         id="content"
       >
         <span
-          className={`text-gray-300 cursor-pointer ${isSidebarOpen && "hidden"}`}
+          className={`text-gray-300 cursor-pointer ${
+            isSidebarOpen && "hidden"
+          }`}
           onClick={toggleSidebar}
         >
           <Bars3Icon className="w-6 h-6 m-2 bg-green-500 text-white rounded-sm hover:bg-green-600" />
