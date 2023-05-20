@@ -9,7 +9,7 @@ import {
 } from "react-router-dom";
 
 //layout
-import AdminRoot from "./pages/admin/AdminRoot";
+import AdminRoot from "./routes/AdminRoot";
 
 //pages
 import Login from "./pages/Login";
@@ -27,9 +27,9 @@ const router = createBrowserRouter(
         <Route>
             <Route path="/" element={<LandingPage />} />
             <Route path="/admin" element={<AdminRoot />}>
-                <Route path="dashboard" element={<Dashboard />} />
+                <Route index element={<Dashboard />} />
                 <Route path="informasi" element={<Informasi />} />
-                <Route path="product" element={<Product />} />
+                <Route path="produk" element={<Product />} />
                 <Route path="pesanan" element={<Pesanan />} />
                 <Route path="ulasan" element={<Ulasan />} />
             </Route>
