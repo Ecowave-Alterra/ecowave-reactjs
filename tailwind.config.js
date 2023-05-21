@@ -2,11 +2,8 @@
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
-    screens: {
-      mobile: '640px',
-      dekstop: '1248px',
-    },
     colors: {
+      transparent: 'transparent',
       white: '#FFFFFF',
       black: '#111827',
       warning: '#FACC15',
