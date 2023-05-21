@@ -42,6 +42,7 @@ export default {
       p2: ['16px', { lineHeight: '24px' }],
       p3: ['14px', { lineHeight: '20px' }],
       p4: ['12px', { lineHeight: '18px' }],
+      p5: ['8px', { lineHeight: '14px' }],
     },
 
     extend: {},
