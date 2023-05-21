@@ -9,7 +9,7 @@ import {
 } from "react-router-dom";
 
 //layout
-import AdminRoot from "./pages/admin/AdminRoot";
+import AdminRoot from "./routes/AdminRoot";
 
 //pages
 import Login from "./pages/Login";
