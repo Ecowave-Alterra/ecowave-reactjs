@@ -19,7 +19,13 @@ import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/admin/dashboard";
 import Pesanan from "./pages/admin/pesanan";
 import Ulasan from "./pages/admin/ulasan";
+
+//informasi
 import Informasi from "./pages/admin/dataInduk/informasi";
+import TambahInformasi from "./pages/admin/dataInduk/informasi/TambahInformasi";
+import UbahInformasi from "./pages/admin/dataInduk/informasi/UbahInformasi";
+import DetailInformasi from "./pages/admin/dataInduk/informasi/DetailInformasi";
+
 import Produk from "./pages/admin/dataInduk/produk";
 
 const router = createBrowserRouter(
@@ -29,6 +35,9 @@ const router = createBrowserRouter(
             <Route path="/admin" element={<AdminRoot />}>
                 <Route index element={<Dashboard />} />
                 <Route path="informasi" element={<Informasi />} />
+                <Route path="informasi/tambah" element={<TambahInformasi />} />
+                <Route path="informasi/ubah" element={<UbahInformasi />} />
+                <Route path="informasi/:id" element={<DetailInformasi />} />
                 <Route path="produk" element={<Produk />} />
                 <Route path="pesanan" element={<Pesanan />} />
                 <Route path="ulasan" element={<Ulasan />} />
