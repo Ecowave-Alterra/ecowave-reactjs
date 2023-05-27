@@ -57,7 +57,7 @@ export default function Sidebar({ children }) {
             {/* Navigation Start */}
             {/* Dashboard */}
             <NavLink
-              exact to="/admin/"
+              to="/admin/"
               className={({ isActive }) =>
                 isActive
                   ? "flex items-center rounded-md my-2 mx-8 p-3 duration-300 cursor-pointer  fill-white bg-green-500 text-white border-[1px] border-black"
@@ -78,7 +78,7 @@ export default function Sidebar({ children }) {
 
             {/* Data Induk */}
             <div
-              className="flex items-center rounded-md my-2 mx-8 p-3 duration-300 cursor-pointer text-gray-600 fill-gray-600 hover:fill-white hover:bg-green-500 hover:text-white hover:border-[1px] hover:border-black "
+              className={`flex items-center rounded-md my-2 mx-8 p-3 duration-300 cursor-pointer text-gray-600 fill-gray-600 hover:fill-white hover:bg-green-500 hover:text-white hover:border-[1px] hover:border-black ${isDropdownOpen && "fill-white bg-green-500 text-white border-[1px] border-black"}`}
               onClick={toggleDropdown}
             >
               <svg

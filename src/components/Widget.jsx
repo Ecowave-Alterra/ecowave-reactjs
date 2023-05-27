@@ -23,7 +23,7 @@ const Widget = (props) => {
               </svg>
             </div>
             <p className="font-normal text-p1">Total Pendapatan</p>
-            <p className="font-semibold text-h6">Rp.{props.data}</p>
+            <p className="font-semibold text-h6">{props.data ? `Rp.${props.data}` : "-"}</p>
           </div>
         </>
       );
@@ -47,7 +47,7 @@ const Widget = (props) => {
               </svg>
             </div>
             <p className="font-normal text-p1">Total Pengguna</p>
-            <p className="font-semibold text-h6">{props.data}</p>
+            <p className="font-semibold text-h6">{props.data ? props.data : "-"}</p>
           </div>
         </>
       );
@@ -70,7 +70,7 @@ const Widget = (props) => {
               </svg>
             </div>
             <p className="font-normal text-p1">Total Pesanan</p>
-            <p className="font-semibold text-h6">{props.data}</p>
+            <p className="font-semibold text-h6">{props.data ? props.data : "-"}</p>
           </div>
         </>
       );

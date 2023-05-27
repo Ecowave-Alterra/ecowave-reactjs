@@ -4,11 +4,10 @@ import BarChart from "../../../components/BarChart";
 
 const Dashboard = () => {
   const [pendapatan, setPendapatan] = useState("80.000.000");
-  const [pengguna, setPengguna] = useState("1.000");
-  const [pesanan, setPesanan] = useState("80.000");
+  const [pengguna, setPengguna] = useState("5.000");
+  const [pesanan, setPesanan] = useState("1.345");
 
   const [itemList, setItemList] = useState([]);
-
 
   const data = [
     {
@@ -42,7 +41,7 @@ const Dashboard = () => {
       stok: 240,
       harga: "Rp. 35.000",
       status: "Habis",
-    }
+    },
   ];
 
   useEffect(() => {
@@ -58,6 +57,7 @@ const Dashboard = () => {
       </div>
       <BarChart />
       <div className="grid grid-cols-2 gap-20 m-8">
+        {/* Table top 3 produk */}
         <div id="data1">
           <p className="text-p2 font-medium">
             3 Barang yang paling banyak dipesan
@@ -66,22 +66,30 @@ const Dashboard = () => {
             <thead className="bg-green-500 text-white">
               <tr>
                 <th className="py-[14px] px-[10px] text-p2 font-medium">No</th>
-                <th className="py-[14px] px-[10px] text-p2 font-medium">Nama Barang</th>
-                <th className="py-[14px] px-[10px] text-p2 font-medium">Total Pemesanan</th>
+                <th className="py-[14px] px-[10px] text-p2 font-medium">
+                  Nama Barang
+                </th>
+                <th className="py-[14px] px-[10px] text-p2 font-medium">
+                  Total Pemesanan
+                </th>
               </tr>
             </thead>
             <tbody>
-            {itemList &&
-              itemList.slice(0,3).map((row, index) => (
-                <tr key={index} className="even:bg-gray-50 text-p4">
-                  <td className="py-[18px] px-[10px]">{index + 1}.</td>
-                  <td className="py-[18px] px-[10px]">{row.nama}</td>
-                  <td className="py-[18px] px-[10px]">{row.stok}</td>
-                </tr>
-              ))}
+              {itemList &&
+                itemList.slice(0, 3).map((row, index) => (
+                  <tr key={index} className="even:bg-gray-50 text-p4">
+                    <td className="py-[18px] px-[10px]">{index + 1}.</td>
+                    <td className="py-[18px] px-[10px]">{row.nama}</td>
+                    <td className="py-[18px] px-[10px]">{row.stok}</td>
+                  </tr>
+                ))}
             </tbody>
           </table>
+          {itemList.length == 0 && (
+            <p className="text-center text-gray-500 text-p3 font-semibold my-14 py-4 bg-gray-50">Belum ada data tersedia</p>
+          )}
         </div>
+        {/* Table top 3 produk diulas*/}
         <div id="data2">
           <p className="text-p2 font-medium">
             3 Barang yang paling banyak diberikan ulasan
@@ -90,21 +98,28 @@ const Dashboard = () => {
             <thead className="bg-green-500 text-white">
               <tr>
                 <th className="py-[14px] px-[10px] text-p2 font-medium">No</th>
-                <th className="py-[14px] px-[10px] text-p2 font-medium">Nama Barang</th>
-                <th className="py-[14px] px-[10px] text-p2 font-medium">Total Ulasan</th>
+                <th className="py-[14px] px-[10px] text-p2 font-medium">
+                  Nama Barang
+                </th>
+                <th className="py-[14px] px-[10px] text-p2 font-medium">
+                  Total Ulasan
+                </th>
               </tr>
             </thead>
             <tbody>
-            {itemList &&
-              itemList.slice(0,3).map((row, index) => (
-                <tr key={index} className="even:bg-gray-50 text-p4">
-                  <td className="py-[18px] px-[10px]">{index + 1}.</td>
-                  <td className="py-[18px] px-[10px]">{row.nama}</td>
-                  <td className="py-[18px] px-[10px]">{row.stok}</td>
-                </tr>
-              ))}
+              {itemList &&
+                itemList.slice(0, 3).map((row, index) => (
+                  <tr key={index} className="even:bg-gray-50 text-p4">
+                    <td className="py-[18px] px-[10px]">{index + 1}.</td>
+                    <td className="py-[18px] px-[10px]">{row.nama}</td>
+                    <td className="py-[18px] px-[10px]">{row.stok}</td>
+                  </tr>
+                ))}
             </tbody>
           </table>
+          {itemList.length == 0 && (
+            <p className="text-center text-gray-500 text-p3 font-semibold my-14 py-4 bg-gray-50">Belum ada data tersedia</p>
+          )}
         </div>
       </div>
     </>
