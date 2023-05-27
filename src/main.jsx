@@ -26,7 +26,10 @@ import TambahInformasi from "./pages/admin/dataInduk/informasi/TambahInformasi";
 import UbahInformasi from "./pages/admin/dataInduk/informasi/UbahInformasi";
 import DetailInformasi from "./pages/admin/dataInduk/informasi/DetailInformasi";
 
+//Produk
 import Produk from "./pages/admin/dataInduk/produk";
+import TambahProduk from "./pages/admin/dataInduk/produk/TambahProduk";
+import UbahProduk from "./pages/admin/dataInduk/produk/UbahProduk";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -39,6 +42,8 @@ const router = createBrowserRouter(
                 <Route path="informasi/ubah" element={<UbahInformasi />} />
                 <Route path="informasi/:id" element={<DetailInformasi />} />
                 <Route path="produk" element={<Produk />} />
+                <Route path="produk/tambah" element={<TambahProduk />} />
+                <Route path="produk/ubah" element={<UbahProduk />} />
                 <Route path="pesanan" element={<Pesanan />} />
                 <Route path="ulasan" element={<Ulasan />} />
             </Route>

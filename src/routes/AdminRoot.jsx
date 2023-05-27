@@ -12,6 +12,7 @@ import {
 import Logo from "../assets/img/logo.jpg";
 import { Outlet } from "react-router-dom";
 import { Link } from "react-router-dom";
+import Sidebar from "../components/Sidebar";
 
 export default function AdminRoot() {
     const [isSidebarOpen, setSidebarOpen] = useState(true);
