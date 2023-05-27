@@ -164,14 +164,14 @@ function LandingPage() {
                     <div
                         id="accordion-flush"
                         data-accordion="collapse"
-                        data-active-classes="bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
-                        data-inactive-classes="text-gray-500 dark:text-gray-400"
+                        data-active-classes="bg-white text-gray-900 "
+                        data-inactive-classes="text-gray-500"
                     >
                         {/* 1 */}
                         <h2 id="accordion-flush-heading-1">
                             <button
                                 type="button"
-                                className="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400"
+                                className="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 "
                                 data-accordion-target="#accordion-flush-body-1"
                                 aria-expanded="false"
                                 aria-controls="accordion-flush-body-1"
@@ -197,8 +197,8 @@ function LandingPage() {
                             className="hidden"
                             aria-labelledby="accordion-flush-heading-1"
                         >
-                            <div className="py-5 border-b border-gray-200 dark:border-gray-700">
-                                <p className="mb-2 text-gray-500 dark:text-gray-400">
+                            <div className="py-5 border-b border-gray-200 ">
+                                <p className="mb-2 text-gray-500">
                                     EcoWave itu aplikasi yang memudahkanmu
                                     berbelanja produk ramah lingkungan. Di sini
                                     kamu juga bisa update informasi seputar
@@ -211,7 +211,7 @@ function LandingPage() {
                         <h2 id="accordion-flush-heading-2">
                             <button
                                 type="button"
-                                className="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400"
+                                className="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 "
                                 data-accordion-target="#accordion-flush-body-2"
                                 aria-expanded="false"
                                 aria-controls="accordion-flush-body-2"
@@ -239,8 +239,8 @@ function LandingPage() {
                             className="hidden"
                             aria-labelledby="accordion-flush-heading-2"
                         >
-                            <div className="py-5 border-b border-gray-200 dark:border-gray-700">
-                                <p className="mb-2 text-gray-500 dark:text-gray-400">
+                            <div className="py-5 border-b border-gray-200 ">
+                                <p className="mb-2 text-gray-500 ">
                                     Siapa aja, dong! Kami di sini ingin mengajak
                                     kamu untuk peduli terhadap bumi kita dan
                                     ingin gaya hidupmu lebih ramah lingkungan,
@@ -253,7 +253,7 @@ function LandingPage() {
                         <h2 id="accordion-flush-heading-3">
                             <button
                                 type="button"
-                                className="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400"
+                                className="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 "
                                 data-accordion-target="#accordion-flush-body-3"
                                 aria-expanded="false"
                                 aria-controls="accordion-flush-body-3"
@@ -279,8 +279,8 @@ function LandingPage() {
                             className="hidden"
                             aria-labelledby="accordion-flush-heading-3"
                         >
-                            <div className="py-5 border-b border-gray-200 dark:border-gray-700">
-                                <p className="mb-2 text-gray-500 dark:text-gray-400">
+                            <div className="py-5 border-b border-gray-200 ">
+                                <p className="mb-2 text-gray-500 ">
                                     Gampang banget! Tinggal download
                                     aplikasinya, daftar, dan kamu sudah bisa
                                     belanja produk ramah lingkungan favoritmu.
@@ -292,7 +292,7 @@ function LandingPage() {
                         <h2 id="accordion-flush-heading-4">
                             <button
                                 type="button"
-                                className="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400"
+                                className="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 "
                                 data-accordion-target="#accordion-flush-body-4"
                                 aria-expanded="false"
                                 aria-controls="accordion-flush-body-4"
@@ -318,8 +318,8 @@ function LandingPage() {
                             className="hidden"
                             aria-labelledby="accordion-flush-heading-4"
                         >
-                            <div className="py-5 border-b border-gray-200 dark:border-gray-700">
-                                <p className="mb-2 text-gray-500 dark:text-gray-400">
+                            <div className="py-5 border-b border-gray-200 ">
+                                <p className="mb-2 text-gray-500 ">
                                     Tenang aja! Harga produk di EcoWave
                                     terjangkau kok, dan kamu juga bisa
                                     manfaatkan diskon yang sering kita kasih.
@@ -331,7 +331,7 @@ function LandingPage() {
                         <h2 id="accordion-flush-heading-5">
                             <button
                                 type="button"
-                                className="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400"
+                                className="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 "
                                 data-accordion-target="#accordion-flush-body-5"
                                 aria-expanded="false"
                                 aria-controls="accordion-flush-body-5"
@@ -360,8 +360,8 @@ function LandingPage() {
                             className="hidden"
                             aria-labelledby="accordion-flush-heading-5"
                         >
-                            <div className="py-5 border-b border-gray-200 dark:border-gray-700">
-                                <p className="mb-2 text-gray-500 dark:text-gray-400">
+                            <div className="py-5 border-b border-gray-200 ">
+                                <p className="mb-2 text-gray-500 ">
                                     Tentu saja! Kami selalu berusaha
                                     memberikanmu informasi terupdate dan
                                     terpercaya tentang lingkungan di Indonesia.
