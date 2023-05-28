@@ -1,9 +1,9 @@
-import empty from '../../../assets/DetailPemesanan/Empty Cart.png';
+import Empty from '../../../assets/img/Empty Cart.png';
 import { EyeIcon } from '@heroicons/react/24/outline';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import ButtonGroup from '../../../components/ButtonGroup';
-import InputField from '../../../components/Search';
+import Search from '../../../components/Search';
 
 export default function Pesanan() {
   const [itemList, setItemList] = useState([]);
@@ -120,7 +120,7 @@ export default function Pesanan() {
 
       {/* Search */}
       <div className="mt-7">
-        <InputField
+        <Search
           id="search-pesanan"
           placeholder="Masukan ID"
           onChange={handleChange}
@@ -216,10 +216,10 @@ export default function Pesanan() {
             </nav>
           </div>
         )}
-        {/* empty */}
+        {/* Empty */}
         {records.length == 0 && (
           <div className="py-20">
-            <img src={empty} className="h-80 mx-auto" />
+            <img src={Empty} className="h-80 mx-auto" />
             <p className="text-p3 font-semibold text-gray-500 text-center">
               Pesanan Kosong
             </p>

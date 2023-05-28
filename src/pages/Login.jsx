@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Shopping from "../assets/Online shopping.png";
+import Shopping from "../assets/img/Online shopping.png";
 import * as Yup from "yup"
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";

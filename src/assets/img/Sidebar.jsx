@@ -5,8 +5,8 @@ import {
   ChevronDownIcon,
   Bars3Icon,
 } from "@heroicons/react/24/outline";
-import Logo from "../assets/img/logo.png";
-import { NavLink } from "react-router-dom";
+import Logo from "../assets/img/logo.jpg";
+import {  NavLink } from "react-router-dom";
 
 export default function Sidebar({ children }) {
   const [isSidebarOpen, setSidebarOpen] = useState(true);

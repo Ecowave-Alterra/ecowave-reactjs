@@ -1,4 +1,4 @@
-import back from '../../../assets/DetailPemesanan/Vector.png';
+import Back from '../../../assets/img/Vector.png';
 import {
   TruckIcon,
   MapPinIcon,
@@ -20,7 +20,7 @@ function DetailPesanan() {
       lokasi: 'Jl Asia Afrika No 123 Kota Bandung 40526',
     },
     produk: {
-      img: '/src/assets/DetailPemesanan/media.png',
+      img: '/src/assets/img/media.png',
       namaProduk: 'Totebag Tas belanja serbaguna',
       jumlah: 1,
     },
@@ -64,10 +64,10 @@ function DetailPesanan() {
 
   return (
     <div className="py-12 px-10">
-      {/* back */}
+      {/* Back */}
       <div className="flex justify-start items-center mb-14 ">
         <Link to={'/admin/pesanan'}>
-          <img src={back} className="h-3 mr-7 cursor-pointer" />
+          <img src={Back} className="h-3 mr-7 cursor-pointer" />
         </Link>
         <div className="text-h6 font-medium">Detail Pemesanan</div>
       </div>

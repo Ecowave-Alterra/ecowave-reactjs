@@ -22,7 +22,7 @@ import Ulasan from "./pages/admin/ulasan";
 
 // Pesanan
 import Pesanan from "./pages/admin/pesanan";
-import DetailPesanan from './pages/admin/pesanan/detail-pesanan';
+import DetailPesanan from './pages/admin/pesanan/DetailPesanan';
 
 //informasi
 import Informasi from "./pages/admin/dataInduk/informasi";

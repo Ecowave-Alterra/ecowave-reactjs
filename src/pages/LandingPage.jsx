@@ -1,11 +1,11 @@
-import logo from "../assets/LandingImg/logo.png";
-import hero from "../assets/LandingImg/Rectangle 24.png";
-import google from "../assets/LandingImg/google_play.png";
-import store from "../assets/LandingImg/store.png";
-import diskon from "../assets/LandingImg/diskon.png";
-import info from "../assets/LandingImg/info.png";
-import poin from "../assets/LandingImg/poin.png";
-import prototype from "../assets/LandingImg/prototype.png";
+import logo from "../assets/img/logo.png";
+import hero from "../assets/img/Rectangle 24.png";
+import google from "../assets/img/google_play.png";
+import store from "../assets/img/store.png";
+import diskon from "../assets/img/diskon.png";
+import info from "../assets/img/info.png";
+import poin from "../assets/img/poin.png";
+import prototype from "../assets/img/prototype.png";
 
 function LandingPage() {
     const currentYear = new Date().getFullYear();
