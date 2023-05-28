@@ -18,7 +18,6 @@ import NotFound from './pages/NotFound';
 
 
 import Dashboard from "./pages/admin/dashboard";
-import Pesanan from "./pages/admin/pesanan";
 import Ulasan from "./pages/admin/ulasan";
 
 // Pesanan
