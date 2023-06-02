@@ -43,7 +43,7 @@ export default function Sidebar({ children }) {
     <>
       {/* Sidebar */}
       <nav
-        className={`fixed top-0 bottom-0 sm:w-[300px] w-full overflow-y-auto text-center bg-green-50 ${
+        className={`fixed top-0 bottom-0 sm:w-[300px] w-full overflow-y-auto text-center bg-green-50 z-50 ${
           isSidebarOpen ? "" : "hidden"
         }`}
       >
@@ -63,8 +63,9 @@ export default function Sidebar({ children }) {
             {/* Navigation Start */}
             {/* Dashboard */}
             <NavLink
+              end
               onClick={() => setAction(false)}
-              to="/admin/"
+              to="/admin"
               className={({ isActive }) =>
                 isActive
                   ? "flex items-center rounded-md my-2 mx-8 p-3 duration-300 cursor-pointer  fill-white bg-green-500 text-white border-[1px] border-black"
