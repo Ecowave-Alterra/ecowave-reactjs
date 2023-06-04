@@ -33,11 +33,6 @@ export default function Sidebar({ children }) {
         setDropdownOpen(!isDropdownOpen);
     };
 
-
-    const handleLogout = () => {
-        console.log("Logout");
-    };
-
   const setAction = (stat) => {
     setSubMenuActive(stat);
     console.log(isSubMenuActive);

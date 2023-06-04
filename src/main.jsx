@@ -24,9 +24,6 @@ import Ulasan from "./pages/admin/ulasan";
 import Pesanan from "./pages/admin/pesanan";
 import DetailPesanan from "./pages/admin/pesanan/DetailPesanan";
 
-import OpsiPengiriman from './pages/admin/dataInduk/opsi';
-
-
 //informasi
 import Informasi from './pages/admin/dataInduk/informasi';
 import TambahInformasi from './pages/admin/dataInduk/informasi/TambahInformasi';
@@ -41,7 +38,7 @@ import DetailUlasan from "./pages/admin/ulasan/DetailUlasan";
 
 // Pengiriman
 import MetodePengiriman from "./pages/admin/dataInduk/metodePengiriman";
-import OpsiPengiriman from "./pages/admin/dataInduk/opsiPengiriman";
+import OpsiPengiriman from "./pages/admin/dataInduk/opsi";
 
 // Voucher & Kategori
 import Kategori from "./pages/admin/dataInduk/kategori";
