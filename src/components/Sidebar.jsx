@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import {
-  ArrowRightOnRectangleIcon,
-  XMarkIcon,
-  ChevronDownIcon,
-  Bars3Icon,
-} from '@heroicons/react/24/outline';
-import Logo from '../assets/img/logo.png';
-import { NavLink } from 'react-router-dom';
+    ArrowRightOnRectangleIcon,
+    XMarkIcon,
+    ChevronDownIcon,
+    Bars3Icon,
+} from "@heroicons/react/24/outline";
+import Logo from "../assets/img/logo.png";
+import { NavLink } from "react-router-dom";
+
 
 export default function Sidebar({ children }) {
-  const [isSidebarOpen, setSidebarOpen] = useState(true);
-  const [isDropdownOpen, setDropdownOpen] = useState(false);
+    const [isSidebarOpen, setSidebarOpen] = useState(true);
+    const [isDropdownOpen, setDropdownOpen] = useState(false);
+
 
   const subMenus = [
     { name: 'Produk', link: '/admin/produk' },
@@ -18,27 +20,31 @@ export default function Sidebar({ children }) {
     { name: 'Opsi Pengiriman', link: '/admin/opsi' },
     { name: 'Voucher', link: '/admin/produk' },
     { name: 'Metode Pengiriman', link: '/admin/produk' },
-    { name: 'Kategori', link: '/admin/produk' },
+    { name: "Kategori", link: "/admin/kategori" },
   ];
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!isSidebarOpen);
-  };
 
-  const toggleDropdown = () => {
-    setDropdownOpen(!isDropdownOpen);
-  };
+    const toggleSidebar = () => {
+        setSidebarOpen(!isSidebarOpen);
+    };
 
-  const handleLogout = () => {
-    console.log('Logout');
-  };
+    const toggleDropdown = () => {
+        setDropdownOpen(!isDropdownOpen);
+    };
+
+
+    const handleLogout = () => {
+        console.log("Logout");
+    };
+
+
 
   return (
     <>
       {/* Sidebar */}
       <nav
-        className={`fixed top-0 bottom-0 sm:w-[300px] w-full overflow-y-auto text-center bg-green-50 ${
-          isSidebarOpen ? '' : 'hidden'
+        className={`fixed top-0 bottom-0 sm:w-[300px] w-full overflow-y-auto text-center bg-green-50 z-50 ${
+          isSidebarOpen ? "" : "hidden"
         }`}
       >
         {/* Start Nav Section */}
@@ -57,11 +63,13 @@ export default function Sidebar({ children }) {
             {/* Navigation Start */}
             {/* Dashboard */}
             <NavLink
-              to="/admin/"
+              end
+              onClick={() => setAction(false)}
+              to="/admin"
               className={({ isActive }) =>
                 isActive
-                  ? 'flex items-center rounded-md my-2 mx-8 p-3 duration-300 cursor-pointer  fill-white bg-green-500 text-white border-[1px] border-black'
-                  : 'flex items-center rounded-md my-2 mx-8 p-3 duration-300 cursor-pointer text-gray-600 fill-gray-600 hover:fill-white hover:bg-green-500 hover:text-white hover:border-[1px] hover:border-black'
+                  ? "flex items-center rounded-md my-2 mx-8 p-3 duration-300 cursor-pointer  fill-white bg-green-500 text-white border-[1px] border-black"
+                  : "flex items-center rounded-md my-2 mx-8 p-3 duration-300 cursor-pointer text-gray-600 fill-gray-600 hover:fill-white hover:bg-green-500 hover:text-white hover:border-[1px] hover:border-black"
               }
             >
               <svg
@@ -79,8 +87,8 @@ export default function Sidebar({ children }) {
             {/* Data Induk */}
             <div
               className={`flex items-center rounded-md my-2 mx-8 p-3 duration-300 cursor-pointer text-gray-600 fill-gray-600 hover:fill-white hover:bg-green-500 hover:text-white hover:border-[1px] hover:border-black ${
-                isDropdownOpen &&
-                'fill-white bg-green-500 text-white border-[1px] border-black'
+                isSubMenuActive &&
+                "fill-white bg-green-500 text-white border-[1px] border-black"
               }`}
               onClick={toggleDropdown}
             >
@@ -96,7 +104,7 @@ export default function Sidebar({ children }) {
               <div className="flex justify-between w-full items-center">
                 <span className="ml-2 text-p2 ">Data Induk</span>
                 <span
-                  className={`text-sm ${isDropdownOpen ? 'rotate-180' : ''}`}
+                  className={`text-sm ${isDropdownOpen ? "rotate-180" : ""}`}
                   id="arrow"
                 >
                   <ChevronDownIcon className="w-5 h-5 " />
@@ -104,19 +112,20 @@ export default function Sidebar({ children }) {
               </div>
             </div>
             <div
-              className={`text-left w-4/5 mx-auto ${
-                isDropdownOpen ? '' : 'hidden'
+              className={`text-left w-4/5 mx-auto  ${
+                isDropdownOpen ? "" : "hidden"
               }`}
               id="submenu"
             >
               {subMenus.map((menu) => (
                 <NavLink
+                  onClick={() => setAction(true)}
                   to={menu.link}
                   className={({ isActive }) =>
-                    isActive ? 'text-green-500 ' : 'text-gray-600'
+                    isActive ? "text-green-500" : "text-gray-600"
                   }
                 >
-                  <p className="cursor-pointer rounded-md py-3 ps-[62px] text-p2 font-medium ">
+                  <p className="cursor-pointer py-3 ps-[62px] text-p2 font-medium hover:bg-green-200 hover:text-black">
                     {menu.name}
                   </p>
                 </NavLink>
@@ -125,12 +134,12 @@ export default function Sidebar({ children }) {
 
             {/* Pesanan */}
             <NavLink
-              exact
+              onClick={() => setAction(false)}
               to="/admin/pesanan"
               className={({ isActive }) =>
                 isActive
-                  ? 'flex items-center rounded-md my-2 mx-8 p-3 duration-300 cursor-pointer  fill-white bg-green-500 text-white border-[1px] border-black'
-                  : 'flex items-center rounded-md my-2 mx-8 p-3 duration-300 cursor-pointer text-gray-600 fill-gray-600 hover:fill-white hover:bg-green-500 hover:text-white hover:border-[1px] hover:border-black'
+                  ? "flex items-center rounded-md my-2 mx-8 p-3 duration-300 cursor-pointer  fill-white bg-green-500 text-white border-[1px] border-black"
+                  : "flex items-center rounded-md my-2 mx-8 p-3 duration-300 cursor-pointer text-gray-600 fill-gray-600 hover:fill-white hover:bg-green-500 hover:text-white hover:border-[1px] hover:border-black"
               }
             >
               <svg
@@ -148,12 +157,12 @@ export default function Sidebar({ children }) {
 
             {/* Ulasan */}
             <NavLink
-              exact
+              onClick={() => setAction(false)}
               to="/admin/ulasan"
               className={({ isActive }) =>
                 isActive
-                  ? 'flex items-center rounded-md my-2 mx-8 p-3 duration-300 cursor-pointer  fill-white bg-green-500 text-white border-[1px] border-black'
-                  : 'flex items-center rounded-md my-2 mx-8 p-3 duration-300 cursor-pointer text-gray-600 fill-gray-600 hover:fill-white hover:bg-green-500 hover:text-white hover:border-[1px] hover:border-black'
+                  ? "flex items-center rounded-md my-2 mx-8 p-3 duration-300 cursor-pointer  fill-white bg-green-500 text-white border-[1px] border-black"
+                  : "flex items-center rounded-md my-2 mx-8 p-3 duration-300 cursor-pointer text-gray-600 fill-gray-600 hover:fill-white hover:bg-green-500 hover:text-white hover:border-[1px] hover:border-black"
               }
             >
               <svg
@@ -206,7 +215,7 @@ export default function Sidebar({ children }) {
       >
         <span
           className={`text-gray-300 cursor-pointer ${
-            isSidebarOpen && 'hidden'
+            isSidebarOpen && "hidden"
           }`}
           onClick={toggleSidebar}
         >

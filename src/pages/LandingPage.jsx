@@ -7,6 +7,8 @@ import info from "../assets/img/info.png";
 import poin from "../assets/img/poin.png";
 import prototype from "../assets/img/prototype.png";
 
+import { Accordion } from "flowbite-react";
+
 function LandingPage() {
     const currentYear = new Date().getFullYear();
 
@@ -160,216 +162,74 @@ function LandingPage() {
                             Mari kita bahas satu per satu!
                         </p>
                     </div>
-
-                    <div
-                        id="accordion-flush"
-                        data-accordion="collapse"
-                        data-active-classes="bg-white text-gray-900 "
-                        data-inactive-classes="text-gray-500"
+                    <Accordion
+                        collapseAll
+                        data-active-classes="bg-blue-100  text-blue-600 dark:text-white"
                     >
-                        {/* 1 */}
-                        <h2 id="accordion-flush-heading-1">
-                            <button
-                                type="button"
-                                className="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 "
-                                data-accordion-target="#accordion-flush-body-1"
-                                aria-expanded="false"
-                                aria-controls="accordion-flush-body-1"
-                            >
-                                <span>EcoWave itu apa sih?</span>
-                                <svg
-                                    data-accordion-icon=""
-                                    className="w-6 h-6 shrink-0"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        fillRule="evenodd"
-                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                        clipRule="evenodd"
-                                    />
-                                </svg>
-                            </button>
-                        </h2>
-                        <div
-                            id="accordion-flush-body-1"
-                            className="hidden"
-                            aria-labelledby="accordion-flush-heading-1"
-                        >
-                            <div className="py-5 border-b border-gray-200 ">
-                                <p className="mb-2 text-gray-500">
+                        <Accordion.Panel>
+                            <Accordion.Title>
+                                EcoWave itu apa sih?
+                            </Accordion.Title>
+                            <Accordion.Content>
+                                <p className="mb-2 text-gray-500 dark:text-gray-400">
                                     EcoWave itu aplikasi yang memudahkanmu
                                     berbelanja produk ramah lingkungan. Di sini
                                     kamu juga bisa update informasi seputar
                                     lingkungan Indonesia lho!
                                 </p>
-                            </div>
-                        </div>
-
-                        {/* 2 */}
-                        <h2 id="accordion-flush-heading-2">
-                            <button
-                                type="button"
-                                className="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 "
-                                data-accordion-target="#accordion-flush-body-2"
-                                aria-expanded="false"
-                                aria-controls="accordion-flush-body-2"
-                            >
-                                <span>
-                                    Siapa aja sih yang bisa pakai EcoWave?
-                                </span>
-                                <svg
-                                    data-accordion-icon=""
-                                    className="w-6 h-6 shrink-0"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        fillRule="evenodd"
-                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                        clipRule="evenodd"
-                                    />
-                                </svg>
-                            </button>
-                        </h2>
-                        <div
-                            id="accordion-flush-body-2"
-                            className="hidden"
-                            aria-labelledby="accordion-flush-heading-2"
-                        >
-                            <div className="py-5 border-b border-gray-200 ">
-                                <p className="mb-2 text-gray-500 ">
+                            </Accordion.Content>
+                        </Accordion.Panel>
+                        <Accordion.Panel>
+                            <Accordion.Title>
+                                Siapa aja sih yang bisa pakai EcoWave?
+                            </Accordion.Title>
+                            <Accordion.Content>
+                                <p className="mb-2 text-gray-500 dark:text-gray-400">
                                     Siapa aja, dong! Kami di sini ingin mengajak
                                     kamu untuk peduli terhadap bumi kita dan
                                     ingin gaya hidupmu lebih ramah lingkungan,
                                     yuk gabung di EcoWave!
                                 </p>
-                            </div>
-                        </div>
-
-                        {/* 3 */}
-                        <h2 id="accordion-flush-heading-3">
-                            <button
-                                type="button"
-                                className="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 "
-                                data-accordion-target="#accordion-flush-body-3"
-                                aria-expanded="false"
-                                aria-controls="accordion-flush-body-3"
-                            >
-                                <span>Gimana cara belanja di EcoWave?</span>
-                                <svg
-                                    data-accordion-icon=""
-                                    className="w-6 h-6 shrink-0"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        fillRule="evenodd"
-                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                        clipRule="evenodd"
-                                    />
-                                </svg>
-                            </button>
-                        </h2>
-                        <div
-                            id="accordion-flush-body-3"
-                            className="hidden"
-                            aria-labelledby="accordion-flush-heading-3"
-                        >
-                            <div className="py-5 border-b border-gray-200 ">
-                                <p className="mb-2 text-gray-500 ">
+                            </Accordion.Content>
+                        </Accordion.Panel>
+                        <Accordion.Panel>
+                            <Accordion.Title>
+                                Gimana cara belanja di EcoWave?
+                            </Accordion.Title>
+                            <Accordion.Content>
+                                <p className="mb-2 text-gray-500 dark:text-gray-400">
                                     Gampang banget! Tinggal download
                                     aplikasinya, daftar, dan kamu sudah bisa
                                     belanja produk ramah lingkungan favoritmu.
                                 </p>
-                            </div>
-                        </div>
-
-                        {/* 4 */}
-                        <h2 id="accordion-flush-heading-4">
-                            <button
-                                type="button"
-                                className="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 "
-                                data-accordion-target="#accordion-flush-body-4"
-                                aria-expanded="false"
-                                aria-controls="accordion-flush-body-4"
-                            >
-                                <span>Produk di EcoWave mahal nggak ya?</span>
-                                <svg
-                                    data-accordion-icon=""
-                                    className="w-6 h-6 shrink-0"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        fillRule="evenodd"
-                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                        clipRule="evenodd"
-                                    />
-                                </svg>
-                            </button>
-                        </h2>
-                        <div
-                            id="accordion-flush-body-4"
-                            className="hidden"
-                            aria-labelledby="accordion-flush-heading-4"
-                        >
-                            <div className="py-5 border-b border-gray-200 ">
-                                <p className="mb-2 text-gray-500 ">
+                            </Accordion.Content>
+                        </Accordion.Panel>
+                        <Accordion.Panel>
+                            <Accordion.Title>
+                                Produk di EcoWave mahal nggak ya?
+                            </Accordion.Title>
+                            <Accordion.Content>
+                                <p className="mb-2 text-gray-500 dark:text-gray-400">
                                     Tenang aja! Harga produk di EcoWave
                                     terjangkau kok, dan kamu juga bisa
                                     manfaatkan diskon yang sering kita kasih.
                                 </p>
-                            </div>
-                        </div>
-
-                        {/* 5 */}
-                        <h2 id="accordion-flush-heading-5">
-                            <button
-                                type="button"
-                                className="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 "
-                                data-accordion-target="#accordion-flush-body-5"
-                                aria-expanded="false"
-                                aria-controls="accordion-flush-body-5"
-                            >
-                                <span>
-                                    Informasi lingkungan di EcoWave dapat
-                                    dipercaya?
-                                </span>
-                                <svg
-                                    data-accordion-icon=""
-                                    className="w-6 h-6 shrink-0"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        fillRule="evenodd"
-                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                        clipRule="evenodd"
-                                    />
-                                </svg>
-                            </button>
-                        </h2>
-                        <div
-                            id="accordion-flush-body-5"
-                            className="hidden"
-                            aria-labelledby="accordion-flush-heading-5"
-                        >
-                            <div className="py-5 border-b border-gray-200 ">
-                                <p className="mb-2 text-gray-500 ">
+                            </Accordion.Content>
+                        </Accordion.Panel>
+                        <Accordion.Panel>
+                            <Accordion.Title>
+                                Informasi lingkungan di EcoWave dapat dipercaya?
+                            </Accordion.Title>
+                            <Accordion.Content>
+                                <p className="mb-2 text-gray-500 dark:text-gray-400">
                                     Tentu saja! Kami selalu berusaha
                                     memberikanmu informasi terupdate dan
                                     terpercaya tentang lingkungan di Indonesia.
                                     Jadi kamu nggak perlu khawatir!
                                 </p>
-                            </div>
-                        </div>
-                    </div>
+                            </Accordion.Content>
+                        </Accordion.Panel>
+                    </Accordion>
                 </div>
             </div>
 

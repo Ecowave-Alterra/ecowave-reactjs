@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { PlusSmallIcon, ArrowDownTrayIcon } from "@heroicons/react/24/solid";
+import Search from "../../../../components/Search";
 import ButtonGroup from "../../../../components/ButtonGroup";
 
 export default function Informasi() {
@@ -12,7 +13,7 @@ export default function Informasi() {
     return (
         <div className="sm:ml-[44px] sm:mr-8 mx-4">
             {/* header */}
-            <div className="mt-16 flex flex-row justify-between items-center">
+            <div className="mt-16 flex flex-row justify-between items-center mb-9">
                 <div className="">
                     <h4 className="text-h4 text-black">Informasi</h4>
                     <p className="text-p2 text-grey-500 mt-2">
@@ -36,8 +37,10 @@ export default function Informasi() {
                 </div>
             </div>
 
+            <Search placeholder="Cari Nama Kategori" />
+
             {/* table */}
-            <div className="inline-flex flex-row gap-1 border-b-[2px] border-green-500 justify-start items-end">
+            <div className="inline-flex flex-row gap-1 border-b-[2px] border-green-500 justify-start items-end mt-8">
                 <ButtonGroup
                     buttons={["Semua", "Terbit", "Draft"]}
                     getData={getDataByStatus}
