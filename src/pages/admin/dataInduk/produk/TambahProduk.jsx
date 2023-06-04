@@ -199,7 +199,6 @@ export default function TambahProduk() {
             </div>
           </div>
         )}
-                <img width={100} src="" ref={ImageRef} alt="" hidden />
 
                 <label
                     id="dropContainer"
