@@ -5,15 +5,15 @@ import TambahKategoriModal from "../../../../components/TambahKategoriModal";
 import { useState } from "react";
 
 export default function Kategori() {
-    const [showModal, setShowModal] = useState(false);
+    let [isOpen, setIsOpen] = useState(false);
 
-    const handleOpenModal = () => {
-        setShowModal(true);
-    };
+    // const handleOpenModal = () => {
+    //     setShowModal(true);
+    // };
 
-    const handleCloseModal = () => {
-        setShowModal(false);
-    };
+    // const handleCloseModal = () => {
+    //     setShowModal(false);
+    // };
 
     return (
         <div className="sm:ml-[44px] sm:mr-8 mx-4 ">
@@ -23,18 +23,15 @@ export default function Kategori() {
                     <h4 className="text-h4 text-black">Informasi</h4>
                 </div>
                 <button
-                    onClick={handleOpenModal}
+                    onClick={() => setIsOpen(true)}
                     className="flex flex-row gap-[13px] items-center rounded-full bg-green-500 py-[10px] pl-[21px] pr-4 hover:bg-green-600 duration-200"
                 >
                     <PlusSmallIcon className="w-[14px]  text-white " />
-                    <p className=" text-p3 text-white">Tambah</p>
+                    <p className=" text-p3 text-white">Tambah kategori</p>
                 </button>
             </div>
             <Search placeholder="Cari Nama Kategori" />
-            <TambahKategoriModal
-                handleCloseModal={handleCloseModal}
-                showModal={showModal}
-            />
+            <TambahKategoriModal isOpen={isOpen} setIsOpen={setIsOpen} />
         </div>
     );
 }
