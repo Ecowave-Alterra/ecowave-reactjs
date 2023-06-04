@@ -1,3 +1,4 @@
+import React from 'react'
 import { PlusSmallIcon } from "@heroicons/react/24/solid";
 import Search from "../../../../components/Search";
 import TambahKategoriModal from "../../../../components/TambahKategoriModal";

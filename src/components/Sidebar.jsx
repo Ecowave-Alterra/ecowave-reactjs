@@ -10,16 +10,17 @@ import { NavLink } from "react-router-dom";
 
 
 export default function Sidebar({ children }) {
-    const [isSidebarOpen, setSidebarOpen] = useState(true);
-    const [isDropdownOpen, setDropdownOpen] = useState(false);
 
+  const [isSidebarOpen, setSidebarOpen] = useState(true);
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [isSubMenuActive, setSubMenuActive] = useState();
 
   const subMenus = [
     { name: 'Produk', link: '/admin/produk' },
     { name: 'Informasi', link: '/admin/informasi' },
     { name: 'Opsi Pengiriman', link: '/admin/opsi' },
-    { name: 'Voucher', link: '/admin/produk' },
-    { name: 'Metode Pengiriman', link: '/admin/produk' },
+    { name: "Voucher", link: "/admin/voucher" },
+    { name: "Metode Pengiriman", link: "/admin/metode-pengiriman" },
     { name: "Kategori", link: "/admin/kategori" },
   ];
 
@@ -37,6 +38,14 @@ export default function Sidebar({ children }) {
         console.log("Logout");
     };
 
+  const setAction = (stat) => {
+    setSubMenuActive(stat);
+    console.log(isSubMenuActive);
+  };
+
+  const handleLogout = () => {
+    console.log("Logout");
+  };
 
 
   return (
