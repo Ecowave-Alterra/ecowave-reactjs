@@ -1,3 +1,4 @@
+
 import { Link, useNavigate } from "react-router-dom";
 import {
     PlusSmallIcon,
@@ -6,8 +7,8 @@ import {
     PencilIcon,
     TrashIcon,
 } from "@heroicons/react/24/solid";
-import ButtonGroup from "../../../../components/ButtonGroup";
 
+import ButtonGroup from "../../../../components/ButtonGroup";
 import Search from "../../../../components/Search";
 import { useEffect, useState } from "react";
 
@@ -71,7 +72,7 @@ export default function Informasi() {
     return (
         <div className="sm:ml-[44px] sm:mr-8 mx-4">
             {/* header */}
-            <div className="mt-16 flex flex-row justify-between items-center">
+            <div className="mt-16 flex flex-row justify-between items-center mb-9">
                 <div className="">
                     <h4 className="text-h4 text-black">Informasi</h4>
                     <p className="text-p2 text-grey-500 mt-2">
@@ -110,7 +111,6 @@ export default function Informasi() {
                 />
             </div>
 
-            {/* table */}
             {/* Table */}
             <div className="overflow-x-auto mt-3">
                 <table className="w-full min-w-[1000px] text-p4 text-left text-black">
