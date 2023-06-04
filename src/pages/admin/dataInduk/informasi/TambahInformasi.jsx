@@ -1,17 +1,33 @@
-import { Link } from "react-router-dom";
-import { ChevronLeftIcon } from "@heroicons/react/24/outline";
+import { useNavigate } from "react-router-dom";
+import {
+    ChevronLeftIcon,
+    PencilIcon,
+    TrashIcon,
+} from "@heroicons/react/24/outline";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import ReactQuill from "react-quill";
+import { useDropzone } from "react-dropzone";
 import "react-quill/dist/quill.snow.css";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export default function TambahInformasi() {
+    const InputImageRef = useRef(null);
+    const navigate = useNavigate();
+    const [imageRef, setImageRef] = useState(null);
+
     const formik = useFormik({
+        // validateOnChange: true,
         initialValues: {
+            image: "",
             judul: "",
             konten: "",
         },
         validationSchema: Yup.object({
+            image: Yup.mixed().required("Gambar harus diunggah"),
+            // .test("fileSize", "Ukuran file terlalu besar", (value) => {
+            //     return !value || (value && value.size <= 4 * 1024 * 1024); // Maksimum 4MB
+            // }),
             judul: Yup.string()
                 .max(
                     65,
@@ -26,23 +42,206 @@ export default function TambahInformasi() {
                 }),
         }),
         onSubmit: (values) => {
-            alert(JSON.stringify(values, null, 2));
+            // alert(JSON.stringify(values, null, 2));
+            console.log(JSON.stringify(values));
+            alert(JSON.stringify(values));
         },
     });
+
+    const handleSaveDraft = () => {
+        // check image size
+        if (formik.values.image.size > 4 * 1024 * 1024) {
+            formik.setFieldError(
+                "image",
+                "Mohon maaf, ukuran file Anda melebihi batas maksimum 4 MB."
+            );
+            alert("Mohon maaf, ukuran file Anda melebihi batas maksimum 4 MB.");
+        } else {
+            console.log("Data form draft:", formik.values);
+        }
+    };
+
+    useEffect(() => {
+        console.log(imageRef);
+    }, [imageRef]);
+
+    const backToMain = () => {
+        if (
+            (formik.values.image == "" &&
+                formik.values.judul == "" &&
+                formik.values.konten == "") ||
+            formik.values.konten == "<p><br></p>"
+        ) {
+            navigate("/admin/informasi/");
+        } else {
+            const back = confirm(
+                "Apakah Anda yakin ingin keluar tanpa menyimpan informasi?"
+            );
+            if (back) {
+                navigate("/admin/informasi/");
+            }
+        }
+    };
+
+    // open function untuk handle image
+    const onDrop = useCallback((acceptedFiles) => {
+        formik.setFieldValue("image", acceptedFiles[0]);
+        console.log(acceptedFiles[0]);
+        const imgInitial = acceptedFiles[0];
+        showImages(imgInitial);
+    }, []);
+    const { getRootProps, getInputProps } = useDropzone({
+        onDrop,
+        accept: {
+            "image/jpeg": [".jpeg", ".png", ".jpg"],
+            "image/jpg": [],
+            "image/png": [],
+        },
+        multiple: false,
+        maxFiles: 2,
+        onDropRejected: () => {
+            alert("file tidak diterima");
+        },
+    });
+
+    const handleFileChange = (event) => {
+        formik.setFieldValue("image", event.target.files[0]);
+        console.log(event.target.files[0]);
+        const imgInitial = event.target.files[0];
+        showImages(imgInitial);
+    };
+
+    function showImages(image) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            setImageRef(e.target.result);
+        };
+        reader.readAsDataURL(image);
+    }
+
+    const removeImage = () => {
+        setImageRef(null);
+        formik.setFieldValue("image", "");
+    };
+    // close function handle image
 
     return (
         <div>
             <div className="flex flex-row row-gap items-center gap-6 ml-8 mt-8">
-                <Link to="/admin/informasi/">
+                <button id="button-back" onClick={backToMain}>
                     <ChevronLeftIcon className="w-5 h-5 text-green-500" />
-                </Link>
+                </button>
                 <h6 className="text-h6 font-medium">Ubah Informasi</h6>
             </div>
             <form onSubmit={formik.handleSubmit} className="mt-5">
+                <div className="mt-3 mx-4 sm:mx-8 mb-10">
+                    <label className="text-p2" htmlFor="konten">
+                        Konten Informasi
+                    </label>
+                    <div className="relative flex text-p2 max-w-2xl max-h-[312px] h-[312px] items-center mx-auto mt-2  rounded-3xl border border-gray-300  overflow-hidden">
+                        {imageRef ? (
+                            <div className="flex flex-row gap-5 absolute top-5 right-4 z-30 ">
+                                <label
+                                    htmlFor="image"
+                                    className="group hover:bg-green-500 bg-green-50 w-14 h-14 flex justify-center items-center rounded-2xl shadow-2 cursor-pointer duration-200"
+                                >
+                                    <PencilIcon className="w-[19px] h-[19px] text-green-600 group-hover:text-white" />
+                                    <input
+                                        type="file"
+                                        id="image"
+                                        name="image"
+                                        accept="image/jpeg, image/png"
+                                        multiple={false}
+                                        ref={InputImageRef}
+                                        onChange={handleFileChange}
+                                        hidden
+                                    />
+                                </label>
+                                <button
+                                    className="group hover:bg-error-500 bg-error-50 w-14 h-14 flex justify-center items-center rounded-2xl shadow-2"
+                                    onClick={removeImage}
+                                    id="button-remove-image"
+                                >
+                                    <TrashIcon className="w-[19px] h-[19px] group-hover:text-error-50 text-error-500 " />
+                                </button>
+                            </div>
+                        ) : (
+                            <div
+                                id="input-drop-image"
+                                {...getRootProps({ className: "dropzone" })}
+                                className="w-full h-full flex items-center justify-center cursor-pointer "
+                            >
+                                <div className="flex-wrap text-center w-full ">
+                                    <div className="mx-auto w-10 h-10 rounded-full bg-gray-50 flex justify-center items-center mb-3 text-center ">
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            strokeWidth="1.5"
+                                            stroke="currentColor"
+                                            className="w-6 h-6 "
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"
+                                            />
+                                        </svg>
+                                    </div>
+                                    <div className="space-y-2 ">
+                                        <span
+                                            className="text-base text-green-500 font-semibold cursor-pointer"
+                                            htmlFor="image"
+                                        >
+                                            Klik untuk Mengunggah
+                                        </span>
+
+                                        <input
+                                            type="file"
+                                            id="image"
+                                            name="image"
+                                            accept="image/jpeg, image/png"
+                                            multiple={false}
+                                            // ref={InputImageRef}
+                                            // onChange={handleFileChange}
+                                            {...getInputProps()}
+                                            hidden
+                                        />
+                                        <span className="text-sm text-gray-500">
+                                            {" "}
+                                            atau seret dan lepas
+                                        </span>
+                                    </div>
+                                    <div className="space-y-2 ">
+                                        <span className="text-sm text-gray-500">
+                                            PNG, atau JPG (maks. 4mb & 1 file
+                                            diizinkan)
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {imageRef && (
+                            <img
+                                src={imageRef}
+                                className="object-cover max-h-[312px] w-full"
+                                alt=""
+                            />
+                        )}
+                    </div>
+                    {formik.errors.image && formik.touched.image && (
+                        <div className="text-error-500 text-p4 ml-12 text-center mt-1 ">
+                            {formik.errors.image}
+                        </div>
+                    )}
+                </div>
+
                 {/* judul informasi */}
                 <div className="relative h-10 mt-3 mx-4 sm:mx-8">
                     <input
                         id="judul"
+                        maxLength="65"
                         className={
                             formik.errors.judul && formik.touched.judul
                                 ? "peer h-full w-full rounded-[7px] border border-error-500 border-t-transparent bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-green-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-error-500 placeholder-shown:border-t-error-500 focus:border-2 focus:border-error-500 focus:border-t-transparent focus:outline-0 "
@@ -63,7 +262,7 @@ export default function TambahInformasi() {
                     </label>
                 </div>
                 {formik.errors.judul && formik.touched.judul && (
-                    <div className="text-error-500 text-p4 mt-1 ml-12">
+                    <div className="text-error-500 text-p4 mt-1 ml-12 ">
                         {formik.errors.judul}
                     </div>
                 )}
@@ -79,9 +278,9 @@ export default function TambahInformasi() {
                         value={formik.values.konten}
                         className="h-80 "
                         theme="snow"
-                        onChange={(value) =>
-                            formik.setFieldValue("konten", value)
-                        }
+                        onChange={(value) => {
+                            formik.setFieldValue("konten", value);
+                        }}
                     />
                 </div>
                 {formik.errors.konten && formik.touched.konten && (
@@ -93,9 +292,14 @@ export default function TambahInformasi() {
                 <div className="flex flex-row gap-2 relative top-[72px] mx-8 justify-end ">
                     <button
                         className="px-4 py-[10px] bg-green-50 text-green-500 font-semibold rounded-full disabled:text-green-300"
-                        type="submit"
+                        id="button-draft-submit"
+                        type="button"
+                        onClick={handleSaveDraft}
                         data-te-ripple-init=""
-                        disabled={!formik.dirty}
+                        disabled={
+                            Object.keys(formik.errors).length >= 3 ||
+                            !formik.dirty
+                        }
                     >
                         Simpan sebagai draft
                     </button>
@@ -103,6 +307,7 @@ export default function TambahInformasi() {
                         className="px-4 py-[10px] bg-green-500 font-semibold text-white rounded-full  disabled:bg-green-300 duration-100 hover:bg-green-600 active:border-2 
                         active:border-green-300"
                         type="submit"
+                        id="button-terbit-submit"
                         data-te-ripple-init=""
                         disabled={!(formik.isValid && formik.dirty)}
                     >

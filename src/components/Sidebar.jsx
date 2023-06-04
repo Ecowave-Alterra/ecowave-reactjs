@@ -1,34 +1,42 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
-  ArrowRightOnRectangleIcon,
-  XMarkIcon,
-  ChevronDownIcon,
-  Bars3Icon,
+    ArrowRightOnRectangleIcon,
+    XMarkIcon,
+    ChevronDownIcon,
+    Bars3Icon,
 } from "@heroicons/react/24/outline";
 import Logo from "../assets/img/logo.png";
 import { NavLink } from "react-router-dom";
 
+
 export default function Sidebar({ children }) {
+
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isSubMenuActive, setSubMenuActive] = useState();
 
   const subMenus = [
-    { name: "Produk", link: "produk" },
-    { name: "Informasi", link: "informasi" },
-    { name: "Opsi Pengiriman", link: "opsi-pengiriman" },
-    { name: "Voucher", link: "voucher" },
-    { name: "Metode Pengiriman", link: "metode-pengiriman" },
-    { name: "Kategori", link: "kategori" },
+    { name: 'Produk', link: '/admin/produk' },
+    { name: 'Informasi', link: '/admin/informasi' },
+    { name: 'Opsi Pengiriman', link: '/admin/opsi' },
+    { name: "Voucher", link: "/admin/voucher" },
+    { name: "Metode Pengiriman", link: "/admin/metode-pengiriman" },
+    { name: "Kategori", link: "/admin/kategori" },
   ];
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!isSidebarOpen);
-  };
 
-  const toggleDropdown = () => {
-    setDropdownOpen(!isDropdownOpen);
-  };
+    const toggleSidebar = () => {
+        setSidebarOpen(!isSidebarOpen);
+    };
+
+    const toggleDropdown = () => {
+        setDropdownOpen(!isDropdownOpen);
+    };
+
+
+    const handleLogout = () => {
+        console.log("Logout");
+    };
 
   const setAction = (stat) => {
     setSubMenuActive(stat);
@@ -38,6 +46,7 @@ export default function Sidebar({ children }) {
   const handleLogout = () => {
     console.log("Logout");
   };
+
 
   return (
     <>
