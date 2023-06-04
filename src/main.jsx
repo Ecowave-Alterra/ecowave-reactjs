@@ -46,6 +46,10 @@ import Voucher from "./pages/admin/dataInduk/voucher";
 import TambahVoucher from "./pages/admin/dataInduk/voucher/TambahVoucher";
 import UbahVoucher from "./pages/admin/dataInduk/voucher/UbahVoucher";
 
+//Metode Pembayaran
+import MetodePembayaran from "./pages/admin/dataInduk/metodePembayaran"
+import TambahMetodePembayaran from "./pages/admin/dataInduk/metodePembayaran/TambahMetode";
+import UbahMetodePembayaran from "./pages/admin/dataInduk/metodePembayaran/UbahMetode";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -69,6 +73,9 @@ const router = createBrowserRouter(
           <Route path="voucher" element={<Voucher />} />
           <Route path="voucher/tambah" element={<TambahVoucher />} />
           <Route path="voucher/ubah" element={<UbahVoucher />} />
+          <Route path="pembayaran" element={<MetodePembayaran />} />
+          <Route path="pembayaran/tambah" element={<TambahMetodePembayaran />} />
+          <Route path="pembayaran/ubah" element={<UbahMetodePembayaran />} />
           <Route path="metode-pengiriman" element={<MetodePengiriman />} />
           <Route path="kategori" element={<Kategori />} />
       </Route>

@@ -90,6 +90,7 @@ export default function UbahProduk(){
                     accept="png, jpg"
                     ref={InputImageRef}
                     onChange={ShowImages}
+                    
                     hidden
                   />
                 </label>
