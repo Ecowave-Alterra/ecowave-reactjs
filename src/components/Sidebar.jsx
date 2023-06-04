@@ -11,7 +11,7 @@ import { NavLink } from "react-router-dom";
 export default function Sidebar({ children }) {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const [isSubMenuActive, setSubMenuActive] = useState(false);
+  const [isSubMenuActive, setSubMenuActive] = useState();
 
   const subMenus = [
     { name: "Produk", link: "produk" },

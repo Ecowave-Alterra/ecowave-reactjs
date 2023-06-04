@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // Komponen
 import ButtonGroup from "../../../../components/ButtonGroup";
 
 
 // Ikon & Gambar
-import { EyeIcon, PlusSmallIcon } from "@heroicons/react/24/outline";
+import {  PencilIcon, TrashIcon, PlusSmallIcon } from "@heroicons/react/24/outline";
 import Empty from "../../../../assets/img/Empty Voucher.png";
 
 const Voucher = () => {
@@ -53,8 +53,23 @@ const Voucher = () => {
     setCurrentPage(id);
   };
 
+  const voucher = [
+    {
+      jenis: 'Gratis Ongkir',
+      sisa: 1000,
+      mulai: '27 Mei 2023',
+      brakhir: '1 jan 2024',
+    },
+    {
+      jenis: 'Diskon Belanja',
+      sisa: 1000,
+      mulai: '27 Mei 2023',
+      brakhir: '1 jan 2024',
+    },
+  ];
+
   useEffect(() => {
-    // setItemList(data);
+    setItemList(voucher);
   }, []);
 
   return (
@@ -97,18 +112,72 @@ const Voucher = () => {
                   <td className="py-[18px] px-[10px]">
                     {firstIndex + index + 1}.
                   </td>
-                  <td className="py-[18px] px-[10px]">{row.no}</td>
-                  <td className="py-[18px] px-[10px]">{row.nama}</td>
-                  <td className="py-[18px] px-[10px]">{row.stok}</td>
+                  <td className="py-[18px] px-[10px]">{row.jenis}</td>
+                  <td className="py-[18px] px-[10px]">{row.sisa}</td>
+                  <td className="py-[18px] px-[10px]">{row.mulai}</td>
+                  <td className="py-[18px] px-[10px]">{row.brakhir}</td>
                   <td className="py-[18px] px-[10px] text-center flex space-x-2 justify-center">
-                    <Link to={"/admin/ulasan/detail"}>
-                      <EyeIcon className="w-5 h-5 text-green-500" />
-                    </Link>
+                  <div className="flex">
+                      <Link to="/admin/voucher/ubah" className="bg-green-50 rounded-full mx-2">
+                        <PencilIcon className="w-5 h-5 text-green-500" />
+                      </Link>
+                      <div className="bg-green-50 rounded-full mx-2">
+                        <TrashIcon className="w-5 h-5 text-error-500" />
+                      </div>
+                    </div>
                   </td>
                 </tr>
               ))}
           </tbody>
         </table>
+
+        {/* Pagination */}
+        {records.length >= 1 && (
+          <div className="flex justify-between w-full py-4">
+            <div>
+              <p className="text-p2 font-normal px-5 py-3 text-gray-500">{`Halaman ${currentPage} dari ${nPage}`}</p>
+            </div>
+            <nav>
+              <ul className="list-style-none flex">
+                <li>
+                  <a
+                    className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold  ${
+                      currentPage === 1 ? "text-gray-300" : "text-green-500"
+                    }`}
+                    onClick={currentPage === 1 ? null : prevPage}
+                  >
+                    Previous
+                  </a>
+                </li>
+                {numbers.map((n, i) => (
+                  <li key={i}>
+                    <p
+                      className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold rounded-full text-green-500 ${
+                        currentPage === n
+                          ? "bg-green-500 text-white"
+                          : "bg-green-50"
+                      }`}
+                      onClick={() => changePage(n)}
+                    >
+                      {n}
+                    </p>
+                  </li>
+                ))}
+
+                <li>
+                  <a
+                    className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold  ${
+                      currentPage === nPage ? "text-gray-300" : "text-green-500"
+                    }`}
+                    onClick={currentPage === nPage ? null : nextPage}
+                  >
+                    Next
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        )}
 
         {/* Empty */}
         {records.length == 0 && (
