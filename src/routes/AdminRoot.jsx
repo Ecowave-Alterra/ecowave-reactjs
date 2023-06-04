@@ -93,6 +93,11 @@ export default function AdminRoot() {
                                     Informasi
                                 </h1>
                             </Link>
+                            <Link to="/admin/pembayaran">
+                                <h1 className="cursor-pointer rounded-md py-3 ps-[62px] hover:text-green-500">
+                                    Metode Pembayaran
+                                </h1>
+                            </Link>
                         </div>
                         <Link to="/admin/pesanan">
                             <div className="flex items-center rounded-md my-2 mx-8 p-3 duration-300 cursor-pointer text-gray-600 hover:bg-green-500 hover:text-white hover:border-[1px] hover:border-black ">

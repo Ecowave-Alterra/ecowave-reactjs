@@ -31,6 +31,11 @@ import Produk from "./pages/admin/dataInduk/produk";
 import TambahProduk from "./pages/admin/dataInduk/produk/TambahProduk";
 import UbahProduk from "./pages/admin/dataInduk/produk/UbahProduk";
 
+//Metode Pembayaran
+import MetodePembayaran from "./pages/admin/dataInduk/metodePembayaran"
+import TambahMetodePembayaran from "./pages/admin/dataInduk/metodePembayaran/TambahMetode";
+import UbahMetodePembayaran from "./pages/admin/dataInduk/metodePembayaran/UbahMetode";
+
 const router = createBrowserRouter(
     createRoutesFromElements(
         <Route>
@@ -44,6 +49,9 @@ const router = createBrowserRouter(
                 <Route path="produk" element={<Produk />} />
                 <Route path="produk/tambah" element={<TambahProduk />} />
                 <Route path="produk/ubah" element={<UbahProduk />} />
+                <Route path="pembayaran" element={<MetodePembayaran />} />
+                <Route path="pembayaran/tambah" element={<TambahMetodePembayaran />} />
+                <Route path="pembayaran/ubah" element={<UbahMetodePembayaran />} />
                 <Route path="pesanan" element={<Pesanan />} />
                 <Route path="ulasan" element={<Ulasan />} />
             </Route>
