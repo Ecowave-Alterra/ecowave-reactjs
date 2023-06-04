@@ -23,41 +23,44 @@ import Ulasan from "./pages/admin/ulasan";
 import Pesanan from "./pages/admin/pesanan";
 import DetailPesanan from "./pages/admin/pesanan/DetailPesanan";
 
+import OpsiPengiriman from './pages/admin/dataInduk/opsi';
+
 //informasi
-import Informasi from "./pages/admin/dataInduk/informasi";
-import TambahInformasi from "./pages/admin/dataInduk/informasi/TambahInformasi";
-import UbahInformasi from "./pages/admin/dataInduk/informasi/UbahInformasi";
-import DetailInformasi from "./pages/admin/dataInduk/informasi/DetailInformasi";
+import Informasi from './pages/admin/dataInduk/informasi';
+import TambahInformasi from './pages/admin/dataInduk/informasi/TambahInformasi';
+import UbahInformasi from './pages/admin/dataInduk/informasi/UbahInformasi';
+import DetailInformasi from './pages/admin/dataInduk/informasi/DetailInformasi';
 
 //Produk
-import Produk from "./pages/admin/dataInduk/produk";
-import TambahProduk from "./pages/admin/dataInduk/produk/TambahProduk";
-import UbahProduk from "./pages/admin/dataInduk/produk/UbahProduk";
+import Produk from './pages/admin/dataInduk/produk';
+import TambahProduk from './pages/admin/dataInduk/produk/TambahProduk';
+import UbahProduk from './pages/admin/dataInduk/produk/UbahProduk';
 
 import Kategori from "./pages/admin/dataInduk/kategori";
 
 const router = createBrowserRouter(
-    createRoutesFromElements(
-        <Route>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/admin" element={<AdminRoot />}>
-                <Route index element={<Dashboard />} />
-                <Route path="informasi" element={<Informasi />} />
-                <Route path="informasi/tambah" element={<TambahInformasi />} />
-                <Route path="informasi/ubah" element={<UbahInformasi />} />
-                <Route path="informasi/:id" element={<DetailInformasi />} />
-                <Route path="kategori" element={<Kategori />} />
-                <Route path="produk" element={<Produk />} />
-                <Route path="produk/tambah" element={<TambahProduk />} />
-                <Route path="produk/ubah" element={<UbahProduk />} />
-                <Route path="pesanan" element={<Pesanan />} />
-                <Route path="pesanan/detail" element={<DetailPesanan />} />
-                <Route path="ulasan" element={<Ulasan />} />
-            </Route>
-            <Route path="/login" element={<Login />} />
-            <Route path="*" element={<NotFound />} />
-        </Route>
-    )
+  createRoutesFromElements(
+    <Route>
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/admin" element={<AdminRoot />}>
+        <Route index element={<Dashboard />} />
+        <Route path="informasi" element={<Informasi />} />
+        <Route path="informasi/tambah" element={<TambahInformasi />} />
+        <Route path="informasi/ubah" element={<UbahInformasi />} />
+        <Route path="informasi/:id" element={<DetailInformasi />} />
+        <Route path="produk" element={<Produk />} />
+        <Route path="produk/tambah" element={<TambahProduk />} />
+        <Route path="produk/ubah" element={<UbahProduk />} />
+        <Route path="kategori" element={<Kategori />} />
+        <Route path="opsi" element={<OpsiPengiriman />} />
+        <Route path="pesanan" element={<Pesanan />} />
+        <Route path="pesanan/detail" element={<DetailPesanan />} />
+        <Route path="ulasan" element={<Ulasan />} />
+      </Route>
+      <Route path="/login" element={<Login />} />
+      <Route path="*" element={<NotFound />} />
+    </Route>
+  )
 );
 
 ReactDOM.createRoot(document.getElementById("root")).render(
