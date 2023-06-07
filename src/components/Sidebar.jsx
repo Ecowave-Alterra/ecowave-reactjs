@@ -20,7 +20,7 @@ export default function Sidebar({ children }) {
     { name: 'Informasi', link: '/admin/informasi' },
     { name: 'Opsi Pengiriman', link: '/admin/opsi' },
     { name: "Voucher", link: "/admin/voucher" },
-    { name: "Metode Pengiriman", link: "/admin/metode-pengiriman" },
+    { name: "Metode Pembayaran", link: "/admin/pembayaran" },
     { name: "Kategori", link: "/admin/kategori" },
   ];
 

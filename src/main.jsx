@@ -37,7 +37,6 @@ import UbahProduk from "./pages/admin/dataInduk/produk/UbahProduk";
 import DetailUlasan from "./pages/admin/ulasan/DetailUlasan";
 
 // Pengiriman
-import MetodePengiriman from "./pages/admin/dataInduk/metodePengiriman";
 import OpsiPengiriman from "./pages/admin/dataInduk/opsi";
 
 // Voucher & Kategori
@@ -76,7 +75,6 @@ const router = createBrowserRouter(
           <Route path="pembayaran" element={<MetodePembayaran />} />
           <Route path="pembayaran/tambah" element={<TambahMetodePembayaran />} />
           <Route path="pembayaran/ubah" element={<UbahMetodePembayaran />} />
-          <Route path="metode-pengiriman" element={<MetodePengiriman />} />
           <Route path="kategori" element={<Kategori />} />
       </Route>
       <Route path="/login" element={<Login />} />

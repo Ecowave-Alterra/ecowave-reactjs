@@ -10,7 +10,7 @@ import { EyeIcon } from "@heroicons/react/24/outline";
 import Empty from "../../../assets/img/File Not Found.png";
 
 export default function Ulasan() {
-  const [tabMenu, setTabMenu] = useState(["Semua", "Perabot", "Kantong"])
+  const [tabMenu, setTabMenu] = useState(["Semua", "Perabot", "Kantong"]);
   const [itemList, setItemList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const recordPerPage = 10;
@@ -256,13 +256,16 @@ export default function Ulasan() {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto border-[1px] border-gray-500 rounded-md relative mt-3">
-        <table className="w-full text-left whitespace-nowrap table-auto">
+      <div className="overflow-x-auto mt-3">
+        <table className="w-full text-left table-auto">
           <thead className="bg-green-500 text-white">
             <tr>
               {columns &&
-                columns.map((head) => (
-                  <th className="py-[14px] px-[10px] text-p2 font-medium text-center">
+                columns.map((head, i) => (
+                  <th
+                    key={i}
+                    className="py-[14px] text-p2 font-medium text-center"
+                  >
                     {head.header}
                   </th>
                 ))}
@@ -271,12 +274,16 @@ export default function Ulasan() {
           <tbody>
             {itemList &&
               records.map((row, index) => (
-                <tr key={index} className="even:bg-gray-50 text-p4 text-center">
-                  <td className="py-[18px] px-[10px]">
+                <tr key={index} className="even:bg-gray-50 text-p4 text-left">
+                  <td className="py-[18px] text-center">
                     {firstIndex + index + 1}.
                   </td>
-                  <td className="py-[18px] px-[10px]">{row.no}</td>
-                  <td className="py-[18px] px-[10px]">{row.nama}</td>
+                  <td className="py-[18px] px-[10px] min-w-[100px] ">
+                    {row.no}
+                  </td>
+                  <td className="py-[18px] px-[10px] min-w-[100px]">
+                    {row.nama}
+                  </td>
                   <td className="py-[18px] px-[10px]">{row.stok}</td>
                   <td className="py-[18px] px-[10px] text-center flex space-x-2 justify-center">
                     <Link to={"/admin/ulasan/detail"}>

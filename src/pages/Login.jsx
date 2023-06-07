@@ -3,6 +3,7 @@ import Shopping from "../assets/img/Online shopping.png";
 import * as Yup from "yup"
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
+import {Cookies} from 'js-cookie'
 
 const user = {
   email : "admin@gmail.com",
@@ -23,11 +24,28 @@ export default function Login() {
       email : "",
       passWord : ""
     },
-    validationSchema: Yup.object({
-      email: Yup.string().required("Email Kosong").email("Email Tidak Valid").oneOf([user.email], "Email Tidak Terdaftar"),
-      passWord: Yup.string().required("Password Kosong").oneOf([user.password], "Password Tidak Terdaftar")
-    }),
-    onSubmit: (e) => {
+    // validationSchema: Yup.object({
+    //   email: Yup.string().required("Email Kosong").email("Email Tidak Valid").oneOf([user.email], "Email Tidak Terdaftar"),
+    //   passWord: Yup.string().required("Password Kosong").oneOf([user.password], "Password Tidak Terdaftar")
+    // }),
+    onSubmit: async (e) => {
+      // try {
+      //   const response = await fetch(
+      //     "https://ecowave-h64wmjjkza-uc.a.run.app/admin/login",
+      //     {
+      //       method: "POST",
+      //       body: {
+      //         "email" : e.email,
+      //         "password" : e.passWord
+      //       },
+      //     }
+      //   );
+      //   const result = await response.json();
+      //   // Cookies.set("token", result.token)
+      //   console.log("Success:", result);
+      // } catch (error) {
+      //   console.error("Error:", error);
+      // }
       navigate("/admin")
     },
   });
