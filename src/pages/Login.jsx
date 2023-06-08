@@ -1,26 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Shopping from "../assets/img/Online shopping.png";
 import * as Yup from "yup"
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
-
-const user = {
-  email : "admin@gmail.com",
-  password : "12345678"
-}
+import getLoginData from "../fetch/Login";
+import setAuthCookie, { getAuthCookieAdminId } from "../utils/cookies";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate()
+  const [data, postDataLogin] = getLoginData()
 
   const handleShowPassword = (e) => {
     setShowPassword(!showPassword);
     e.preventDefault();
   };
 
-  const handlehandle = (e) => {
-    const aku = 0
-  }
 
   const formik = useFormik({
     initialValues: {
@@ -28,11 +23,17 @@ export default function Login() {
       passWord : ""
     },
     validationSchema: Yup.object({
-      email: Yup.string().required("Email Kosong").email("Email Tidak Valid").oneOf([user.email], "Email Tidak Terdaftar"),
-      passWord: Yup.string().required("Password Kosong").oneOf([user.password], "Password Tidak Terdaftar")
+      email: Yup.string().required("Email Kosong").email("Email Tidak Valid"),
+      passWord: Yup.string().required("Password Kosong")
     }),
-    onSubmit: (e) => {
-      navigate("/admin")
+    onSubmit: async (e) => {
+      await postDataLogin(formik.values)
+      console.log(data)
+      if (data.Token){
+        setAuthCookie(data.Token, data.Id)
+        alert("Id "+getAuthCookieAdminId()+" Berhasil disimpan Di Cookies")
+        window.location.reload()
+      }
     },
   });
 

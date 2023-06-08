@@ -8,17 +8,15 @@ import poin from "../assets/img/poin.png";
 import prototype from "../assets/img/prototype.png";
 
 import { Accordion } from "flowbite-react";
-import { useNavigate } from "react-router-dom";
 
 function LandingPage() {
     const currentYear = new Date().getFullYear();
-    const navigate = useNavigate()
 
     return (
         <div>
             {/* navbar section*/}
             <div className="flex justify-between items-center sticky sm:px-12 px-5 sm:h-20 h-14 shadow-1 top-0 bg-white">
-                <img src={logo} className="h-8 sm:h-14" onClick={ () => navigate("/login")} />
+                <img src={logo} className="h-8 sm:h-14" />
                 <div className="flex sm:space-x-14 space-x-4 items-center">
                     <a
                         href="#beranda"

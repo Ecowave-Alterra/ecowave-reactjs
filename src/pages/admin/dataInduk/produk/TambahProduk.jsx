@@ -97,7 +97,7 @@ export default function TambahProduk() {
   };
   const handleDeleteImage = (index) => {
     image.map((element) => {
-      
+      return element[index] != display
     })
   };
 
@@ -115,7 +115,7 @@ export default function TambahProduk() {
             <label
               id="dropContainer"
               {...getRootProps({ className: "dropzone" })}
-              className="flex text-p2 w-full py-40 h-fit items-center rounded-3xl border border-gray-300 border-dashed bg-[#D9D9D9]"
+              className="flex text-p2 w-full py-40 h-fit items-center rounded-3xl border border-gray-300 border-dashed bg-gray-300"
             >
               <div className="flex-wrap text-center w-full">
                 <button className="bg-gray-50 rounded-full p-3 cursor-default">
@@ -155,6 +155,11 @@ export default function TambahProduk() {
               </div>
             </label>
             <div className="flex h-16">
+              <label
+                className="bg-gray-300 flex cursor-pointer place-content-center items-center h-full w-16 mt-3 ms-3 border-2 border-green-500 rounded-2xl"
+                onClick={open}
+              >
+              </label>
               <label
                 className="flex cursor-pointer place-content-center items-center h-full w-16 mt-3 ms-3 border-2 border-green-500 rounded-2xl"
                 onClick={open}
