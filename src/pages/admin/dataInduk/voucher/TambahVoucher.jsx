@@ -6,33 +6,45 @@ import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 import InputField from "../../../../components/InputField";
 
 const TambahVoucher = () => {
-  const [voucherCategory, setVoucherCategory] = useState();
+  const [voucherCategory, setVoucherCategory] = useState("diskon");
+
+  const handleCategoryChange = (event) => {
+    const value = event.target.value
+    console.log(value)
+    formik.setFieldValue("kategori", value);
+    setVoucherCategory(value);
+};
+
   const formik = useFormik({
     initialValues: {
-      voucherCategory: "",
+      kategori: "",
       voucherStart: "",
       voucherEnd: "",
-      minBelanja: "",
-      potongan: "",
-      diskon: "",
+      ...(voucherCategory == "diskon" && {
+        minBelanja: "",
+        potongan: "",
+        diskon: "",
+      }),
       jumlah: "",
       batas: "",
     },
     validationSchema: Yup.object({
-      voucherCategory: Yup.string().required("Pilih Salah Satu Kategori"),
+      kategori: Yup.string().required("Pilih Salah Satu Kategori"),
       voucherStart: Yup.string().required("Pilih Tanggal Mulai Voucher"),
       voucherEnd: Yup.string().required("Pilih Tanggal Berakhir Voucher"),
-      minBelanja: Yup.string()
-        .matches(/^[1-9][0-9]*$/, "Harap masukan angka")
-        .required("Data yang diisi harus angka. Contoh: 10500"),
-      potongan: Yup.string()
-        .matches(/^[1-9][0-9]*$/, "Harap masukan angka")
-        .required("Data yang diisi harus angka. Contoh: 10500"),
-      diskon: Yup.string()
-        .matches(/^[1-9][0-9]*$/, "Harap masukan angka")
-        .min(0)
-        .max(100)
-        .required("Data yang diisi harus angka. Contoh: 50"),
+      ...(voucherCategory == "diskon" && {
+        minBelanja: Yup.string()
+          .matches(/^[1-9][0-9]*$/, "Harap masukan angka")
+          .required("Data yang diisi harus angka. Contoh: 10500"),
+        potongan: Yup.string()
+          .matches(/^[1-9][0-9]*$/, "Harap masukan angka")
+          .required("Data yang diisi harus angka. Contoh: 10500"),
+        diskon: Yup.string()
+          .matches(/^[1-9][0-9]*$/, "Harap masukan angka")
+          .min(0)
+          .max(100)
+          .required("Data yang diisi harus angka. Contoh: 50"),
+      }),
       jumlah: Yup.string()
         .matches(/^[1-9][0-9]*$/, "Harap masukan angka")
         .required("Data yang diisi harus angka. Contoh: 500"),
@@ -58,9 +70,13 @@ const TambahVoucher = () => {
       <form onSubmit={formik.handleSubmit}>
         <div className="relative h-10 mt-6">
           <select
-            id="voucherCategory"
-            className="h-fit w-full rounded-[7px] border border-gray-500 bg-transparent px-3 py-2.5 text-gray-500 font-sans font-medium outline outline-0 transition-all placeholder-shown:border focus:outline-0"
-            onChange={(e) => setVoucherCategory(e.target.value)}
+            id="kategori"
+            className={
+              formik.errors.kategori && formik.touched.kategori
+                ? "h-fit ps-2 w-full rounded-[7px] border border-error-500 bg-transparent py-2.5 font-sans text-sm font-normal text-blue-green-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-error-500 placeholder-shown:border-t-error-500 focus:border-2 focus:border-error-500 focus:outline-0 "
+                : "h-fit w-full rounded-[7px] border border-green-400 bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-green-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-green-400 placeholder-shown:border-t-green-400 focus:border-2 focus:border-green-400 focus:outline-0 "
+            }
+            onChange={handleCategoryChange}
           >
             <option value="" className="">
               Masukan Jenis Voucher
@@ -73,9 +89,14 @@ const TambahVoucher = () => {
             </option>
           </select>
         </div>
+        {formik.errors.kategori && formik.touched.kategori && (
+          <div className="text-error-500 text-p4 ms-3">
+            {formik.errors.kategori}
+          </div>
+        )}
         {/* Date */}
         <div className="grid grid-cols-2 gap-4">
-        <InputField
+          <InputField
             id="voucherStart"
             type="date"
             label="Tanggal Selesai"
@@ -96,35 +117,39 @@ const TambahVoucher = () => {
           />
         </div>
 
-        {/* Min Belanja */}
-        <InputField
-          id="minBelanja"
-          label="Minimum Belanja"
-          touched={formik.touched.minBelanja}
-          errors={formik.errors.minBelanja}
-          values={formik.values.minBelanja}
-          onChange={formik.handleChange}
-        />
+        {voucherCategory == "diskon" && (
+          <>
+            {/* Min Belanja */}
+            <InputField
+              id="minBelanja"
+              label="Minimum Belanja"
+              touched={formik.touched.minBelanja}
+              errors={formik.errors.minBelanja}
+              values={formik.values.minBelanja}
+              onChange={formik.handleChange}
+            />
 
-        {/* Potongan */}
-        <InputField
-          id="potongan"
-          label="Maksimum Potongan Harga"
-          touched={formik.touched.potongan}
-          errors={formik.errors.potongan}
-          values={formik.values.potongan}
-          onChange={formik.handleChange}
-        />
+            {/* Potongan */}
+            <InputField
+              id="potongan"
+              label="Maksimum Potongan Harga"
+              touched={formik.touched.potongan}
+              errors={formik.errors.potongan}
+              values={formik.values.potongan}
+              onChange={formik.handleChange}
+            />
 
-        {/* Diskon */}
-        <InputField
-          id="diskon"
-          label="Diskon"
-          touched={formik.touched.diskon}
-          errors={formik.errors.diskon}
-          values={formik.values.diskon}
-          onChange={formik.handleChange}
-        />
+            {/* Diskon */}
+            <InputField
+              id="diskon"
+              label="Diskon"
+              touched={formik.touched.diskon}
+              errors={formik.errors.diskon}
+              values={formik.values.diskon}
+              onChange={formik.handleChange}
+            />
+          </>
+        )}
 
         {/* Jumlah */}
         <InputField
@@ -151,7 +176,7 @@ const TambahVoucher = () => {
             className="px-8 py-4 bg-green-500 font-semibold text-white rounded-full disabled:bg-green-300 duration-100 hover:bg-green-600"
             type="submit"
             data-te-ripple-init=""
-            // disabled={!(formik.isValid && formik.dirty)}
+            disabled={!(formik.isValid && formik.dirty)}
           >
             Tambah
           </button>

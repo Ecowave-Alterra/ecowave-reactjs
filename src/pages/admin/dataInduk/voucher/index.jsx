@@ -210,21 +210,6 @@ const Voucher = () => {
           </div>
         )}
       </div>
-      {/* Modal */}
-      {showModal && (
-        <Alert onClose={closeModal} variant="danger" message="message" />
-      )}
-      {/* {showModal && (
-        <ModalConfirm
-          title="Modal1 fdfd dfdfetr f hhrtghrtgrg"
-          description="description ini adalahdad dsdssd sdsihteg dsretetg?"
-          labelCancel="Batal"
-          labelConfirm="Lanjut"
-          onCancel={closeModal}
-          onConfirm={closeModal}
-          variant="danger"
-        />
-      )} */}
     </div>
   );
 };

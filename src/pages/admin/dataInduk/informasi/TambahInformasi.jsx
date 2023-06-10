@@ -42,9 +42,10 @@ export default function TambahInformasi() {
               }),
       }),
       onSubmit: async (values) => {
-        alert(JSON.stringify(values, null, 2));
-        console.log(JSON.stringify(values));
-        alert(JSON.stringify(values));
+        // alert(JSON.stringify(values, null, 2));
+        // console.log(JSON.stringify(values));
+        // alert(JSON.stringify(values));
+        console.log(values)
       },
     });
 
