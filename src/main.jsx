@@ -80,7 +80,6 @@ const router = createBrowserRouter(
               <Route path="metode-pembayaran" element={<MetodePembayaran />} />
               <Route path="metode-pembayaran/tambah" element={<TambahMetodePembayaran />} />
               <Route path="metode-pembayaran/ubah" element={<UbahMetodePembayaran />} />
-              <Route path="metode-pengiriman" element={<MetodePengiriman />} />
               <Route path="kategori" element={<Kategori />} />
           </Route>
       </Route>
