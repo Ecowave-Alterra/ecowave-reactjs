@@ -34,7 +34,7 @@ export default function UbahMetodePembayaran() {
     return (
         <>
         <div className="flex flex-row row-gap gap-6 ml-8 my-8">
-            <Link to="/admin/pembayaran/">
+            <Link to="/admin/metode-pembayaran/">
             <ChevronLeftIcon className="w-5 h-5 text-green-500" />
             </Link>
             <h6 className="text-h6 font-medium">Ubah Metode Pembayaran</h6>
@@ -133,7 +133,7 @@ export default function UbahMetodePembayaran() {
                 <button
                 className="text-p3 mb-3 px-6 w-fit inline-block border-green-500 border-solid border-2  text-green-500 rounded-full py-2 text-xs font-medium uppercase leading-normal shadow-[0_4px_9px_-4px_rgba(0,0,0,0.2)] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:outline-none focus:ring-0 active:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)]"
                 data-te-ripple-init=""
-                onClick={() => navigate("/admin/pembayaran")}
+                onClick={() => navigate("/admin/metode-pembayaran")}
                 >
                 Batal
                 </button>

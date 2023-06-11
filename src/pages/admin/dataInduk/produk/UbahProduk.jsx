@@ -1,113 +1,215 @@
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { useRef } from "react";
+import { useCallback, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill/lib";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 import "react-quill/dist/quill.snow.css";
+import { useDropzone } from "react-dropzone";
+import { PencilIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 
-export default function UbahProduk(){
-    const InputImageRef = useRef(null);
-  const ImageRef = useRef(null);
-  const navigate = useNavigate()
-  console.log(ImageRef.current)
+const datauji = {
+  productName: "Botol",
+  kategori: "Kantong",
+  harga: 12000,
+  stok: 30,
+  deskripsi: "<h1>halo</h1>",
+};
+let image = [];
+let edit = false;
+let choosed = "";
 
+export default function UbahProduk() {
+  const navigate = useNavigate();
+  const [display, setDisplay] = useState(image[0]);
+
+  const isThereSameImage = (inputFile) => {
+    for (let i = 0; i < image.length; i++) {
+      if (image[i] == inputFile) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const onDrop = useCallback((acceptedFiles) => {
+    acceptedFiles.forEach((file) => {
+      if (file.type === "image/jpg" || file.type === "image/png") {
+        const reader = new FileReader();
+
+        reader.onabort = () => console.log("file reading was aborted");
+        reader.onerror = () => console.log("file reading has failed");
+        reader.onload = (e) => {
+          if (isThereSameImage(e.target.result) == true) {
+            alert("ada gambar yang sama");
+          } else {
+            if (edit == false) {
+              image.push(e.target.result);
+              setDisplay(e.target.result);
+              choosed = e.target.result;
+            } else {
+              image.map((element, i) => {
+                if (element == choosed) {
+                  alert(i);
+                  image[i] = e.target.result;
+                  choosed = e.target.result;
+                }
+              });
+              edit = false;
+            }
+          }
+        };
+        reader.readAsDataURL(file);
+      } else {
+        alert("gambar tidak valid");
+      }
+    });
+  }, []);
+  const { getRootProps, getInputProps, open } = useDropzone({
+    onDrop,
+    noClick: true,
+  });
 
   const formik = useFormik({
     initialValues: {
-      productName: "",
-      category: "",
-      price: "",
-      stock: "",
-      description: "",
+      productName: [datauji.productName],
+      category: [datauji.kategori],
+      price: [datauji.harga],
+      stock: [datauji.stok],
+      description: [datauji.deskripsi],
     },
     validationSchema: Yup.object({
       productName: Yup.string().required("Nama Produk Tidak Boleh Kosong"),
       category: Yup.string().required("Pilih Salah Satu Kategori"),
       price: Yup.string().required("Harga Produk tidak Boleh Kosong"),
       stock: Yup.string().required("Stok Tidak Boleh Kosong"),
-      description: Yup.string().required("Deskripsi Tidak boleh Kosong")
-      .test("br-check", "Deskripsi Tidak boleh Kosong", (value) => {
-        const strippedHTML = value.replace(/<\/?[^>]+(>|$)/g, "");
-        return strippedHTML.trim().length > 0;
-    }),
+      description: Yup.string().required("Stok Tidak Boleh Kosong"),
     }),
     onSubmit: (e) => {
-      console.log("masuk");
+      console.log(formik.values);
     },
   });
 
-  function ShowImages() {
-    const imgFile = InputImageRef.current.files[0];
-    const reader = new FileReader();
-    reader.onload = e => {
-      ImageRef.current.src = e.target.result;
-    };
-    reader.readAsDataURL(imgFile);
-  }
+  const changeDisplay = (index) => {
+    setDisplay(image[index]);
+    choosed = image[index];
+  };
+
+  const handleEditImage = (open) => {
+    edit = true;
+    alert(edit);
+    open;
+  };
+  const handleDeleteImage = (index) => {
+    image.map((element) => {
+      return element[index] != display;
+    });
+  };
 
   return (
     <>
-      <div className="flex flex-row row-gap items-center gap-6 ml-8 my-8">
+      <div className="flex flex-row row-gap gap-6 ml-8 my-8">
         <Link to="/admin/produk/">
           <ChevronLeftIcon className="w-5 h-5 text-green-500" />
         </Link>
-        <h6 className="text-h6 font-medium">Ubah Produk</h6>
+        <h6 className="text-h6 font-medium">Tambah Produk</h6>
       </div>
-      <div className="lg:flex md:flex-wrap w-full" aria-hidden={ImageRef.current === null}>
-          <label
-            id="dropContainer"
-            hidden
-            className="flex text-p2 lg:w-5/12 py-40 h-fit items-center rounded-3xl border border-gray-300 border-dashed bg-[#D9D9D9]"
-          >
-            <div className="flex-wrap text-center w-full">
-              <button className="bg-gray-50 rounded-full p-3 cursor-default">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="w-6 h-6"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"
-                  />
-                </svg>
-              </button>
-              <div className="space-y-2 ">
-                <label
-                  className="text-base text-green-500 font-semibold cursor-pointer"
-                  htmlFor="doc"
-                >
-                  Klik untuk Mengunggah
-                  <input
-                    type="file"
-                    id="doc"
-                    name="doc"
-                    accept="png, jpg"
-                    ref={InputImageRef}
-                    onChange={ShowImages}
-                    
-                    hidden
-                  />
-                </label>
-                <span className="text-sm text-gray-500">
-                  {" "}
-                  atau seret dan lepas
-                </span>
+      <div className="flex w-full">
+        {image.length == 0 ? (
+          <div className="flex-wrap ms-3 w-5/12">
+            <label
+              id="dropContainer"
+              {...getRootProps({ className: "dropzone" })}
+              className="flex text-p2 w-full py-40 h-fit items-center rounded-3xl border border-gray-300 border-dashed bg-gray-300"
+            >
+              <div className="flex-wrap text-center w-full">
+                <button className="bg-gray-50 rounded-full p-3 cursor-default">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-6 h-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"
+                    />
+                  </svg>
+                </button>
+                <div className="space-y-2 ">
+                  <input {...getInputProps()} hidden />
+                  <label
+                    className="text-base text-green-500 font-semibold cursor-pointer"
+                    onClick={open}
+                  >
+                    Klik untuk Mengunggah
+                  </label>
+                  <span className="text-sm text-gray-500">
+                    {" "}
+                    atau seret dan lepas
+                  </span>
+                </div>
+                <div className="space-y-2 ">
+                  <span className="text-sm text-gray-500">
+                    PNG, atau JPG (maks. 640x312px)
+                  </span>
+                </div>
               </div>
-              <div className="space-y-2 ">
-                <span className="text-sm text-gray-500">
-                  PNG, atau JPG (maks. 640x312px)
-                </span>
-              </div>
+            </label>
+            <div className="flex h-16">
+              <label
+                className="bg-gray-300 flex cursor-pointer place-content-center items-center h-full w-16 mt-3 ms-3 border-2 border-green-500 rounded-2xl"
+                onClick={open}
+              >
+                <h2>.</h2>
+              </label>
+              <label
+                className="flex cursor-pointer place-content-center items-center h-full w-16 mt-3 ms-3 border-2 border-green-500 rounded-2xl"
+                onClick={open}
+              >
+                <PlusIcon className="w-8 h-8 text-green-400" />
+              </label>
             </div>
-          </label>
-        
-        <img width={100} src="" ref={ImageRef} alt="" hidden/>
+          </div>
+        ) : (
+          <div className="flex-wrap relative ms-3 w-5/12">
+            <PencilIcon
+              className="absolute right-20 top-4 align-self-end w-12 h-12 p-3 text-white bg-green-400 hover:bg-green-500 rounded-full"
+              onClick={() => handleEditImage(open())}
+            />
+            <TrashIcon
+              className="absolute right-4 top-4 w-12 h-12 p-3 text-white bg-error-400 hover:bg-error-500 rounded-full"
+              onClick={() => handleDeleteImage()}
+            />
+            <img
+              src={display}
+              alt=""
+              className="h-96 w-full border-2 border-green-500 rounded-2xl"
+            />
+
+            <div className="flex h-16">
+              {image?.map((file, index) => (
+                <img
+                  src={file}
+                  alt=""
+                  onClick={() => changeDisplay(index)}
+                  className="cursor-pointer w-16 h-full mt-3 ms-3 border-2 border-green-500 rounded-2xl"
+                />
+              ))}
+              {image.length <= 4 ? (
+                <label
+                  className="flex cursor-pointer place-content-center items-center h-full w-16 mt-3 ms-3 border-2 border-green-500 rounded-2xl"
+                  onClick={open}
+                >
+                  <PlusIcon className="w-8 h-8 text-green-400" />
+                </label>
+              ) : null}
+            </div>
+          </div>
+        )}
 
         <label id="dropContainer" className="lg:w-7/12 items-center gap-3">
           <div className="sm:px-10 sm:mt-0 md:px-10 md:mt-52 lg:mt-0  w-full min-w-[300px]">
@@ -154,6 +256,7 @@ export default function UbahProduk(){
                           : "h-fit w-full rounded-[7px] border border-green-400 bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-green-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-green-400 placeholder-shown:border-t-green-400 focus:border-2 focus:border-green-400 focus:outline-0 "
                       }
                       onChange={formik.handleChange}
+                      value={formik.values.category}
                     >
                       <option value="">--Pilih Salah Satu--</option>
                       <option value="Makanan">Kantong</option>
@@ -166,7 +269,6 @@ export default function UbahProduk(){
                     {formik.errors.category}
                   </div>
                 )}
-
                 {/*Price and Stock input*/}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="relative" data-te-input-wrapper-init="">
@@ -232,14 +334,21 @@ export default function UbahProduk(){
                 {/*Description Input*/}
                 <div className="relative" data-te-input-wrapper-init="">
                   <div className="relative h-40 mt-8">
-                    <label className="text-p2 text-green-500 mb-3" htmlFor="description">
-                      Konten Informasi
+                    <label
+                      className={
+                        formik.errors.description && formik.touched.description
+                          ? "text-p2 text-error-500 mb-3"
+                          : "text-p2 text-green-500 mb-3"
+                      }
+                      htmlFor="description"
+                    >
+                      Deskripsi
                     </label>
                     <ReactQuill
                       id="description"
+                      // value={formik.values.description}
                       className="h-32"
                       theme="snow"
-                      value={formik.values.description}
                       onChange={formik.handleChange}
                     />
                   </div>
@@ -268,9 +377,9 @@ export default function UbahProduk(){
                       className="text-p3 ms-3 mb-3 w-fit px-6 inline-block bg-green-500 rounded-full py-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_rgba(0,0,0,0.2)] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:outline-none focus:ring-0 active:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] disabled:bg-green-300"
                       type="submit"
                       data-te-ripple-init=""
-                      disabled={!(formik.dirty && formik.isValid)}
+                      disabled={!formik.dirty}
                     >
-                      Ubah
+                      Tambah
                     </button>
                   </div>
                 </div>

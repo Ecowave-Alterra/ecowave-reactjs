@@ -7,6 +7,7 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
+import LoggedIn, { LoggedOut } from "./utils/privateRoute";
 
 //layout
 import AdminRoot from "./routes/AdminRoot";
@@ -54,33 +55,40 @@ import UbahMetodePembayaran from "./pages/admin/dataInduk/metodePembayaran/UbahM
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
-      <Route path="/" element={<LandingPage />} />
-      <Route path="/admin" element={<AdminRoot />}>
-        <Route index element={<Dashboard />} />
-        <Route path="pesanan" element={<Pesanan />} />
-        <Route path="pesanan/detail" element={<DetailPesanan />} />
-        <Route path="ulasan" element={<Ulasan />} />
-        <Route path="ulasan/detail" element={<DetailUlasan />} />
-        {/* Route data induk */}
-          <Route path="produk" element={<Produk />} />
-          <Route path="produk/tambah" element={<TambahProduk />} />
-          <Route path="produk/ubah" element={<UbahProduk />} />
-          <Route path="informasi" element={<Informasi />} />
-          <Route path="informasi/tambah" element={<TambahInformasi />} />
-          <Route path="informasi/ubah" element={<UbahInformasi />} />
-          <Route path="informasi/:id" element={<DetailInformasi />} />
-          <Route path="opsi" element={<OpsiPengiriman />} />
-          <Route path="voucher" element={<Voucher />} />
-          <Route path="voucher/tambah" element={<TambahVoucher />} />
-          <Route path="voucher/ubah" element={<UbahVoucher />} />
-          <Route path="pembayaran" element={<MetodePembayaran />} />
-          <Route path="pembayaran/tambah" element={<TambahMetodePembayaran />} />
-          <Route path="pembayaran/ubah" element={<UbahMetodePembayaran />} />
-          <Route path="metode-pengiriman" element={<MetodePengiriman />} />
-          <Route path="kategori" element={<Kategori />} />
+      <Route element={<LoggedIn/>}>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<Login />} />
       </Route>
-      <Route path="/login" element={<Login />} />
-      <Route path="*" element={<NotFound />} />
+      <Route element={<LoggedOut/>}>
+        <Route path="/admin" element={<AdminRoot />}>
+            <Route index element={<Dashboard />} />
+            <Route path="pesanan" element={<Pesanan />} />
+            <Route path="pesanan/detail" element={<DetailPesanan />} />
+            <Route path="ulasan" element={<Ulasan />} />
+            <Route path="ulasan/detail" element={<DetailUlasan />} />
+            {/* Route data induk */}
+              <Route path="produk" element={<Produk />} />
+              <Route path="produk/tambah" element={<TambahProduk />} />
+              <Route path="produk/ubah" element={<UbahProduk />} />
+              <Route path="informasi" element={<Informasi />} />
+              <Route path="informasi/tambah" element={<TambahInformasi />} />
+              <Route path="informasi/ubah" element={<UbahInformasi />} />
+              <Route path="informasi/:id" element={<DetailInformasi />} />
+              <Route path="opsi" element={<OpsiPengiriman />} />
+              <Route path="voucher" element={<Voucher />} />
+              <Route path="voucher/tambah" element={<TambahVoucher />} />
+              <Route path="voucher/ubah" element={<UbahVoucher />} />
+              <Route path="metode-pembayaran" element={<MetodePembayaran />} />
+              <Route path="metode-pembayaran/tambah" element={<TambahMetodePembayaran />} />
+              <Route path="metode-pembayaran/ubah" element={<UbahMetodePembayaran />} />
+              <Route path="metode-pengiriman" element={<MetodePengiriman />} />
+              <Route path="kategori" element={<Kategori />} />
+          </Route>
+      </Route>
+      
+        
+        <Route path="*" element={<NotFound />} />
+      
     </Route>
   )
 );

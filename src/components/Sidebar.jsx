@@ -7,6 +7,7 @@ import {
 } from "@heroicons/react/24/outline";
 import Logo from "../assets/img/logo.png";
 import { NavLink } from "react-router-dom";
+import { removeAuthCookie } from '../utils/cookies';
 
 
 export default function Sidebar({ children }) {
@@ -20,6 +21,7 @@ export default function Sidebar({ children }) {
     { name: 'Informasi', link: '/admin/informasi' },
     { name: 'Opsi Pengiriman', link: '/admin/opsi' },
     { name: "Voucher", link: "/admin/voucher" },
+    { name: "Metode Pembayaran", link: "/admin/metode-pembayaran" },
     { name: "Metode Pengiriman", link: "/admin/metode-pengiriman" },
     { name: "Kategori", link: "/admin/kategori" },
   ];
@@ -39,7 +41,8 @@ export default function Sidebar({ children }) {
   };
 
   const handleLogout = () => {
-    console.log("Logout");
+    removeAuthCookie()
+    window.location.reload()
   };
 
 
