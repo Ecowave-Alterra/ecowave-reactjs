@@ -126,6 +126,7 @@ export default function Sidebar({ children }) {
             >
               {subMenus.map((menu) => (
                 <NavLink
+                  key={menu.name+1}
                   onClick={() => setAction(true)}
                   to={menu.link}
                   className={({ isActive }) =>
