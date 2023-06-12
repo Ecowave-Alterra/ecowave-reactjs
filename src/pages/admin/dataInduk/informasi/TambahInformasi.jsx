@@ -47,6 +47,7 @@ export default function TambahInformasi() {
             alert(JSON.stringify(values));
         },
     });
+    // console.log(import.meta.env.VITE_API_URL);
 
     const handleSaveDraft = () => {
         // check image size
