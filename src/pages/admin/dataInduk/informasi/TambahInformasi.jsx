@@ -17,35 +17,36 @@ export default function TambahInformasi() {
     const [imageRef, setImageRef] = useState(null);
 
     const formik = useFormik({
-        // validateOnChange: true,
-        initialValues: {
-            image: "",
-            judul: "",
-            konten: "",
-        },
-        validationSchema: Yup.object({
-            image: Yup.mixed().required("Gambar harus diunggah"),
-            // .test("fileSize", "Ukuran file terlalu besar", (value) => {
-            //     return !value || (value && value.size <= 4 * 1024 * 1024); // Maksimum 4MB
-            // }),
-            judul: Yup.string()
-                .max(
-                    65,
-                    "Mohon maaf, entri Anda melebihi batas maksimum 65 karakter"
-                )
-                .required("Field harus diisi"),
-            konten: Yup.string()
-                .required("Field harus diisi")
-                .test("br-check", "Field harus diisi", (value) => {
-                    const strippedHTML = value.replace(/<\/?[^>]+(>|$)/g, ""); // Menghapus semua tag HTML dari konten
-                    return strippedHTML.trim().length > 0; // Validasi konten setelah menghapus tag HTML
-                }),
-        }),
-        onSubmit: (values) => {
-            // alert(JSON.stringify(values, null, 2));
-            console.log(JSON.stringify(values));
-            alert(JSON.stringify(values));
-        },
+      // validateOnChange: true,
+      initialValues: {
+        image: "",
+        judul: "",
+        konten: "",
+      },
+      validationSchema: Yup.object({
+          image: Yup.mixed().required("Gambar harus diunggah"),
+          // .test("fileSize", "Ukuran file terlalu besar", (value) => {
+          //     return !value || (value && value.size <= 4 * 1024 * 1024); // Maksimum 4MB
+          // }),
+          judul: Yup.string()
+              .max(
+                  65,
+                  "Mohon maaf, entri Anda melebihi batas maksimum 65 karakter"
+              )
+              .required("Field harus diisi"),
+          konten: Yup.string()
+              .required("Field harus diisi")
+              .test("br-check", "Field harus diisi", (value) => {
+                  const strippedHTML = value.replace(/<\/?[^>]+(>|$)/g, ""); // Menghapus semua tag HTML dari konten
+                  return strippedHTML.trim().length > 0; // Validasi konten setelah menghapus tag HTML
+              }),
+      }),
+      onSubmit: async (values) => {
+        // alert(JSON.stringify(values, null, 2));
+        // console.log(JSON.stringify(values));
+        // alert(JSON.stringify(values));
+        console.log(values)
+      },
     });
     // console.log(import.meta.env.VITE_API_URL);
 

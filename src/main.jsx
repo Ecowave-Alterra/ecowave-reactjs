@@ -38,7 +38,6 @@ import UbahProduk from "./pages/admin/dataInduk/produk/UbahProduk";
 import DetailUlasan from "./pages/admin/ulasan/DetailUlasan";
 
 // Pengiriman
-import MetodePengiriman from "./pages/admin/dataInduk/metodePengiriman";
 import OpsiPengiriman from "./pages/admin/dataInduk/opsi";
 
 // Voucher & Kategori

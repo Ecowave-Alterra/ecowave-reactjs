@@ -22,7 +22,6 @@ export default function Sidebar({ children }) {
     { name: 'Opsi Pengiriman', link: '/admin/opsi' },
     { name: "Voucher", link: "/admin/voucher" },
     { name: "Metode Pembayaran", link: "/admin/metode-pembayaran" },
-    { name: "Metode Pengiriman", link: "/admin/metode-pengiriman" },
     { name: "Kategori", link: "/admin/kategori" },
   ];
 
@@ -126,6 +125,7 @@ export default function Sidebar({ children }) {
             >
               {subMenus.map((menu) => (
                 <NavLink
+                  key={menu.name+1}
                   onClick={() => setAction(true)}
                   to={menu.link}
                   className={({ isActive }) =>

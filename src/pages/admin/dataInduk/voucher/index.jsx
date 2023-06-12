@@ -4,12 +4,18 @@ import { Link, useNavigate } from "react-router-dom";
 // Komponen
 import ButtonGroup from "../../../../components/ButtonGroup";
 
-
 // Ikon & Gambar
-import {  PencilIcon, TrashIcon, PlusSmallIcon } from "@heroicons/react/24/outline";
+import {
+  PencilIcon,
+  TrashIcon,
+  PlusSmallIcon,
+} from "@heroicons/react/24/outline";
 import Empty from "../../../../assets/img/Empty Voucher.png";
+import ModalConfirm from "../../../../components/ModalConfirm";
+import Alert from "../../../../components/Alert";
 
 const Voucher = () => {
+  const [showModal, setShowModal] = useState(true);
   const [itemList, setItemList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const recordPerPage = 10;
@@ -23,6 +29,7 @@ const Voucher = () => {
     "Gratis Ongkir",
     "Diskon Belanja",
   ]);
+
   const navigate = useNavigate();
   const getDataByStatus = (event) => {
     console.log(event.target.name);
@@ -53,18 +60,22 @@ const Voucher = () => {
     setCurrentPage(id);
   };
 
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
   const voucher = [
     {
-      jenis: 'Gratis Ongkir',
+      jenis: "Gratis Ongkir",
       sisa: 1000,
-      mulai: '27 Mei 2023',
-      brakhir: '1 jan 2024',
+      mulai: "27 Mei 2023",
+      brakhir: "1 jan 2024",
     },
     {
-      jenis: 'Diskon Belanja',
+      jenis: "Diskon Belanja",
       sisa: 1000,
-      mulai: '27 Mei 2023',
-      brakhir: '1 jan 2024',
+      mulai: "27 Mei 2023",
+      brakhir: "1 jan 2024",
     },
   ];
 
@@ -93,13 +104,16 @@ const Voucher = () => {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto border-[1px] border-gray-500 rounded-md relative mt-3">
+      <div className="relative overflow-x-auto mt-3">
         <table className="w-full text-left whitespace-nowrap table-auto">
           <thead className="bg-green-500 text-white">
             <tr>
               {columns &&
-                columns.map((head) => (
-                  <th className="py-[14px] px-[10px] text-p2 font-medium text-center">
+                columns.map((head, i) => (
+                  <th
+                    key={i}
+                    className="py-[14px] px-[10px] text-p2 font-medium text-center"
+                  >
                     {head.header}
                   </th>
                 ))}
@@ -112,13 +126,20 @@ const Voucher = () => {
                   <td className="py-[18px] px-[10px]">
                     {firstIndex + index + 1}.
                   </td>
-                  <td className="py-[18px] px-[10px]">{row.jenis}</td>
-                  <td className="py-[18px] px-[10px]">{row.sisa}</td>
+                  <td className="py-[18px] px-[10px] min-w-[150px] text-left">
+                    {row.jenis}
+                  </td>
+                  <td className="py-[18px] px-[10px] min-w-[70px]">
+                    {row.sisa}
+                  </td>
                   <td className="py-[18px] px-[10px]">{row.mulai}</td>
                   <td className="py-[18px] px-[10px]">{row.brakhir}</td>
                   <td className="py-[18px] px-[10px] text-center flex space-x-2 justify-center">
-                  <div className="flex">
-                      <Link to="/admin/voucher/ubah" className="bg-green-50 rounded-full mx-2">
+                    <div className="flex">
+                      <Link
+                        to="/admin/voucher/ubah"
+                        className="bg-green-50 rounded-full mx-2"
+                      >
                         <PencilIcon className="w-5 h-5 text-green-500" />
                       </Link>
                       <div className="bg-green-50 rounded-full mx-2">
