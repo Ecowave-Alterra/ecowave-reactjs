@@ -6,6 +6,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import Cookies from "js-cookie";
+import { mutate } from "swr";
 
 // Komponen
 import Search from "../../../components/Search";
@@ -18,46 +19,66 @@ import { EyeIcon } from "@heroicons/react/24/outline";
 import Empty from "../../../assets/img/File Not Found.png";
 
 export default function Ulasan() {
-  const [search, setSearch] = useState();
+  let [searchParams, setSearchParams] = useSearchParams();
+  const [searchChanges, setSearchChanges] = useState();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  // const swrKey = `/admin/reviews?page=${pageValue}`;
-  const swrKey = `/admin/reviews`;
+  const searchValue = searchParams.get("search") || "";
+  const pageValue = searchParams.get("page") || 1;
+
+  const swrKey = `admin/reviews/search?search=${searchValue}&page=${pageValue}`;
 
   const { data, isLoading, error } = useCrud(swrKey);
   if (error) return <div>error</div>;
-  console.log(data);
-
-  const handleChange = (e) => {
-    setSearch(e.target.value);
-  };
-
-  const getDataStatus = (e) => {
-    console.log(e.target.name);
-  };
+  console.log("data", data);
+  console.log("error", error);
 
   // Fungsi untuk pagination
-  const prevPage = () => {
-    if (currentPage !== firstIndex) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-  const nextPage = () => {
-    if (currentPage !== lastIndex) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-  const changePage = (id) => {
-    setCurrentPage(id);
+  const updatePagination = (newPaginationValue) => {
+    setSearchParams((params) => {
+      const updatedParams = new URLSearchParams(params.toString());
+      updatedParams.set("page", newPaginationValue);
+      return updatedParams;
+    });
   };
 
+  // pagination handling
+  const prevPage = () => {
+    updatePagination(parseInt(pageValue) - 1);
+  };
+  const nextPage = () => {
+    updatePagination(parseInt(pageValue) + 1);
+  };
+  const changePage = (id) => {
+    updatePagination(id);
+  };
+
+  // Fungsi Handler Search
+  const updateSearchQuery = (newSearchValue) => {
+    setSearchParams((params) => {
+      const updatedParams = new URLSearchParams(params.toString());
+      updatedParams.set("search", newSearchValue);
+      return updatedParams;
+    });
+  };
+
+  // Handle Search on Enter
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
-      setSearch(event.target.value);
+      setSearchChanges(event.target.value);
     }
+  };
+
+  const updateURL = () => {
+    navigate({
+      pathname: location.pathname,
+      search: searchParams.toString(),
+    });
   };
 
   useEffect(() => {
-    // setItemList(data);
+    
   }, []);
 
   // Table Setup
@@ -74,7 +95,7 @@ export default function Ulasan() {
     <div className="flex-row px-5 py-10">
       {/* header */}
       <div className="text-h4 mb-2">Ulasan</div>
-      <div className="text-h4 mb-2">{search}</div>
+      <div className="text-h4 mb-2">{searchChanges}</div>
       {/* Search */}
       <div className="mt-7">
         <Search
@@ -118,7 +139,7 @@ export default function Ulasan() {
                       {review.Name}
                     </td>
                     <td className="py-[18px] px-[10px] min-w-[100px]">
-                      {review.Name}
+                      {review.ProductCategory}
                     </td>
                     <td className="py-[18px] px-[10px] min-w-[100px] w-[200px]">
                       {review.ReviewQty}
@@ -135,15 +156,16 @@ export default function Ulasan() {
         </table>
 
         {/* Empty */}
-        {!data && (
-          <EmptyData
-            image={Empty}
-            message="No. Resi yang Anda cari tidak ditemukan"
-          />
-        )}
+        {!data ||
+          (error && (
+            <EmptyData
+              image={Empty}
+              message="No. Resi yang Anda cari tidak ditemukan"
+            />
+          ))}
       </div>
       {/* Pagination */}
-      {data && (
+      {data && data.Status == 200 && (
         <Pagination
           currentPage={data.Page}
           totalPage={data.TotalPage}

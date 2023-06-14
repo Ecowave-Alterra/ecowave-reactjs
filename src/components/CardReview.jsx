@@ -3,12 +3,16 @@ import ReactStars from "react-star-ratings";
 
 const CardReview = ({
   key,
-  nomer,
-  produk,
-  rating,
-  reviewer,
-  imgs,
-  komentar,
+  productName,
+  reviewerName,
+  reviewerPhoto,
+  transactionId,
+  avgRating,
+  expeditionRating,
+  productRating,
+  productPhoto,
+  productVideo,
+  comment,
 }) => {
   return (
     <>
@@ -17,25 +21,31 @@ const CardReview = ({
         <td className="py-11 flex-col align-top pl-4 w-[400px] min-w-[100px]">
           <div className="flex">
             <h2 className="text-p3 font-medium">No Pesanan</h2>
-            <h2 className="text-p3 font-medium ml-4">{nomer}</h2>
+            <h2 className="text-p3 font-medium ml-4">{transactionId}</h2>
           </div>
 
           {/* Reviewer Sections */}
           <div className="flex mt-8 items-center">
-            {reviewer.img}
-            <div className="ml-2 text-p4 font-medium">{reviewer.nama}</div>
+            <img
+              src={reviewerPhoto}
+              alt="User Photo"
+              className="w-[100%] max-w-[30px] h-[30px] mx-1 rounded-full object-cover"
+            />
+            <div className="ml-2 text-p4 font-medium">{reviewerName}</div>
           </div>
-          <div className="flex">
-            {imgs.map((img) => (
-              <img
-                src={img}
-                alt="Gambar Produk"
-                className="max-w-[190px] max-h-[166px]"
-              />
-            ))}
+          <div className="flex my-4">
+            <img
+              src={productPhoto}
+              alt="Gambar Produk"
+              className="max-w-[190px] max-h-[166px] mx-1"
+            />
+            <video className="max-w-[190px] max-h-[166px]" controls >
+              <source src={productVideo} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
           </div>
           {/* Comment section */}
-          <h1 className="text-p2 font-medium w-[326px]">{komentar}</h1>
+          <h1 className="text-p2 font-medium w-[326px]">{comment}</h1>
         </td>
 
         {/* Column 2 */}
@@ -43,7 +53,7 @@ const CardReview = ({
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-p2 font-medium">Nilai Keseluruhan</h1>
             <ReactStars
-              rating={rating}
+              rating={avgRating}
               starRatedColor="#FACC15"
               numberOfStars={5}
               name="rating"
@@ -54,7 +64,7 @@ const CardReview = ({
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-p2 font-medium">Kuaitas Produk</h1>
             <ReactStars
-              rating={rating}
+              rating={productRating}
               starRatedColor="#FACC15"
               numberOfStars={5}
               name="rating"
@@ -65,7 +75,7 @@ const CardReview = ({
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-p2 font-medium">Layanan Pengiriman</h1>
             <ReactStars
-              rating={rating}
+              rating={expeditionRating}
               starRatedColor="#FACC15"
               numberOfStars={5}
               name="rating"
@@ -77,7 +87,7 @@ const CardReview = ({
 
         {/* Column 3 */}
         <td className="flex align-top px-[10px]">
-          <h1 className="font-medium mt-20 text-p2">{produk}</h1>
+          <h1 className="font-medium mt-20 text-p2">{productName}</h1>
         </td>
       </tr>
     </>

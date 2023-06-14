@@ -1,7 +1,7 @@
 import Cookies from "js-cookie";
 import useSWR from "swr";
 
-const baseUrl = "https://3ae2497a-d357-4070-aab1-0a90e9aa61fb.mock.pstmn.io";
+const baseUrl = "https://3ae2497a-d357-4070-aab1-0a90e9aa61fb.mock.pstmn.io/";
 
 async function fetchMock(url) {
     const token = Cookies.get("token");
