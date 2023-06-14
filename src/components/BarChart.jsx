@@ -56,15 +56,10 @@ const BarChart = () => {
     labels,
     datasets: [
       {
-        label: "Dataset 1",
+        label: "Pendapatan",
         data: labels.map(() => faker.datatype.number({ min: 0, max: 100 })),
         backgroundColor: "#14B885",
-      },
-      {
-        label: "Dataset 2",
-        data: labels.map(() => faker.datatype.number({ min: 0, max: 100 })),
-        backgroundColor: "#EF372A",
-      },
+      }
     ],
   };
 

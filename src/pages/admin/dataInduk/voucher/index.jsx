@@ -13,6 +13,8 @@ import {
 import Empty from "../../../../assets/img/Empty Voucher.png";
 import ModalConfirm from "../../../../components/ModalConfirm";
 import Alert from "../../../../components/Alert";
+import Pagination from "../../../../components/Pagination";
+import EmptyData from "../../../../components/EmptyData";
 
 const Voucher = () => {
   const [showModal, setShowModal] = useState(true);
@@ -105,7 +107,7 @@ const Voucher = () => {
 
       {/* Table */}
       <div className="relative overflow-x-auto mt-3">
-        <table className="w-full text-left whitespace-nowrap table-auto">
+        <table className="w-full min-w-[1000px] text-p4 text-left text-black">
           <thead className="bg-green-500 text-white">
             <tr>
               {columns &&
@@ -152,64 +154,21 @@ const Voucher = () => {
           </tbody>
         </table>
 
-        {/* Pagination */}
-        {records.length >= 1 && (
-          <div className="flex justify-between w-full py-4">
-            <div>
-              <p className="text-p2 font-normal px-5 py-3 text-gray-500">{`Halaman ${currentPage} dari ${nPage}`}</p>
-            </div>
-            <nav>
-              <ul className="list-style-none flex">
-                <li>
-                  <a
-                    className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold  ${
-                      currentPage === 1 ? "text-gray-300" : "text-green-500"
-                    }`}
-                    onClick={currentPage === 1 ? null : prevPage}
-                  >
-                    Previous
-                  </a>
-                </li>
-                {numbers.map((n, i) => (
-                  <li key={i}>
-                    <p
-                      className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold rounded-full text-green-500 ${
-                        currentPage === n
-                          ? "bg-green-500 text-white"
-                          : "bg-green-50"
-                      }`}
-                      onClick={() => changePage(n)}
-                    >
-                      {n}
-                    </p>
-                  </li>
-                ))}
-
-                <li>
-                  <a
-                    className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold  ${
-                      currentPage === nPage ? "text-gray-300" : "text-green-500"
-                    }`}
-                    onClick={currentPage === nPage ? null : nextPage}
-                  >
-                    Next
-                  </a>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        )}
-
         {/* Empty */}
         {records.length == 0 && (
-          <div className="py-20">
-            <img src={Empty} className="h-56 mx-auto" />
-            <p className="text-p3 mt-8 font-semibold text-gray-500 text-center">
-              Belum ada list voucher
-            </p>
-          </div>
+          <EmptyData image={Empty} message="Belum ada list voucher" />
         )}
       </div>
+      {/* Pagination */}
+      {records.length >= 1 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPage={nPage}
+          onPrev={prevPage}
+          onChange={changePage}
+          onNext={nextPage}
+        />
+      )}
     </div>
   );
 };

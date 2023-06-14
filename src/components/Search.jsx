@@ -1,6 +1,6 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
-const Search = ({ id, placeholder, onChange }) => (
+const Search = ({ id, placeholder, onChange, handleKeyDown }) => (
     <div className="container flex items-center">
         <div className="relative">
             <div className="absolute top-4 left-3">
@@ -12,6 +12,7 @@ const Search = ({ id, placeholder, onChange }) => (
                 id={id}
                 placeholder={placeholder}
                 onChange={onChange}
+                onKeyDown={handleKeyDown}
             />
         </div>
     </div>

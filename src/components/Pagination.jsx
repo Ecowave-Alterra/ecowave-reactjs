@@ -1,10 +1,10 @@
 import React from "react";
 
-const Pagination = ({}) => {
+const Pagination = ({currentPage, totalPage, onPrev, onNext, onChange }) => {
   return (
     <div className="flex justify-between w-full py-4">
       <div>
-        <p className="text-p2 font-normal px-5 py-3 text-gray-500">{`Halaman ${currentPage} dari ${nPage}`}</p>
+        <p className="text-p2 font-normal px-5 py-3 text-gray-500">{`Halaman ${currentPage} dari ${totalPage}`}</p>
       </div>
       <nav>
         <ul className="list-style-none flex">
@@ -13,18 +13,18 @@ const Pagination = ({}) => {
               className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold  ${
                 currentPage === 1 ? "text-gray-300" : "text-green-500"
               }`}
-              onClick={currentPage === 1 ? null : prevPage}
+              onClick={currentPage === 1 ? null : onPrev}
             >
               Previous
             </a>
           </li>
-          {numbers.map((n, i) => (
+          {[...Array(totalPage + 1).keys()].slice(1).map((n, i) => (
             <li key={i}>
               <p
                 className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold rounded-full text-green-500 ${
                   currentPage === n ? "bg-green-500 text-white" : "bg-green-50"
                 }`}
-                onClick={() => changePage(n)}
+                onClick={() => onChange(n)}
               >
                 {n}
               </p>
@@ -34,9 +34,9 @@ const Pagination = ({}) => {
           <li>
             <a
               className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold  ${
-                currentPage === nPage ? "text-gray-300" : "text-green-500"
+                currentPage === totalPage ? "text-gray-300" : "text-green-500"
               }`}
-              onClick={currentPage === nPage ? null : nextPage}
+              onClick={currentPage === totalPage ? null : onNext}
             >
               Next
             </a>

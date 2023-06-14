@@ -64,7 +64,8 @@ const router = createBrowserRouter(
                     <Route path="pesanan" element={<Pesanan />} />
                     <Route path="pesanan/detail" element={<DetailPesanan />} />
                     <Route path="ulasan" element={<Ulasan />} />
-                    <Route path="ulasan/detail" element={<DetailUlasan />} />
+                    <Route path="ulasan/:reviewId" element={<DetailUlasan />} />
+
                     {/* Route data induk */}
                     <Route path="produk" element={<Produk />} />
                     <Route path="produk/tambah" element={<TambahProduk />} />
@@ -94,10 +95,6 @@ const router = createBrowserRouter(
                     <Route
                         path="metode-pembayaran/ubah"
                         element={<UbahMetodePembayaran />}
-                    />
-                    <Route
-                        path="metode-pengiriman"
-                        element={<MetodePengiriman />}
                     />
                     <Route path="kategori" element={<Kategori />} />
                 </Route>

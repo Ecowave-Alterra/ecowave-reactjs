@@ -1,26 +1,31 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import {
+  useNavigate,
+  Link,
+  useSearchParams,
+  useLocation,
+} from "react-router-dom";
+import Cookies from "js-cookie";
 
 // Komponen
-import ButtonGroup from "../../../components/ButtonGroup";
 import Search from "../../../components/Search";
+import Pagination from "../../../components/Pagination";
+import EmptyData from "../../../components/EmptyData";
+import useCrud from "../../../hooks/FetchMockServer";
 
 // Ikon & Gambar
 import { EyeIcon } from "@heroicons/react/24/outline";
 import Empty from "../../../assets/img/File Not Found.png";
 
 export default function Ulasan() {
-  const [tabMenu, setTabMenu] = useState(["Semua", "Perabot", "Kantong"]);
-  const [itemList, setItemList] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const recordPerPage = 10;
-  const lastIndex = currentPage * recordPerPage;
-  const firstIndex = lastIndex - recordPerPage;
-  const records = itemList.slice(firstIndex, lastIndex);
-  const nPage = Math.ceil(itemList.length / recordPerPage);
-  const numbers = [...Array(nPage + 1).keys()].slice(1);
+  const [search, setSearch] = useState();
 
-  const [search, setSearch] = useState([]);
+  // const swrKey = `/admin/reviews?page=${pageValue}`;
+  const swrKey = `/admin/reviews`;
+
+  const { data, isLoading, error } = useCrud(swrKey);
+  if (error) return <div>error</div>;
+  console.log(data);
 
   const handleChange = (e) => {
     setSearch(e.target.value);
@@ -29,193 +34,6 @@ export default function Ulasan() {
   const getDataStatus = (e) => {
     console.log(e.target.name);
   };
-
-  const data = [
-    {
-      no: "010123",
-      nama: "Totebag",
-      kategori: "Perabot",
-      stok: 20,
-      harga: "Rp. 35.000",
-      status: "Tersedia",
-    },
-    {
-      no: "010124",
-      nama: "Gelas",
-      kategori: "Perabot",
-      stok: 20,
-      harga: "Rp. 35.000",
-      status: "Tersedia",
-    },
-    {
-      no: "010125",
-      nama: "Botol",
-      kategori: "Perabot",
-      stok: 20,
-      harga: "Rp. 35.000",
-      status: "Habis",
-    },
-    {
-      no: "010125",
-      nama: "BotolAqua",
-      kategori: "Perabot",
-      stok: 20,
-      harga: "Rp. 35.000",
-      status: "Habis",
-    },
-    {
-      no: "010125",
-      nama: "BotolAqua",
-      kategori: "Perabot",
-      stok: 20,
-      harga: "Rp. 35.000",
-      status: "Habis",
-    },
-    {
-      no: "010125",
-      nama: "BotolAqua",
-      kategori: "Perabot",
-      stok: 20,
-      harga: "Rp. 35.000",
-      status: "Habis",
-    },
-    {
-      no: "010125",
-      nama: "BotolAqua",
-      kategori: "Perabot",
-      stok: 20,
-      harga: "Rp. 35.000",
-      status: "Habis",
-    },
-    {
-      no: "010125",
-      nama: "BotolAqua",
-      kategori: "Perabot",
-      stok: 20,
-      harga: "Rp. 35.000",
-      status: "Habis",
-    },
-    {
-      no: "010125",
-      nama: "BotolAqua",
-      kategori: "Perabot",
-      stok: 20,
-      harga: "Rp. 35.000",
-      status: "Habis",
-    },
-    {
-      no: "010125",
-      nama: "BotolAqua",
-      kategori: "Perabot",
-      stok: 20,
-      harga: "Rp. 35.000",
-      status: "Habis",
-    },
-    {
-      no: "010125",
-      nama: "BotolAqua",
-      kategori: "Perabot",
-      stok: 20,
-      harga: "Rp. 35.000",
-      status: "Habis",
-    },
-    {
-      no: "010125",
-      nama: "BotolAqua",
-      kategori: "Perabot",
-      stok: 20,
-      harga: "Rp. 35.000",
-      status: "Habis",
-    },
-    {
-      no: "010125",
-      nama: "BotolAqua",
-      kategori: "Perabot",
-      stok: 20,
-      harga: "Rp. 35.000",
-      status: "Habis",
-    },
-    {
-      no: "010125",
-      nama: "BotolAqua",
-      kategori: "Perabot",
-      stok: 20,
-      harga: "Rp. 35.000",
-      status: "Habis",
-    },
-    {
-      no: "010125",
-      nama: "BotolAqua",
-      kategori: "Perabot",
-      stok: 20,
-      harga: "Rp. 35.000",
-      status: "Habis",
-    },
-    {
-      no: "010125",
-      nama: "BotolAqua",
-      kategori: "Perabot",
-      stok: 20,
-      harga: "Rp. 35.000",
-      status: "Habis",
-    },
-    {
-      no: "010125",
-      nama: "BotolAqua",
-      kategori: "Perabot",
-      stok: 20,
-      harga: "Rp. 35.000",
-      status: "Habis",
-    },
-    {
-      no: "010125",
-      nama: "BotolAqua",
-      kategori: "Perabot",
-      stok: 20,
-      harga: "Rp. 35.000",
-      status: "Habis",
-    },
-    {
-      no: "010125",
-      nama: "BotolAqua",
-      kategori: "Perabot",
-      stok: 20,
-      harga: "Rp. 35.000",
-      status: "Habis",
-    },
-    {
-      no: "010125",
-      nama: "BotolAqua",
-      kategori: "Perabot",
-      stok: 20,
-      harga: "Rp. 35.000",
-      status: "Habis",
-    },
-    {
-      no: "010125",
-      nama: "BotolAqua",
-      kategori: "Perabot",
-      stok: 20,
-      harga: "Rp. 35.000",
-      status: "Habis",
-    },
-    {
-      no: "010125",
-      nama: "BotolAqua",
-      kategori: "Perabot",
-      stok: 20,
-      harga: "Rp. 35.000",
-      status: "Habis",
-    },
-  ];
-
-  const columns = [
-    { header: "No." },
-    { header: "Item ID" },
-    { header: "Produk" },
-    { header: "Ulasan Diterima" },
-    { header: "Tindakan" },
-  ];
 
   // Fungsi untuk pagination
   const prevPage = () => {
@@ -232,127 +50,108 @@ export default function Ulasan() {
     setCurrentPage(id);
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      setSearch(event.target.value);
+    }
+  };
+
   useEffect(() => {
-    setItemList(data);
+    // setItemList(data);
   }, []);
+
+  // Table Setup
+  const TALBLE_COLUMNS = [
+    { header: "No." },
+    { header: "Produk ID" },
+    { header: "Nama Produk" },
+    { header: "Kategori" },
+    { header: "Ulasan Diterima" },
+    { header: "Tindakan" },
+  ];
 
   return (
     <div className="flex-row px-5 py-10">
       {/* header */}
       <div className="text-h4 mb-2">Ulasan</div>
-
+      <div className="text-h4 mb-2">{search}</div>
       {/* Search */}
       <div className="mt-7">
         <Search
           id="search-ulasan"
           placeholder="Cari item ID, nama produk"
-          onChange={handleChange}
+          // onChange={handleChange}
+          handleKeyDown={handleKeyDown}
         />
       </div>
-
-      {/* Button grub */}
-      <div className="space-x-1 text-p3 mt-7 border-b-2 inline-flex border-b-green-500">
-        <ButtonGroup buttons={tabMenu} getData={getDataStatus} />
-      </div>
-
       {/* Table */}
       <div className="overflow-x-auto mt-3">
-        <table className="w-full text-left table-auto">
+        <table className="w-full min-w-[1000px] text-p4 text-left text-black mt-4">
           <thead className="bg-green-500 text-white">
             <tr>
-              {columns &&
-                columns.map((head, i) => (
+              {TALBLE_COLUMNS &&
+                TALBLE_COLUMNS.map((head, i) => (
                   <th
                     key={i}
-                    className="py-[14px] text-p2 font-medium text-center"
+                    className="py-[14px] px-[10px] text-p2 font-medium"
                   >
                     {head.header}
                   </th>
                 ))}
             </tr>
           </thead>
-          <tbody>
-            {itemList &&
-              records.map((row, index) => (
-                <tr key={index} className="even:bg-gray-50 text-p4 text-left">
-                  <td className="py-[18px] text-center">
-                    {firstIndex + index + 1}.
-                  </td>
-                  <td className="py-[18px] px-[10px] min-w-[100px] ">
-                    {row.no}
-                  </td>
-                  <td className="py-[18px] px-[10px] min-w-[100px]">
-                    {row.nama}
-                  </td>
-                  <td className="py-[18px] px-[10px]">{row.stok}</td>
-                  <td className="py-[18px] px-[10px] text-center flex space-x-2 justify-center">
-                    <Link to={"/admin/ulasan/detail"}>
-                      <EyeIcon className="w-5 h-5 text-green-500" />
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
+          {isLoading ? (
+            <tr>loading</tr>
+          ) : (
+            <tbody>
+              {data &&
+                data.Status == 200 &&
+                data.Reviews.map((review, index) => (
+                  <tr key={index} className="even:bg-gray-50 text-p4 text-left">
+                    <td className="py-[18px] text-center w-[73px]">
+                      {10 * (parseInt(data.Page) - 1) + index + 1}.
+                    </td>
+                    <td className="py-[18px] px-[10px] min-w-[100px]">
+                      {review.ProductId}
+                    </td>
+                    <td className="py-[18px] px-[10px] min-w-[100px]">
+                      {review.Name}
+                    </td>
+                    <td className="py-[18px] px-[10px] min-w-[100px]">
+                      {review.Name}
+                    </td>
+                    <td className="py-[18px] px-[10px] min-w-[100px] w-[200px]">
+                      {review.ReviewQty}
+                    </td>
+                    <td className="py-[18px] px-[10px] w-[100px] flex space-x-4 justify-center">
+                      <Link to={`/admin/ulasan/${review.ProductId}`}>
+                        <EyeIcon className="w-5 h-5 text-green-500" />
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          )}
         </table>
 
-        {/* Pagination */}
-        {records.length >= 1 && (
-          <div className="flex justify-between w-full py-4">
-            <div>
-              <p className="text-p2 font-normal px-5 py-3 text-gray-500">{`Halaman ${currentPage} dari ${nPage}`}</p>
-            </div>
-            <nav>
-              <ul className="list-style-none flex">
-                <li>
-                  <a
-                    className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold  ${
-                      currentPage === 1 ? "text-gray-300" : "text-green-500"
-                    }`}
-                    onClick={currentPage === 1 ? null : prevPage}
-                  >
-                    Previous
-                  </a>
-                </li>
-                {numbers.map((n, i) => (
-                  <li key={i}>
-                    <p
-                      className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold rounded-full text-green-500 ${
-                        currentPage === n
-                          ? "bg-green-500 text-white"
-                          : "bg-green-50"
-                      }`}
-                      onClick={() => changePage(n)}
-                    >
-                      {n}
-                    </p>
-                  </li>
-                ))}
-
-                <li>
-                  <a
-                    className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold  ${
-                      currentPage === nPage ? "text-gray-300" : "text-green-500"
-                    }`}
-                    onClick={currentPage === nPage ? null : nextPage}
-                  >
-                    Next
-                  </a>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        )}
-
         {/* Empty */}
-        {records.length == 0 && (
-          <div className="py-20">
-            <img src={Empty} className="h-56 mx-auto" />
-            <p className="text-p3 mt-8 font-semibold text-gray-500 text-center">
-              No. Resi yang Anda cari tidak ditemukan
-            </p>
-          </div>
+        {!data && (
+          <EmptyData
+            image={Empty}
+            message="No. Resi yang Anda cari tidak ditemukan"
+          />
         )}
       </div>
+      {/* Pagination */}
+      {data && (
+        <Pagination
+          currentPage={data.Page}
+          totalPage={data.TotalPage}
+          onPrev={prevPage}
+          onChange={changePage}
+          onNext={nextPage}
+        />
+      )}
     </div>
   );
 }
