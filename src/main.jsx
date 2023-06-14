@@ -54,17 +54,18 @@ import UbahMetodePembayaran from "./pages/admin/dataInduk/metodePembayaran/UbahM
 const router = createBrowserRouter(
     createRoutesFromElements(
         <Route>
-            <Route >
+            <Route element={<LoggedIn />}>
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/login" element={<Login />} />
             </Route>
-            <Route >
+            <Route element={<LoggedOut />}>
                 <Route path="/admin" element={<AdminRoot />}>
                     <Route index element={<Dashboard />} />
                     <Route path="pesanan" element={<Pesanan />} />
                     <Route path="pesanan/detail" element={<DetailPesanan />} />
                     <Route path="ulasan" element={<Ulasan />} />
                     <Route path="ulasan/:reviewId" element={<DetailUlasan />} />
+
                     {/* Route data induk */}
                     <Route path="produk" element={<Produk />} />
                     <Route path="produk/tambah" element={<TambahProduk />} />
