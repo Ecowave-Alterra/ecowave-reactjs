@@ -1,8 +1,8 @@
-import React from "react";
+import React from 'react';
 
 const Widget = (props) => {
   switch (props.type) {
-    case "pendapatan":
+    case 'pendapatan':
       return (
         <>
           <div className="p-8 max-w-[337px] h-[200px] rounded-xl border-[1px] border-gray-300 grid grid-rows-3 grid-flow-col gap-4">
@@ -23,12 +23,14 @@ const Widget = (props) => {
               </svg>
             </div>
             <p className="font-normal text-p1">Total Pendapatan</p>
-            <p className="font-semibold text-h6">{props.data ? `Rp.${props.data}` : "-"}</p>
+            <p className="font-semibold text-h6">
+              {props.data ? `Rp.${props.data}` : '-'}
+            </p>
           </div>
         </>
       );
 
-    case "pengguna":
+    case 'pengguna':
       return (
         <>
           <div className="p-8 max-w-[337px] h-[200px] rounded-xl border-[1px] border-gray-300 grid grid-rows-3 grid-flow-col gap-4">
@@ -47,11 +49,13 @@ const Widget = (props) => {
               </svg>
             </div>
             <p className="font-normal text-p1">Total Pengguna</p>
-            <p className="font-semibold text-h6">{props.data ? props.data : "-"}</p>
+            <p className="font-semibold text-h6">
+              {props.data ? props.data : '-'}
+            </p>
           </div>
         </>
       );
-    case "pesanan":
+    case 'pesanan':
       return (
         <>
           <div className="p-8 max-w-[337px] h-[200px] rounded-xl border-[1px] border-gray-300 grid grid-rows-3 grid-flow-col gap-4">
@@ -70,7 +74,9 @@ const Widget = (props) => {
               </svg>
             </div>
             <p className="font-normal text-p1">Total Pesanan</p>
-            <p className="font-semibold text-h6">{props.data ? props.data : "-"}</p>
+            <p className="font-semibold text-h6">
+              {props.data ? props.data : '-'}
+            </p>
           </div>
         </>
       );
