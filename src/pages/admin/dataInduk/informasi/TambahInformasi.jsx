@@ -9,7 +9,7 @@ import { useFormik } from "formik";
 import ReactQuill from "react-quill";
 import { useDropzone } from "react-dropzone";
 import "react-quill/dist/quill.snow.css";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 export default function TambahInformasi() {
     const InputImageRef = useRef(null);
@@ -25,9 +25,6 @@ export default function TambahInformasi() {
         },
         validationSchema: Yup.object({
             image: Yup.mixed().required("Gambar harus diunggah"),
-            // .test("fileSize", "Ukuran file terlalu besar", (value) => {
-            //     return !value || (value && value.size <= 4 * 1024 * 1024); // Maksimum 4MB
-            // }),
             judul: Yup.string()
                 .max(
                     65,
@@ -43,12 +40,21 @@ export default function TambahInformasi() {
         }),
         onSubmit: (values) => {
             // alert(JSON.stringify(values, null, 2));
-            console.log(JSON.stringify(values));
-            alert(JSON.stringify(values));
+            console.log(values);
+            const formData = new FormData();
+            formData.append("Title", values.judul);
+            formData.append("Content", values.konten);
+            formData.append("Status", "Terbit");
+            formData.append("PhotoContentUrl", values.image);
+            console.log("Data dari formData as a draft:", formData);
+
+            for (var pair of formData.entries()) {
+                console.log(pair[0] + ": " + pair[1]);
+            }
         },
     });
-    // console.log(import.meta.env.VITE_API_URL);
 
+    //submit sebagai draft
     const handleSaveDraft = () => {
         // check image size
         if (formik.values.image.size > 4 * 1024 * 1024) {
@@ -58,14 +64,21 @@ export default function TambahInformasi() {
             );
             alert("Mohon maaf, ukuran file Anda melebihi batas maksimum 4 MB.");
         } else {
-            console.log("Data form draft:", formik.values);
+            // console.log("Data form draft:", formik.values);
+            const formData = new FormData();
+            formData.append("Title", formik.values.judul);
+            formData.append("Content", formik.values.konten);
+            formData.append("Status", "Draft");
+            formData.append("PhotoContentUrl", formik.values.image);
+            console.log("Data dari formData as a draft:", formData);
+
+            for (var pair of formData.entries()) {
+                console.log(pair[0] + ": " + pair[1]);
+            }
         }
     };
 
-    useEffect(() => {
-        console.log(imageRef);
-    }, [imageRef]);
-
+    //validasi form input tidak kosong saat ingin kembali ke halaman sebelumnya
     const backToMain = () => {
         if (
             (formik.values.image == "" &&
@@ -84,12 +97,16 @@ export default function TambahInformasi() {
         }
     };
 
-    // open function untuk handle image
+    // open function untuk handle input image
+
+    //tambah gambar dengan drag&drop
     const onDrop = useCallback((acceptedFiles) => {
         formik.setFieldValue("image", acceptedFiles[0]);
-        console.log(acceptedFiles[0]);
+        // console.log(acceptedFiles[0]);
         const imgInitial = acceptedFiles[0];
-        showImages(imgInitial);
+        if (imgInitial !== undefined) {
+            showImages(imgInitial);
+        }
     }, []);
     const { getRootProps, getInputProps } = useDropzone({
         onDrop,
@@ -99,19 +116,21 @@ export default function TambahInformasi() {
             "image/png": [],
         },
         multiple: false,
-        maxFiles: 2,
+        maxFiles: 1,
         onDropRejected: () => {
-            alert("file tidak diterima");
+            alert("file tidak memenuhi standard yang diberikan");
         },
     });
 
+    //tambah image melalui button
     const handleFileChange = (event) => {
         formik.setFieldValue("image", event.target.files[0]);
-        console.log(event.target.files[0]);
+        console.log("benar" + event.target.files[0]);
         const imgInitial = event.target.files[0];
         showImages(imgInitial);
     };
 
+    //menampilkan preview gambar
     function showImages(image) {
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -132,7 +151,7 @@ export default function TambahInformasi() {
                 <button id="button-back" onClick={backToMain}>
                     <ChevronLeftIcon className="w-5 h-5 text-green-500" />
                 </button>
-                <h6 className="text-h6 font-medium">Ubah Informasi</h6>
+                <h6 className="text-h6 font-medium">Tambah Informasi</h6>
             </div>
             <form onSubmit={formik.handleSubmit} className="mt-5">
                 <div className="mt-3 mx-4 sm:mx-8 mb-10">
@@ -290,7 +309,7 @@ export default function TambahInformasi() {
                     </div>
                 )}
                 {/* submit button */}
-                <div className="flex flex-row gap-2 relative top-[72px] mx-8 justify-end ">
+                <div className="flex flex-row gap-2 relative top-[72px] mx-8 justify-end pb-8">
                     <button
                         className="px-4 py-[10px] bg-green-50 text-green-500 font-semibold rounded-full disabled:text-green-300"
                         id="button-draft-submit"

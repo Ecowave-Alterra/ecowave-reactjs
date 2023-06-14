@@ -30,12 +30,13 @@ export default function Informasi() {
     const filterValue = searchParams.get("filter") || "";
     const pageValue = searchParams.get("page") || 1;
 
-    const swrKey = `admin/informations/search?search=${searchValue}&filter=${filterValue}&page=${pageValue}`;
+    const swrKey = `admin/products/category/search?name=${searchValue}&page=${pageValue}`;
 
     const updateSearchQuery = (newSearchValue) => {
         setSearchParams((params) => {
             const updatedParams = new URLSearchParams(params.toString());
             updatedParams.set("search", newSearchValue);
+            updatedParams.set("page", "1");
             return updatedParams;
         });
     };
@@ -134,7 +135,7 @@ export default function Informasi() {
 
     const { data, isLoading, error } = useCrud(swrKey);
     if (error) return <div>error</div>;
-    console.log(data);
+    // console.log(data);
 
     async function getCSVData() {
         const token = Cookies.get("token");
@@ -207,7 +208,7 @@ export default function Informasi() {
 
             {/* Table */}
             <div className="overflow-x-auto mt-3">
-                <table className="w-full min-w-[1000px] text-p4 text-left text-black">
+                <table className="w-full min-w-[1000px] text-p4 text-left  text-black">
                     <thead className="text-p3 text-white bg-green-500 ">
                         <tr>
                             {columns.map((head, i) => (
@@ -221,7 +222,11 @@ export default function Informasi() {
                         </tr>
                     </thead>
                     {isLoading ? (
-                        <td>loading</td>
+                        <tbody>
+                            <tr>
+                                <td>loading</td>
+                            </tr>
+                        </tbody>
                     ) : (
                         <tbody className="">
                             {data && data.Status === 200 ? (
@@ -257,7 +262,8 @@ export default function Informasi() {
                                                 </Link>
                                                 <Link
                                                     to={
-                                                        "/admin/informasi/ubah/"
+                                                        "/admin/informasi/ubah/" +
+                                                        informasi.InformationiId
                                                     }
                                                     className="bg-green-50 rounded-full mx-2 py-[5px] px-[10px]"
                                                 >
@@ -287,73 +293,71 @@ export default function Informasi() {
                         </tbody>
                     )}
                 </table>
-                {/* pagination */}
-                {isLoading ? (
-                    ""
-                ) : (
-                    <div className="mt-2">
-                        {data.TotalPage >= 1 && (
-                            <div className="flex justify-between w-full pb-2">
-                                <div>
-                                    <p className="text-p2 font-normal px-5 py-3 text-gray-500">{`Halaman ${data.Page} dari ${data.TotalPage}`}</p>
-                                </div>
-                                <nav>
-                                    <ul className="list-style-none flex">
-                                        <li>
-                                            <button
-                                                className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold  ${
-                                                    data.Page === 1
-                                                        ? "text-gray-300"
-                                                        : "text-green-500"
-                                                }`}
-                                                onClick={prevPage}
-                                                disabled={data.Page === 1}
-                                            >
-                                                Previous
-                                            </button>
-                                        </li>
-                                        {Array.from(
-                                            { length: data.TotalPage },
-                                            (_, i) => i + 1
-                                        ).map((n) => (
-                                            <li key={n}>
-                                                <p
-                                                    className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold rounded-full text-green-500 ${
-                                                        data.Page === n
-                                                            ? "bg-green-500 text-white"
-                                                            : "bg-green-50"
-                                                    }`}
-                                                    onClick={() =>
-                                                        changePage(n)
-                                                    }
-                                                >
-                                                    {n}
-                                                </p>
-                                            </li>
-                                        ))}
-
-                                        <li>
-                                            <button
-                                                className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold  ${
-                                                    data.Page === data.TotalPage
-                                                        ? "text-gray-300"
-                                                        : "text-green-500"
-                                                }`}
-                                                onClick={nextPage}
-                                                disabled={
-                                                    data.Page === data.TotalPage
-                                                }
-                                            >
-                                                Next
-                                            </button>
-                                        </li>
-                                    </ul>
-                                </nav>
-                            </div>
-                        )}
-                    </div>
-                )}
             </div>
+            {/* pagination */}
+            {isLoading ? (
+                ""
+            ) : (
+                <div className="mt-2">
+                    {data.TotalPage >= 1 && (
+                        <div className="flex justify-between w-full pb-2">
+                            <div>
+                                <p className="text-p2 font-normal px-5 py-3 text-gray-500">{`Halaman ${data.Page} dari ${data.TotalPage}`}</p>
+                            </div>
+                            <nav>
+                                <ul className="list-style-none flex">
+                                    <li>
+                                        <button
+                                            className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold  ${
+                                                data.Page === 1
+                                                    ? "text-gray-300"
+                                                    : "text-green-500"
+                                            }`}
+                                            onClick={prevPage}
+                                            disabled={data.Page === 1}
+                                        >
+                                            Previous
+                                        </button>
+                                    </li>
+                                    {Array.from(
+                                        { length: data.TotalPage },
+                                        (_, i) => i + 1
+                                    ).map((n) => (
+                                        <li key={n}>
+                                            <p
+                                                className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold rounded-full text-green-500 ${
+                                                    data.Page === n
+                                                        ? "bg-green-500 text-white"
+                                                        : "bg-green-50"
+                                                }`}
+                                                onClick={() => changePage(n)}
+                                            >
+                                                {n}
+                                            </p>
+                                        </li>
+                                    ))}
+
+                                    <li>
+                                        <button
+                                            className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold  ${
+                                                data.Page === data.TotalPage
+                                                    ? "text-gray-300"
+                                                    : "text-green-500"
+                                            }`}
+                                            onClick={nextPage}
+                                            disabled={
+                                                data.Page === data.TotalPage
+                                            }
+                                        >
+                                            Next
+                                        </button>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    )}
+                </div>
+            )}
         </div>
     );
 }
