@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Widget from "../../../components/widget";
+import Widget from "../../../components/Widget";
 import BarChart from "../../../components/BarChart";
 
 const Dashboard = () => {
