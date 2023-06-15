@@ -14,9 +14,8 @@ import {
 
 import ButtonGroup from "../../../../components/ButtonGroup";
 import Search from "../../../../components/Search";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useCrud from "../../../../hooks/FetchInformasi";
-import { mutate } from "swr";
 import InformationNotFound from "../../../../components/InformationNotFound";
 import Cookies from "js-cookie";
 
@@ -24,13 +23,12 @@ export default function Informasi() {
     let [searchParams, setSearchParams] = useSearchParams();
     const [searchChanges, setSearchChanges] = useState();
     const navigate = useNavigate();
-    const location = useLocation();
 
     const searchValue = searchParams.get("search") || "";
     const filterValue = searchParams.get("filter") || "";
     const pageValue = searchParams.get("page") || 1;
 
-    const swrKey = `admin/products/category/search?name=${searchValue}&page=${pageValue}`;
+    const swrKey = `admin/informations/search?search=${searchValue}&filter=${filterValue}&page=${pageValue}`;
 
     const updateSearchQuery = (newSearchValue) => {
         setSearchParams((params) => {
@@ -94,13 +92,6 @@ export default function Informasi() {
         }
     };
 
-    const updateURL = () => {
-        navigate({
-            pathname: location.pathname,
-            search: searchParams.toString(),
-        });
-    };
-
     const handleDelete = () => {
         alert("telah dihapus");
     };
@@ -114,28 +105,9 @@ export default function Informasi() {
         { header: "Action" },
     ];
 
-    useEffect(() => {
-        const search = searchParams.get("search") || "";
-        const filter = searchParams.get("filter") || "";
-        const pageValue = searchParams.get("page") || 1;
-        const newSWRKey = `/api/data?search=${search}&filter=${filter}&page=${pageValue}`;
-        // Memperbarui SWR key jika berbeda dengan key sebelumnya
-        if (newSWRKey !== swrKey) {
-            mutate(newSWRKey); // Memperbarui SWR dengan SWR key baru
-        }
-        updateURL();
-
-        if (location.search === "") {
-            setSearchParams({
-                search: "",
-                filter: "",
-            });
-        }
-    }, [searchParams, swrKey, location.search]);
-
     const { data, isLoading, error } = useCrud(swrKey);
     if (error) return <div>error</div>;
-    // console.log(data);
+    console.log(data);
 
     async function getCSVData() {
         const token = Cookies.get("token");
@@ -240,7 +212,7 @@ export default function Informasi() {
                                                 i +
                                                 1}
                                         </th>
-                                        <td className="py-[18px] px-[10px] min-w-[100px]">
+                                        <td className="py-[18px] px-[10px] min-w-[200px]">
                                             {informasi.InformationiId}
                                         </td>
                                         <td className="py-[18px] px-[10px] w-full">

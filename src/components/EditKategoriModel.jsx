@@ -1,18 +1,23 @@
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { Dialog } from "@headlessui/react";
-import { usePostKategori } from "../hooks/FetchKategori";
+import { usePutKategori } from "../hooks/FetchKategori";
 import { useSearchParams } from "react-router-dom";
 import { mutate } from "swr";
 
-export default function TambahKategoriModal({ isOpen, setIsOpen, openAlert }) {
+export default function EditKategoriModal({
+    isOpen,
+    setIsOpen,
+    categoryId,
+    openAlert,
+}) {
+    //query string untuk mutate
     let [searchParams, setSearchParams] = useSearchParams();
     const searchValue = searchParams.get("search") || "";
     const pageValue = searchParams.get("page") || 1;
-
     const swrKey = `admin/products/category/search?name=${searchValue}&page=${pageValue}`;
 
-    const { postData, isLoading } = usePostKategori(`admin/products/category`);
+    const { putData, isLoading } = usePutKategori(`admin/products/category/`);
 
     const formik = useFormik({
         initialValues: {
@@ -30,14 +35,17 @@ export default function TambahKategoriModal({ isOpen, setIsOpen, openAlert }) {
             const datas = {
                 category: values.kategori.toLowerCase(),
             };
-            const response = await postData(datas);
-            if (response.Status === 201) {
+
+            const response = await putData(datas, categoryId);
+            if (response.Status === 200) {
+                openAlert("success", response.Message);
                 mutate(swrKey);
                 resetForm();
                 setIsOpen(false);
-                openAlert("success", response.Message);
             } else {
                 openAlert("danger", response.Message);
+                console.log("put gagal");
+                console.log(response.Message);
             }
         },
     });
@@ -51,7 +59,7 @@ export default function TambahKategoriModal({ isOpen, setIsOpen, openAlert }) {
             <form onSubmit={formik.handleSubmit} className="mt-5 ">
                 <Dialog.Panel>
                     <Dialog.Title className="border-b-2 border-gray-300 text-gray-500 px-6 pt-2 pb-2 font-semibold text-p3">
-                        Tambah Kategori
+                        Ubah Kategori
                     </Dialog.Title>
                     <div className="py-3">
                         {isLoading ? (
@@ -110,7 +118,7 @@ export default function TambahKategoriModal({ isOpen, setIsOpen, openAlert }) {
                                 type="sumbit"
                                 className="px-4 py-[10px] text-p3 text-white bg-[#059669] font-semibold rounded-full disabled:text-white  disabled:bg-green-300 duration-100 hover:bg-green-600 active:border-2 active:border-green-300"
                             >
-                                tambah
+                                ubah
                             </button>
                         </div>
                     )}
