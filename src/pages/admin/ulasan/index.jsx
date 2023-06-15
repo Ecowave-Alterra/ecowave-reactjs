@@ -59,6 +59,7 @@ export default function Ulasan() {
     setSearchParams((params) => {
       const updatedParams = new URLSearchParams(params.toString());
       updatedParams.set("search", newSearchValue);
+      console.log("param", updatedParams)
       return updatedParams;
     });
   };
@@ -66,15 +67,8 @@ export default function Ulasan() {
   // Handle Search on Enter
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
-      setSearchChanges(event.target.value);
+      updateSearchQuery(event.target.value);
     }
-  };
-
-  const updateURL = () => {
-    navigate({
-      pathname: location.pathname,
-      search: searchParams.toString(),
-    });
   };
 
   useEffect(() => {
@@ -95,7 +89,6 @@ export default function Ulasan() {
     <div className="flex-row px-5 py-10">
       {/* header */}
       <div className="text-h4 mb-2">Ulasan</div>
-      <div className="text-h4 mb-2">{searchChanges}</div>
       {/* Search */}
       <div className="mt-7">
         <Search
@@ -122,7 +115,8 @@ export default function Ulasan() {
             </tr>
           </thead>
           {isLoading ? (
-            <tr>loading</tr>
+            // <tr>loading</tr>
+            null
           ) : (
             <tbody>
               {data &&
@@ -139,7 +133,7 @@ export default function Ulasan() {
                       {review.Name}
                     </td>
                     <td className="py-[18px] px-[10px] min-w-[100px]">
-                      {review.ProductCategory}
+                      {review.Category}
                     </td>
                     <td className="py-[18px] px-[10px] min-w-[100px] w-[200px]">
                       {review.ReviewQty}

@@ -16,7 +16,7 @@ const Alert = ({ variant, message, onClose }) => {
   return (
     <div className="fixed inset-0 top-10 h-fit flex items-start justify-center z-20 transition-opacity opacity-100">
       <div
-        className={`flex justify-between items-center w-[343px] h-[44px] ${variants[variant]}`}
+        className={`flex justify-between items-center min-w-[343px] w-fit h-[44px] ${variants[variant]}`}
         role="alert"
       >
         <div className="flex gap-2 items-center">
@@ -35,7 +35,7 @@ const Alert = ({ variant, message, onClose }) => {
           </div>
           <p className="block sm:inline">{message}</p>
         </div>
-        <XMarkIcon className="w-5 h-5 text-white" onClick={onClose} />
+        <XMarkIcon className="w-5 h-5 text-white ml-2" onClick={onClose} />
       </div>
     </div>
   );
