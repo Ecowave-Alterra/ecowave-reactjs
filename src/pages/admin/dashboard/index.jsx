@@ -47,7 +47,7 @@ const Dashboard = observer(() => {
           data={
             isLoading
               ? ""
-              : data.TotalIncome?.toLocaleString("en-US").replace(/,/g, ".")
+              : data.TotalUsers?.toLocaleString("en-US").replace(/,/g, ".")
           }
         />
         <Widget
@@ -55,7 +55,7 @@ const Dashboard = observer(() => {
           data={
             isLoading
               ? ""
-              : data.TotalIncome?.toLocaleString("en-US").replace(/,/g, ".")
+              : data.TotalOrder?.toLocaleString("en-US").replace(/,/g, ".")
           }
         />
       </div>

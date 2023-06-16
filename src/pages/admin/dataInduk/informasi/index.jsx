@@ -14,9 +14,8 @@ import {
 
 import ButtonGroup from "../../../../components/ButtonGroup";
 import Search from "../../../../components/Search";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useCrud from "../../../../hooks/FetchInformasi";
-import { mutate } from "swr";
 import InformationNotFound from "../../../../components/InformationNotFound";
 import Cookies from "js-cookie";
 
@@ -24,7 +23,6 @@ export default function Informasi() {
     let [searchParams, setSearchParams] = useSearchParams();
     const [searchChanges, setSearchChanges] = useState();
     const navigate = useNavigate();
-    const location = useLocation();
 
     const searchValue = searchParams.get("search") || "";
     const filterValue = searchParams.get("filter") || "";
@@ -36,6 +34,7 @@ export default function Informasi() {
         setSearchParams((params) => {
             const updatedParams = new URLSearchParams(params.toString());
             updatedParams.set("search", newSearchValue);
+            updatedParams.set("page", "1");
             return updatedParams;
         });
     };
@@ -93,13 +92,6 @@ export default function Informasi() {
         }
     };
 
-    const updateURL = () => {
-        navigate({
-            pathname: location.pathname,
-            search: searchParams.toString(),
-        });
-    };
-
     const handleDelete = () => {
         alert("telah dihapus");
     };
@@ -112,25 +104,6 @@ export default function Informasi() {
         { header: "Status" },
         { header: "Action" },
     ];
-
-    useEffect(() => {
-        const search = searchParams.get("search") || "";
-        const filter = searchParams.get("filter") || "";
-        const pageValue = searchParams.get("page") || 1;
-        const newSWRKey = `/api/data?search=${search}&filter=${filter}&page=${pageValue}`;
-        // Memperbarui SWR key jika berbeda dengan key sebelumnya
-        if (newSWRKey !== swrKey) {
-            mutate(newSWRKey); // Memperbarui SWR dengan SWR key baru
-        }
-        updateURL();
-
-        if (location.search === "") {
-            setSearchParams({
-                search: "",
-                filter: "",
-            });
-        }
-    }, [searchParams, swrKey, location.search]);
 
     const { data, isLoading, error } = useCrud(swrKey);
     if (error) return <div>error</div>;
@@ -207,7 +180,7 @@ export default function Informasi() {
 
             {/* Table */}
             <div className="overflow-x-auto mt-3">
-                <table className="w-full min-w-[1000px] text-p4 text-left text-black">
+                <table className="w-full min-w-[1000px] text-p4 text-left  text-black">
                     <thead className="text-p3 text-white bg-green-500 ">
                         <tr>
                             {columns.map((head, i) => (
@@ -221,7 +194,11 @@ export default function Informasi() {
                         </tr>
                     </thead>
                     {isLoading ? (
-                        <td>loading</td>
+                        <tbody>
+                            <tr>
+                                <td>loading</td>
+                            </tr>
+                        </tbody>
                     ) : (
                         <tbody className="">
                             {data && data.Status === 200 ? (
@@ -235,7 +212,7 @@ export default function Informasi() {
                                                 i +
                                                 1}
                                         </th>
-                                        <td className="py-[18px] px-[10px] min-w-[100px]">
+                                        <td className="py-[18px] px-[10px] min-w-[200px]">
                                             {informasi.InformationiId}
                                         </td>
                                         <td className="py-[18px] px-[10px] w-full">
@@ -257,7 +234,8 @@ export default function Informasi() {
                                                 </Link>
                                                 <Link
                                                     to={
-                                                        "/admin/informasi/ubah/"
+                                                        "/admin/informasi/ubah/" +
+                                                        informasi.InformationiId
                                                     }
                                                     className="bg-green-50 rounded-full mx-2 py-[5px] px-[10px]"
                                                 >
@@ -287,73 +265,71 @@ export default function Informasi() {
                         </tbody>
                     )}
                 </table>
-                {/* pagination */}
-                {isLoading ? (
-                    ""
-                ) : (
-                    <div className="mt-2">
-                        {data.TotalPage >= 1 && (
-                            <div className="flex justify-between w-full pb-2">
-                                <div>
-                                    <p className="text-p2 font-normal px-5 py-3 text-gray-500">{`Halaman ${data.Page} dari ${data.TotalPage}`}</p>
-                                </div>
-                                <nav>
-                                    <ul className="list-style-none flex">
-                                        <li>
-                                            <button
-                                                className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold  ${
-                                                    data.Page === 1
-                                                        ? "text-gray-300"
-                                                        : "text-green-500"
-                                                }`}
-                                                onClick={prevPage}
-                                                disabled={data.Page === 1}
-                                            >
-                                                Previous
-                                            </button>
-                                        </li>
-                                        {Array.from(
-                                            { length: data.TotalPage },
-                                            (_, i) => i + 1
-                                        ).map((n) => (
-                                            <li key={n}>
-                                                <p
-                                                    className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold rounded-full text-green-500 ${
-                                                        data.Page === n
-                                                            ? "bg-green-500 text-white"
-                                                            : "bg-green-50"
-                                                    }`}
-                                                    onClick={() =>
-                                                        changePage(n)
-                                                    }
-                                                >
-                                                    {n}
-                                                </p>
-                                            </li>
-                                        ))}
-
-                                        <li>
-                                            <button
-                                                className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold  ${
-                                                    data.Page === data.TotalPage
-                                                        ? "text-gray-300"
-                                                        : "text-green-500"
-                                                }`}
-                                                onClick={nextPage}
-                                                disabled={
-                                                    data.Page === data.TotalPage
-                                                }
-                                            >
-                                                Next
-                                            </button>
-                                        </li>
-                                    </ul>
-                                </nav>
-                            </div>
-                        )}
-                    </div>
-                )}
             </div>
+            {/* pagination */}
+            {isLoading ? (
+                ""
+            ) : (
+                <div className="mt-2">
+                    {data.TotalPage >= 1 && (
+                        <div className="flex justify-between w-full pb-2">
+                            <div>
+                                <p className="text-p2 font-normal px-5 py-3 text-gray-500">{`Halaman ${data.Page} dari ${data.TotalPage}`}</p>
+                            </div>
+                            <nav>
+                                <ul className="list-style-none flex">
+                                    <li>
+                                        <button
+                                            className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold  ${
+                                                data.Page === 1
+                                                    ? "text-gray-300"
+                                                    : "text-green-500"
+                                            }`}
+                                            onClick={prevPage}
+                                            disabled={data.Page === 1}
+                                        >
+                                            Previous
+                                        </button>
+                                    </li>
+                                    {Array.from(
+                                        { length: data.TotalPage },
+                                        (_, i) => i + 1
+                                    ).map((n) => (
+                                        <li key={n}>
+                                            <p
+                                                className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold rounded-full text-green-500 ${
+                                                    data.Page === n
+                                                        ? "bg-green-500 text-white"
+                                                        : "bg-green-50"
+                                                }`}
+                                                onClick={() => changePage(n)}
+                                            >
+                                                {n}
+                                            </p>
+                                        </li>
+                                    ))}
+
+                                    <li>
+                                        <button
+                                            className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold  ${
+                                                data.Page === data.TotalPage
+                                                    ? "text-gray-300"
+                                                    : "text-green-500"
+                                            }`}
+                                            onClick={nextPage}
+                                            disabled={
+                                                data.Page === data.TotalPage
+                                            }
+                                        >
+                                            Next
+                                        </button>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    )}
+                </div>
+            )}
         </div>
     );
 }

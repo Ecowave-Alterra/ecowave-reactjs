@@ -75,7 +75,10 @@ const router = createBrowserRouter(
                         path="informasi/tambah"
                         element={<TambahInformasi />}
                     />
-                    <Route path="informasi/ubah" element={<UbahInformasi />} />
+                    <Route
+                        path="informasi/ubah/:userId"
+                        element={<UbahInformasi />}
+                    />
                     <Route
                         path="informasi/:userId"
                         element={<DetailInformasi />}
