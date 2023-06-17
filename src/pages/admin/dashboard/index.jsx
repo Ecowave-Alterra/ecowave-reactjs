@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import Widget from "../../../components/widget";
+import React from "react";
+import Widget from "../../../components/Widget";
 import BarChart from "../../../components/BarChart";
 import useCrud from "../../../hooks/FetchMockServer";
 
@@ -12,24 +12,25 @@ import { observer } from "@legendapp/state/react";
 import { useSearchParams } from "react-router-dom";
 
 const state = observable({
-  pendapatan: "",
-  pengguna: "",
-  pesanan: "",
-  itemlist: [],
+  chartFilter: "",
 });
 
 const Dashboard = observer(() => {
-  const [value, setValue] = useState("mingguan");
-  const swrKey = `admin/dashboard`;
+  let [searchParams, setSearchParams] = useSearchParams();
+
+  const filterValue = searchParams.get("filter") || "";
+
+  const swrKey = `admin/dashboard?filter=${filterValue}`;
   const { data, isLoading, error } = useCrud(swrKey);
-  if (error) return <div>error</div>;
-  console.log("data", data);
-  console.log("error", error);
 
-  const handleChange = (e) => {
-    setValue(e.target.value);
+  const handleChangeFilter = (newFilterValue) => {
+    setSearchParams((params) => {
+      const updatedParams = new URLSearchParams(params.toString());
+      updatedParams.set("filter", newFilterValue.target.value);
+      state.chartFilter.set(newFilterValue.target.value);
+      return updatedParams;
+    });
   };
-
   return (
     <>
       <h1 className="font-normal text-h4 m-8">Dashboard</h1>
@@ -60,9 +61,13 @@ const Dashboard = observer(() => {
         />
       </div>
       {isLoading ? (
-        <h1>Loading..</h1>
+        <img
+          className="h-16 w-16 mx-auto"
+          src="https://icons8.com/preloaders/preloaders/1488/Iphone-spinner-2.gif"
+          alt=""
+        />
       ) : (
-        <BarChart value={value} detail={data?.CurrentWeekIncome}>
+        <BarChart detail={data?.CurrentMonthIncome}>
           <div className="flex justify-between">
             <h1 className="text-h6 font-semibold">Total Pendapatan</h1>
             <div className="w-1/3">
@@ -70,11 +75,12 @@ const Dashboard = observer(() => {
                 <select
                   id="select-bar"
                   className="block appearance-none w-full border border-green-400 text-black text-p2 font-medium py-3 px-4 rounded-xl leading-tight focus:outline-none focus:border-green-400"
-                  onChange={handleChange}
+                  onChange={handleChangeFilter}
+                  value={state.chartFilter.get()}
                 >
-                  <option value="mingguan">Mingguan</option>
-                  <option value="bulanan">Bulanan</option>
-                  <option value="tahunan">Tahunan</option>
+                  <option value="">Mingguan</option>
+                  <option value="month">Bulanan</option>
+                  <option value="year">Tahunan</option>
                 </select>
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                   <ChevronDownIcon className="w-5 h-5" />
@@ -105,9 +111,15 @@ const Dashboard = observer(() => {
               </tr>
             </thead>
             {isLoading ? (
-              <p className="text-center text-gray-500 text-p3 font-semibold my-14 py-4 bg-gray-50">
-                Loading data ..
-              </p>
+              <tbody>
+                <tr>
+                  <td>
+                    <p className="text-center text-gray-500 text-p3 font-semibold my-14 py-4 bg-gray-50">
+                      Loading data ..
+                    </p>
+                  </td>
+                </tr>
+              </tbody>
             ) : (
               <tbody>
                 {data?.FavoriteProducts &&
@@ -150,9 +162,15 @@ const Dashboard = observer(() => {
               </tr>
             </thead>
             {isLoading ? (
-              <p className="text-center text-gray-500 text-p3 font-semibold my-14 py-4 bg-gray-50">
-                Loading data ..
-              </p>
+              <tbody>
+                <tr>
+                  <td>
+                    <p className="text-center text-gray-500 text-p3 font-semibold my-14 py-4 bg-gray-50">
+                      Loading data ..
+                    </p>
+                  </td>
+                </tr>
+              </tbody>
             ) : (
               <tbody>
                 {data?.MostRatedProducts &&

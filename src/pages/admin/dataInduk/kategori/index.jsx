@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { mutate } from "swr";
 
 import {
@@ -15,13 +15,11 @@ import Alert from "../../../../components/Alert";
 // import ModalConfirm from "../../../../components/ModalConfirm";
 import EditKategoriModal from "../../../../components/EditKategoriModel";
 import TambahKategoriModal from "../../../../components/TambahKategoriModal";
-import {
-    useDeleteKategori,
-    useGetAllCategory,
-} from "../../../../hooks/FetchKategori";
+import { useDeleteData, useGetData } from "../../../../hooks/FetchData";
 import ErrorPage from "../../../../components/ErrorPage";
 
 export default function Kategori() {
+    const navigate = useNavigate();
     //modal tambah dan edit data
     const [isOpenAdd, setIsOpenAdd] = useState(false);
     const [isOpenEdit, setIsOpenEdit] = useState(false);
@@ -41,8 +39,8 @@ export default function Kategori() {
     const pageValue = searchParams.get("page") || 1;
 
     const swrKey = `admin/products/category/search?name=${searchValue}&page=${pageValue}`;
-    const { data, isLoading, error } = useGetAllCategory(swrKey);
-    const { deleteData, isLoading: loading } = useDeleteKategori(
+    const { data, isLoading, error } = useGetData(swrKey);
+    const { deleteData, isLoading: loading } = useDeleteData(
         `admin/products/category/`
     );
 
@@ -64,7 +62,6 @@ export default function Kategori() {
         event.preventDefault();
         if (searchChanges !== searchValue) {
             updateSearchQuery(searchChanges);
-            setSearchChanges("");
         }
     };
 
@@ -120,15 +117,13 @@ export default function Kategori() {
             "Apakah Anda yakin ingin menghapus kategori?"
         );
         if (deleteConfirm) {
-            // await deleteData(id);
             const response = await deleteData(id);
             if (response.Status === 200) {
                 openAlert("success", response.Message);
+                navigate("?search=&page=1");
                 await mutate(swrKey);
-                console.log(response.Message);
             } else {
                 openAlert("danger", response.Message);
-                console.log(response.Message);
             }
         }
     };
@@ -172,7 +167,8 @@ export default function Kategori() {
                 </div>
                 <button
                     onClick={() => setIsOpenAdd(true)}
-                    className="flex flex-row gap-[13px] items-center rounded-full bg-green-500 py-[10px] pl-[21px] pr-4 hover:bg-green-600 duration-200"
+                    className="btn_open_modal_tambah flex flex-row gap-[13px] items-center rounded-full bg-green-500 py-[10px] pl-[21px] pr-4 hover:bg-green-600 duration-200"
+                    id="btn_open_modal_tambah"
                 >
                     <PlusSmallIcon className="w-[14px]  text-white " />
                     <p className=" text-p3 text-white">Tambah kategori</p>
@@ -248,12 +244,14 @@ export default function Kategori() {
                                                             category.Id
                                                         )
                                                     }
-                                                    className="bg-green-50 rounded-full mx-2 py-[5px] px-[10px]"
+                                                    className="btn_open_modal_edit bg-green-50 rounded-full mx-2 py-[5px] px-[10px]"
+                                                    id="btn_open_modal_edit"
                                                 >
                                                     <PencilIcon className="w-5 h-5 text-green-500" />
                                                 </button>
                                                 <button
-                                                    className="bg-green-50 rounded-full mx-2 py-[5px] px-[10px]"
+                                                    className="btn_handle_delete bg-green-50 rounded-full mx-2 py-[5px] px-[10px]"
+                                                    id="btn_handle_delete"
                                                     onClick={() =>
                                                         handleDelete(
                                                             category.Id
@@ -280,7 +278,7 @@ export default function Kategori() {
                 </table>
             </div>
             {/* pagination */}
-            {isLoading ? (
+            {isLoading || loading ? (
                 ""
             ) : (
                 <div className="mt-2">

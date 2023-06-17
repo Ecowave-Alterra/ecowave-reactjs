@@ -1,18 +1,21 @@
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { Dialog } from "@headlessui/react";
-import { usePostKategori } from "../hooks/FetchKategori";
-import { useSearchParams } from "react-router-dom";
+import { usePostDataUsingJson } from "../hooks/FetchData";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { mutate } from "swr";
 
 export default function TambahKategoriModal({ isOpen, setIsOpen, openAlert }) {
     let [searchParams, setSearchParams] = useSearchParams();
+    const navigate = useNavigate();
     const searchValue = searchParams.get("search") || "";
     const pageValue = searchParams.get("page") || 1;
 
     const swrKey = `admin/products/category/search?name=${searchValue}&page=${pageValue}`;
 
-    const { postData, isLoading } = usePostKategori(`admin/products/category`);
+    const { postData, isLoading } = usePostDataUsingJson(
+        `admin/products/category`
+    );
 
     const formik = useFormik({
         initialValues: {
@@ -36,6 +39,7 @@ export default function TambahKategoriModal({ isOpen, setIsOpen, openAlert }) {
                 resetForm();
                 setIsOpen(false);
                 openAlert("success", response.Message);
+                navigate("?search=&page=1");
             } else {
                 openAlert("danger", response.Message);
             }
@@ -101,7 +105,8 @@ export default function TambahKategoriModal({ isOpen, setIsOpen, openAlert }) {
                         <div className="flex flex-row gap-2 items-center justify-end ml-auto p-3">
                             <button
                                 onClick={() => setIsOpen(false)}
-                                className="px-4 py-[10px] text-p3 text-[#535A65] bg-white font-semibold rounded-full"
+                                className="btn_close_modal_tambah px-4 py-[10px] text-p3 text-[#535A65] bg-white font-semibold rounded-full"
+                                id="btn_close_modal_tambah"
                             >
                                 batal
                             </button>
@@ -109,6 +114,7 @@ export default function TambahKategoriModal({ isOpen, setIsOpen, openAlert }) {
                                 disabled={!(formik.isValid && formik.dirty)}
                                 type="sumbit"
                                 className="px-4 py-[10px] text-p3 text-white bg-[#059669] font-semibold rounded-full disabled:text-white  disabled:bg-green-300 duration-100 hover:bg-green-600 active:border-2 active:border-green-300"
+                                id="btn_submit_tambah"
                             >
                                 tambah
                             </button>

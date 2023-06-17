@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 // ChartJs
 import {
   Chart as ChartJS,
@@ -25,7 +25,7 @@ ChartJS.register(
   Legend
 );
 
-const BarChart = ({ children, value, detail }) => {
+const BarChart = ({ children, detail }) => {
   const incomeLabel = detail ? detail[0] : [];
   const arrayLabels = detail ? Object.keys(incomeLabel) : [];
   const valuePerLabel = detail ? Object.values(incomeLabel) : [];
@@ -62,7 +62,6 @@ const BarChart = ({ children, value, detail }) => {
     },
   };
 
-  useEffect(() => {}, [value]);
   return (
     <>
       {/* Chart Section */}
