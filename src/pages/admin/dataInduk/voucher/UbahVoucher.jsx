@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
@@ -7,6 +7,7 @@ import InputField from "../../../../components/InputField";
 
 const EditVoucher = () => {
   const [voucherCategory, setVoucherCategory] = useState("diskon");
+  let { voucherId } = useParams();
 
   const handleCategoryChange = (event) => {
     const value = event.target.value;
