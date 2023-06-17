@@ -1,9 +1,4 @@
-import {
-    Link,
-    useNavigate,
-    useSearchParams,
-    useLocation,
-} from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import {
     PlusSmallIcon,
     ArrowDownTrayIcon,
@@ -14,22 +9,39 @@ import {
 
 import ButtonGroup from "../../../../components/ButtonGroup";
 import Search from "../../../../components/Search";
-import { useState } from "react";
-import useCrud from "../../../../hooks/FetchInformasi";
+import { useEffect, useState } from "react";
 import InformationNotFound from "../../../../components/InformationNotFound";
 import Cookies from "js-cookie";
+import Pagination from "../../../../components/Pagination";
+import ErrorPage from "../../../../components/ErrorPage";
+import { useDeleteData, useGetData } from "../../../../hooks/FetchData";
+import Alert from "../../../../components/Alert";
+import { mutate } from "swr";
 
 export default function Informasi() {
     let [searchParams, setSearchParams] = useSearchParams();
-    const [searchChanges, setSearchChanges] = useState();
+    const [searchChanges, setSearchChanges] = useState("");
     const navigate = useNavigate();
 
+    //get query string
     const searchValue = searchParams.get("search") || "";
     const filterValue = searchParams.get("filter") || "";
     const pageValue = searchParams.get("page") || 1;
-
     const swrKey = `admin/informations/search?search=${searchValue}&filter=${filterValue}&page=${pageValue}`;
 
+    //query string dikirim ke halaman tambah dan ubah
+    const backValues = {
+        search: searchValue,
+        filter: filterValue,
+        page: pageValue,
+    };
+
+    //alert fetching data
+    const [isAlert, setIsAlert] = useState(false);
+    const [message, setMessage] = useState("");
+    const [variant, setVariant] = useState("");
+
+    //query string handling
     const updateSearchQuery = (newSearchValue) => {
         setSearchParams((params) => {
             const updatedParams = new URLSearchParams(params.toString());
@@ -68,8 +80,6 @@ export default function Informasi() {
     };
 
     const getDataByStatus = async (event) => {
-        console.log(event.target.name);
-
         if (event.target.name === "Semua") {
             updateFilter("");
         } else {
@@ -77,26 +87,49 @@ export default function Informasi() {
         }
     };
 
+    //search handling
     const handleChange = (e) => {
-        console.log(e.target.value);
         setSearchChanges(e.target.value);
-        console.log(searchChanges);
     };
 
     const handleSearch = (event) => {
         event.preventDefault();
         if (searchChanges !== searchValue) {
             updateSearchQuery(searchChanges);
-        } else {
-            alert("sama");
         }
     };
 
-    const handleDelete = () => {
-        alert("telah dihapus");
+    //handling alert fetching data
+    const openAlert = (variant, message) => {
+        setIsAlert(true);
+        setVariant(variant);
+        setMessage(message);
+        setTimeout(closeAlert, 2500);
+    };
+    const closeAlert = () => {
+        setIsAlert(false);
+        setVariant("");
+        setMessage("");
     };
 
-    // table setup
+    //Handle delete
+    const handleDelete = async (id) => {
+        const deleteConfirm = confirm(
+            "Apakah Anda yakin ingin menghapus kategori?"
+        );
+        if (deleteConfirm) {
+            const response = await deleteData(id);
+            if (response.Status === 200) {
+                openAlert("success", response.Message);
+                navigate("?search=&page=1");
+                await mutate(swrKey);
+            } else {
+                openAlert("danger", response.Message);
+            }
+        }
+    };
+
+    // table header
     const columns = [
         { header: "No." },
         { header: "Id" },
@@ -105,24 +138,27 @@ export default function Informasi() {
         { header: "Action" },
     ];
 
-    const { data, isLoading, error } = useCrud(swrKey);
-    if (error) return <div>error</div>;
-    console.log(data);
+    const { data, isLoading, error } = useGetData(swrKey);
+    const { deleteData, isLoading: loading } =
+        useDeleteData(`admin/informations/`);
+    if (error) return <ErrorPage />;
+    // console.log("data baru :");
+    // console.log(data);
 
     async function getCSVData() {
-        const token = Cookies.get("token");
-        const response = await fetch(`/admin/informations/download-csv`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        const data = await response.json();
-        console.log(data);
-        return data;
+        console.log("kurang csv");
     }
 
     return (
         <div className="sm:ml-[44px] sm:mr-8 mx-4">
+            {isAlert && (
+                <Alert
+                    variant={variant}
+                    message={message}
+                    onClose={closeAlert}
+                />
+            )}
+
             {/* header */}
             <div className="mt-16 flex flex-row justify-between items-center mb-9">
                 <div className="">
@@ -135,6 +171,7 @@ export default function Informasi() {
                     <button
                         onClick={getCSVData}
                         className="flex flex-row gap-[13px] items-center rounded-full border-gray-300 border  py-[10px] pl-[21px] pr-4 hover:bg-gray-50 duration-200"
+                        id="btn_import_csv"
                     >
                         <ArrowDownTrayIcon className="w-[14px]  text-gray-500 " />
                         <p className=" text-p3 text-gray-600 font-semibold">
@@ -142,8 +179,13 @@ export default function Informasi() {
                         </p>
                     </button>
                     <button
-                        onClick={() => navigate("/admin/informasi/tambah")}
+                        onClick={() =>
+                            navigate("/admin/informasi/tambah", {
+                                state: backValues,
+                            })
+                        }
                         className="flex flex-row gap-[13px] items-center rounded-full bg-green-500 py-[10px] pl-[21px] pr-4 hover:bg-green-600 duration-200"
+                        id="btn_to_tambahInformasi"
                     >
                         <PlusSmallIcon className="w-[14px]  text-white " />
                         <p className=" text-p3 text-white">Tambah Informasi</p>
@@ -160,7 +202,7 @@ export default function Informasi() {
                         />
                         <button
                             type="submit"
-                            id="input-button"
+                            id="btn-input-search"
                             className="gap-[13px] items-center rounded-full bg-green-500 py-[10px]  px-6 hover:bg-green-600 duration-200  text-p3 text-white"
                             value={searchChanges}
                         >
@@ -193,10 +235,16 @@ export default function Informasi() {
                             ))}
                         </tr>
                     </thead>
-                    {isLoading ? (
+                    {isLoading || loading ? (
                         <tbody>
-                            <tr>
-                                <td>loading</td>
+                            <tr className="">
+                                <td colSpan={5} className="mx-auto py-40">
+                                    <img
+                                        className="h-16 w-16 mx-auto"
+                                        src="https://icons8.com/preloaders/preloaders/1488/Iphone-spinner-2.gif"
+                                        alt=""
+                                    />
+                                </td>
                             </tr>
                         </tbody>
                     ) : (
@@ -223,28 +271,43 @@ export default function Informasi() {
                                         </td>
                                         <td className="py-[18px] px-[10px] text-center flex space-x-2 justify-center w-[180px]">
                                             <div className="flex justify-start">
-                                                <Link
-                                                    to={
-                                                        "/admin/informasi/" +
-                                                        informasi.InformationiId
+                                                <button
+                                                    onClick={() =>
+                                                        navigate(
+                                                            "/admin/informasi/" +
+                                                                informasi.InformationiId,
+                                                            {
+                                                                state: backValues,
+                                                            }
+                                                        )
                                                     }
                                                     className="bg-green-50 rounded-full mx-2 py-[5px] px-[10px]"
+                                                    id="btn_to_detail"
                                                 >
                                                     <EyeIcon className="w-5 h-5 text-green-500" />
-                                                </Link>
-                                                <Link
-                                                    to={
-                                                        "/admin/informasi/ubah/" +
-                                                        informasi.InformationiId
+                                                </button>
+                                                <button
+                                                    onClick={() =>
+                                                        navigate(
+                                                            "/admin/informasi/ubah/" +
+                                                                informasi.InformationiId,
+                                                            {
+                                                                state: backValues,
+                                                            }
+                                                        )
                                                     }
                                                     className="bg-green-50 rounded-full mx-2 py-[5px] px-[10px]"
+                                                    id="btn_to_ubah"
                                                 >
                                                     <PencilIcon className="w-5 h-5 text-green-500" />
-                                                </Link>
+                                                </button>
                                                 <button
                                                     className="bg-green-50 rounded-full mx-2 py-[5px] px-[10px]"
+                                                    id="btn_delete_info"
                                                     onClick={() =>
-                                                        handleDelete()
+                                                        handleDelete(
+                                                            informasi.InformationiId
+                                                        )
                                                     }
                                                 >
                                                     <TrashIcon className="w-5 h-5 text-error-500" />
@@ -272,61 +335,13 @@ export default function Informasi() {
             ) : (
                 <div className="mt-2">
                     {data.TotalPage >= 1 && (
-                        <div className="flex justify-between w-full pb-2">
-                            <div>
-                                <p className="text-p2 font-normal px-5 py-3 text-gray-500">{`Halaman ${data.Page} dari ${data.TotalPage}`}</p>
-                            </div>
-                            <nav>
-                                <ul className="list-style-none flex">
-                                    <li>
-                                        <button
-                                            className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold  ${
-                                                data.Page === 1
-                                                    ? "text-gray-300"
-                                                    : "text-green-500"
-                                            }`}
-                                            onClick={prevPage}
-                                            disabled={data.Page === 1}
-                                        >
-                                            Previous
-                                        </button>
-                                    </li>
-                                    {Array.from(
-                                        { length: data.TotalPage },
-                                        (_, i) => i + 1
-                                    ).map((n) => (
-                                        <li key={n}>
-                                            <p
-                                                className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold rounded-full text-green-500 ${
-                                                    data.Page === n
-                                                        ? "bg-green-500 text-white"
-                                                        : "bg-green-50"
-                                                }`}
-                                                onClick={() => changePage(n)}
-                                            >
-                                                {n}
-                                            </p>
-                                        </li>
-                                    ))}
-
-                                    <li>
-                                        <button
-                                            className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold  ${
-                                                data.Page === data.TotalPage
-                                                    ? "text-gray-300"
-                                                    : "text-green-500"
-                                            }`}
-                                            onClick={nextPage}
-                                            disabled={
-                                                data.Page === data.TotalPage
-                                            }
-                                        >
-                                            Next
-                                        </button>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
+                        <Pagination
+                            currentPage={data.Page}
+                            totalPage={data.TotalPage}
+                            onPrev={prevPage}
+                            onNext={nextPage}
+                            onChange={changePage}
+                        />
                     )}
                 </div>
             )}

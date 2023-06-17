@@ -1,7 +1,7 @@
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { Dialog } from "@headlessui/react";
-import { usePutKategori } from "../hooks/FetchKategori";
+import { usePutDataUsingJson } from "../hooks/FetchData";
 import { useSearchParams } from "react-router-dom";
 import { mutate } from "swr";
 
@@ -17,7 +17,9 @@ export default function EditKategoriModal({
     const pageValue = searchParams.get("page") || 1;
     const swrKey = `admin/products/category/search?name=${searchValue}&page=${pageValue}`;
 
-    const { putData, isLoading } = usePutKategori(`admin/products/category/`);
+    const { putData, isLoading } = usePutDataUsingJson(
+        `admin/products/category/`
+    );
 
     const formik = useFormik({
         initialValues: {
@@ -109,14 +111,16 @@ export default function EditKategoriModal({
                         <div className="flex flex-row gap-2 items-center justify-end ml-auto p-3">
                             <button
                                 onClick={() => setIsOpen(false)}
-                                className="px-4 py-[10px] text-p3 text-[#535A65] bg-white font-semibold rounded-full"
+                                className="btn_close_modal_edit px-4 py-[10px] text-p3 text-[#535A65] bg-white font-semibold rounded-full"
+                                id="btn_close_modal_edit"
                             >
                                 batal
                             </button>
                             <button
                                 disabled={!(formik.isValid && formik.dirty)}
                                 type="sumbit"
-                                className="px-4 py-[10px] text-p3 text-white bg-[#059669] font-semibold rounded-full disabled:text-white  disabled:bg-green-300 duration-100 hover:bg-green-600 active:border-2 active:border-green-300"
+                                className="btn_submit_edit px-4 py-[10px] text-p3 text-white bg-[#059669] font-semibold rounded-full disabled:text-white  disabled:bg-green-300 duration-100 hover:bg-green-600 active:border-2 active:border-green-300"
+                                id="btn_submit_edit"
                             >
                                 ubah
                             </button>
