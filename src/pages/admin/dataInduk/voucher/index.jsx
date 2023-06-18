@@ -17,9 +17,9 @@ import {
 } from "@heroicons/react/24/outline";
 
 import {
-  useDeleteKategori,
-  useGetAllCategory,
-} from "../../../../hooks/FetchKategori";
+  useGetData,
+  usePostDataUsingJson,
+} from "../../../../hooks/FetchData";
 
 const Voucher = () => {
   let [searchParams, setSearchParams] = useSearchParams();
@@ -30,13 +30,9 @@ const Voucher = () => {
   const pageValue = searchParams.get("page") || 1;
   
   // Data request
-  const swrKey = `admin/vouchers?page=${pageValue}`;
-  const { data, isLoading, error } = useGetAllCategory(swrKey);
-  
-  const { deleteData, isLoading: loading } = useDeleteKategori(
-    `admin/products/category/`
-    );
-    
+  const swrKey = `admin/vouchers/filter?page=${pageValue}&type=${filterValue}`;
+  const { data, isLoading, error } = useGetData(swrKey);
+  console.log("Data",data)
 
   // fungsi untuk filter
   const updateFilter = (newFilterValue) => {

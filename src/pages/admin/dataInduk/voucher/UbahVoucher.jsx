@@ -64,7 +64,7 @@ const EditVoucher = () => {
         <Link to="/admin/voucher/">
           <ChevronLeftIcon className="w-5 h-5 text-green-500" />
         </Link>
-        <h6 className="text-h6 font-medium">Tambah Voucher</h6>
+        <h6 className="text-h6 font-medium">Ubah Voucher</h6>
       </div>
 
       {/* fORM SECTION */}
