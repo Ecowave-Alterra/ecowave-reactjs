@@ -17,7 +17,7 @@ import Pagination from "../../../../components/Pagination";
 import EmptyData from "../../../../components/EmptyData";
 
 const Voucher = () => {
-  const [showModal, setShowModal] = useState(true);
+  const [showModal, setShowModal] = useState();
   const [itemList, setItemList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const recordPerPage = 10;
@@ -25,7 +25,6 @@ const Voucher = () => {
   const firstIndex = lastIndex - recordPerPage;
   const records = itemList.slice(firstIndex, lastIndex);
   const nPage = Math.ceil(itemList.length / recordPerPage);
-  const numbers = [...Array(nPage + 1).keys()].slice(1);
   const [tabMenu, setTabMenu] = useState([
     "Semua",
     "Gratis Ongkir",
@@ -168,6 +167,13 @@ const Voucher = () => {
           onChange={changePage}
           onNext={nextPage}
         />
+      )}
+
+      <button className="bg-green-300" onClick={() => setShowModal(true)}>
+        Modal
+      </button>
+      {showModal && (
+        <Alert variant="danger" message="Halddddddddd Laert" onClose={closeModal} />
       )}
     </div>
   );
