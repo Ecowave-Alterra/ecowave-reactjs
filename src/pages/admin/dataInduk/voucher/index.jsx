@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 // Komponen
@@ -16,23 +16,19 @@ import {
   PlusSmallIcon,
 } from "@heroicons/react/24/outline";
 
-import {
-  useGetData,
-  usePostDataUsingJson,
-} from "../../../../hooks/FetchData";
+import { useGetData, useDeleteData } from "../../../../hooks/FetchData";
 
 const Voucher = () => {
   let [searchParams, setSearchParams] = useSearchParams();
-  const [showModal, setShowModal] = useState();
   const navigate = useNavigate();
 
   const filterValue = searchParams.get("filter") || "";
   const pageValue = searchParams.get("page") || 1;
-  
+
   // Data request
   const swrKey = `admin/vouchers/filter?page=${pageValue}&type=${filterValue}`;
   const { data, isLoading, error } = useGetData(swrKey);
-  console.log("Data",data)
+  const { deleteData, isLoading: loading } = useDeleteData(`admin/vouchers/`);
 
   // fungsi untuk filter
   const updateFilter = (newFilterValue) => {
@@ -73,9 +69,53 @@ const Voucher = () => {
     updatePagination(id);
   };
 
-  const closeModal = () => {
-    setShowModal(false);
+  // Fungsi handle delete
+  const [showModalDelete, setShowModalDelete] = useState(false);
+  const [typeSelectedVoucher, setTypeSelectedVoucher] = useState();
+  const [voucherId, setVoucherId] = useState();
+
+  const openConfirmDelete = (id, name) => {
+    setShowModalDelete(true);
+    setTypeSelectedVoucher(name);
+    setVoucherId(id);
   };
+
+  const closeConfirmDelete = () => {
+    setShowModalDelete(false);
+    console.log("CANCEL")
+  };
+
+  const handleDelete = async () => {
+    console.log("DELETE", voucherId);
+    const response = await deleteData(voucherId);
+    console.log(response)
+    if (response.Status === 200) {
+      openAlert("success", response.Message);
+      console.log(response.Message)
+      setShowModalDelete(false);
+      changePage(1)
+    } else {
+      openAlert("danger", response.Message);
+    }
+  };
+
+  //alert fetching data
+  const [isAlert, setIsAlert] = useState(false);
+  const [message, setMessage] = useState("");
+  const [variant, setVariant] = useState("");
+
+  const openAlert = (variant, message) => {
+    setIsAlert(true);
+    setVariant(variant);
+    setMessage(message);
+    setTimeout(closeAlert, 2500);
+  };
+  const closeAlert = () => {
+    setIsAlert(false);
+    setVariant("");
+    setMessage("");
+  };
+
 
   const TABLE_COLUMS = [
     { header: "No." },
@@ -127,7 +167,7 @@ const Voucher = () => {
           {isLoading ? (
             <tbody>
               <tr className="">
-                <td colSpan={3} className="mx-auto py-40">
+                <td colSpan={6} className="mx-auto py-40">
                   <img
                     className="h-16 w-16 mx-auto"
                     src="https://icons8.com/preloaders/preloaders/1488/Iphone-spinner-2.gif"
@@ -166,16 +206,21 @@ const Voucher = () => {
                         >
                           <PencilIcon className="w-5 h-5 text-green-500" />
                         </Link>
-                        <div className="bg-green-50 rounded-full mx-2">
+                        <button
+                          className="bg-green-50 rounded-full mx-2"
+                          onClick={() =>
+                            openConfirmDelete(voucher.VoucherId, voucher.Type)
+                          }
+                        >
                           <TrashIcon className="w-5 h-5 text-error-500" />
-                        </div>
+                        </button>
                       </div>
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr className="row-span-3 w-full">
-                  <td colSpan={3}>
+                  <td colSpan={6}>
                     <EmptyData image={Empty} message={data.Message} />
                   </td>
                 </tr>
@@ -201,14 +246,20 @@ const Voucher = () => {
         </div>
       )}
 
-      <button className="bg-green-300" onClick={() => setShowModal(true)}>
-        Modal
-      </button>
-      {showModal && (
-        <Alert
+      {/* Alert  */}
+      {isAlert && (
+        <Alert variant={variant} message={message} onClose={closeAlert} />
+      )}
+      {/* confirm delete */}
+      {showModalDelete && (
+        <ModalConfirm
+          title="Hapus Voucher yang dipilih?"
+          description={`Voucher dengan tipe ${typeSelectedVoucher} akan dihapus secara permanen`}
+          onCancel={closeConfirmDelete}
+          onConfirm={handleDelete}
+          labelCancel="batal"
+          labelConfirm="hapus"
           variant="danger"
-          message="Halddddddddd Laert"
-          onClose={closeModal}
         />
       )}
     </div>

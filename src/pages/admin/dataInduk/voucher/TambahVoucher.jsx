@@ -1,25 +1,31 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { useFormik } from "formik";
+import moment from "moment";
 import { observable } from "@legendapp/state";
 import { observer } from "@legendapp/state/react";
-import moment from "moment";
 
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 import InputField from "../../../../components/InputField";
 import Alert from "../../../../components/Alert";
+import ModalConfirm from "../../../../components/ModalConfirm";
 
 import { usePostDataUsingJson } from "../../../../hooks/FetchData";
+
+// Legend State Management
 const state = observable({
-  chartFilter: "",
+  postData: {},
 });
 
 const TambahVoucher = observer(() => {
+  const navigate = useNavigate();
   //alert fetching data
   const [isAlert, setIsAlert] = useState(false);
   const [message, setMessage] = useState("");
   const [variant, setVariant] = useState("");
+
+  // fetch data
   const { postData, isLoading } = usePostDataUsingJson(`admin/vouchers`);
   const [voucherCategory, setVoucherCategory] = useState("2");
 
@@ -38,7 +44,6 @@ const TambahVoucher = observer(() => {
     const minutes = currentTime.getMinutes().toString();
     const seconds = currentTime.getSeconds().toString();
     const milliseconds = currentTime.getMilliseconds().toString();
-
     const timezoneOffset = currentTime.getTimezoneOffset();
     const timezoneOffsetHours = Math.floor(
       Math.abs(timezoneOffset) / 60
@@ -54,10 +59,38 @@ const TambahVoucher = observer(() => {
     return formattedTime;
   };
 
+  // Handle Post data
+  // Fungsi handle Edit
+  const [showModalPost, setShowModalPost] = useState(false);
+  const [showModalBack, setShowModalBack] = useState(false);
+
+  const openConfirmPost = () => {
+    setShowModalPost(true);
+  };
+
+  const closeConfirmPost = () => {
+    setShowModalPost(false);
+    console.log("CANCEL");
+  };
+
+  const hanndlePost = async () => {
+    const response = await postData(state.postData.get());
+    if (response.Status === 201) {
+      openAlert("success", response.Message);
+      setShowModalPost(false);
+      setTimeout(function () {
+        navigate("/admin/voucher");
+      }, 2000);
+    } else {
+      openAlert("danger", response.Message);
+      setShowModalPost(false);
+    }
+  };
+
   // Formik
   const formik = useFormik({
     initialValues: {
-      VoucherTypeId: 0,
+      VoucherTypeId: "",
       StartDate: "",
       EndDate: "",
       ...(voucherCategory == "2" && {
@@ -92,9 +125,10 @@ const TambahVoucher = observer(() => {
         .matches(/^[1-9][0-9]*$/, "Harap masukan angka")
         .required("Data yang diisi harus angka. Contoh: 9"),
     }),
-    onSubmit: async (e, {resetForm}) => {
+    onSubmit: async (e, { resetForm }) => {
+      openConfirmPost()
       const datas = {
-        VoucherTypeId: e.VoucherTypeId,
+        VoucherTypeId: parseInt(e.VoucherTypeId),
         StartDate: getCurrentTime(e.StartDate),
         EndDate: getCurrentTime(e.EndDate),
         ...(voucherCategory == "2" && {
@@ -105,14 +139,7 @@ const TambahVoucher = observer(() => {
         ClaimableUserCount: parseInt(e.ClaimableUserCount),
         MaxClaimLimit: parseInt(e.MaxClaimLimit),
       };
-
-      const response = await postData(datas);
-      if (response.Status === 201) {
-        openAlert("success", response.Message);
-        resetForm()
-      } else {
-        openAlert("danger", response.Message);
-      }
+      state.postData.set(datas);
     },
   });
 
@@ -168,7 +195,7 @@ const TambahVoucher = observer(() => {
             </div>
           )}
           {/* Date */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-4 mt-4">
             <InputField
               id="StartDate"
               type="date"
@@ -259,6 +286,18 @@ const TambahVoucher = observer(() => {
       {/* alert fetch api */}
       {isAlert && (
         <Alert variant={variant} message={message} onClose={closeAlert} />
+      )}
+
+      {/* confirm delete */}
+      {showModalPost && (
+        <ModalConfirm
+          title="Apakah voucher yang ingin ditambahkan sudah benar?"
+          onCancel={closeConfirmPost}
+          onConfirm={hanndlePost}
+          labelCancel="tidak"
+          labelConfirm="iya"
+          variant="success"
+        />
       )}
     </>
   );
