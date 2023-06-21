@@ -86,7 +86,7 @@ const router = createBrowserRouter(
                     <Route path="opsi" element={<OpsiPengiriman />} />
                     <Route path="voucher" element={<Voucher />} />
                     <Route path="voucher/tambah" element={<TambahVoucher />} />
-                    <Route path="voucher/ubah" element={<UbahVoucher />} />
+                    <Route path="voucher/ubah/:voucherId" element={<UbahVoucher />} />
                     <Route
                         path="metode-pembayaran"
                         element={<MetodePembayaran />}

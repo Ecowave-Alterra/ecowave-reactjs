@@ -1,8 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 // Komponen
 import ButtonGroup from "../../../../components/ButtonGroup";
+import Empty from "../../../../assets/img/Empty Voucher.png";
+import ModalConfirm from "../../../../components/ModalConfirm";
+import Alert from "../../../../components/Alert";
+import Pagination from "../../../../components/Pagination";
+import EmptyData from "../../../../components/EmptyData";
 
 // Ikon & Gambar
 import {
@@ -10,79 +15,116 @@ import {
   TrashIcon,
   PlusSmallIcon,
 } from "@heroicons/react/24/outline";
-import Empty from "../../../../assets/img/Empty Voucher.png";
-import ModalConfirm from "../../../../components/ModalConfirm";
-import Alert from "../../../../components/Alert";
-import Pagination from "../../../../components/Pagination";
-import EmptyData from "../../../../components/EmptyData";
+
+import { useGetData, useDeleteData } from "../../../../hooks/FetchData";
 
 const Voucher = () => {
-  const [showModal, setShowModal] = useState();
-  const [itemList, setItemList] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const recordPerPage = 10;
-  const lastIndex = currentPage * recordPerPage;
-  const firstIndex = lastIndex - recordPerPage;
-  const records = itemList.slice(firstIndex, lastIndex);
-  const nPage = Math.ceil(itemList.length / recordPerPage);
-  const [tabMenu, setTabMenu] = useState([
-    "Semua",
-    "Gratis Ongkir",
-    "Diskon Belanja",
-  ]);
-
+  let [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-  const getDataByStatus = (event) => {
-    console.log(event.target.name);
-    //do some stuff here
+
+  const filterValue = searchParams.get("filter") || "";
+  const pageValue = searchParams.get("page") || 1;
+
+  // Data request
+  const swrKey = `admin/vouchers/filter?page=${pageValue}&type=${filterValue}`;
+  const { data, isLoading, error } = useGetData(swrKey);
+  const { deleteData, isLoading: loading } = useDeleteData(`admin/vouchers/`);
+
+  // fungsi untuk filter
+  const updateFilter = (newFilterValue) => {
+    setSearchParams((params) => {
+      const updatedParams = new URLSearchParams(params.toString());
+      updatedParams.set("filter", newFilterValue);
+      updatedParams.set("page", "1");
+      return updatedParams;
+    });
   };
 
-  const columns = [
+  const getDataByStatus = async (event) => {
+    console.log(event.target.name);
+
+    if (event.target.name === "Semua") {
+      updateFilter("");
+    } else {
+      updateFilter(event.target.name);
+    }
+  };
+
+  // Fungsi untuk pagination
+  const updatePagination = (newPaginationValue) => {
+    setSearchParams((params) => {
+      const updatedParams = new URLSearchParams(params.toString());
+      updatedParams.set("page", newPaginationValue);
+      return updatedParams;
+    });
+  };
+
+  const prevPage = () => {
+    updatePagination(parseInt(pageValue) - 1);
+  };
+  const nextPage = () => {
+    updatePagination(parseInt(pageValue) + 1);
+  };
+  const changePage = (id) => {
+    updatePagination(id);
+  };
+
+  // Fungsi handle delete
+  const [showModalDelete, setShowModalDelete] = useState(false);
+  const [typeSelectedVoucher, setTypeSelectedVoucher] = useState();
+  const [voucherId, setVoucherId] = useState();
+
+  const openConfirmDelete = (id, name) => {
+    setShowModalDelete(true);
+    setTypeSelectedVoucher(name);
+    setVoucherId(id);
+  };
+
+  const closeConfirmDelete = () => {
+    setShowModalDelete(false);
+    console.log("CANCEL")
+  };
+
+  const handleDelete = async () => {
+    console.log("DELETE", voucherId);
+    const response = await deleteData(voucherId);
+    console.log(response)
+    if (response.Status === 200) {
+      openAlert("success", response.Message);
+      console.log(response.Message)
+      setShowModalDelete(false);
+      changePage(1)
+    } else {
+      openAlert("danger", response.Message);
+    }
+  };
+
+  //alert fetching data
+  const [isAlert, setIsAlert] = useState(false);
+  const [message, setMessage] = useState("");
+  const [variant, setVariant] = useState("");
+
+  const openAlert = (variant, message) => {
+    setIsAlert(true);
+    setVariant(variant);
+    setMessage(message);
+    setTimeout(closeAlert, 2500);
+  };
+  const closeAlert = () => {
+    setIsAlert(false);
+    setVariant("");
+    setMessage("");
+  };
+
+
+  const TABLE_COLUMS = [
     { header: "No." },
     { header: "Jenis Voucher" },
     { header: "Sisa Klaim Voucher" },
     { header: "Tanggal Mulai" },
     { header: "Tanggal Berakhir" },
-    { header: "Tindakan" },
+    { header: "Aksi" },
   ];
-
-  // Fungsi untuk pagination
-  const prevPage = () => {
-    if (currentPage !== firstIndex) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-  const nextPage = () => {
-    if (currentPage !== lastIndex) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-  const changePage = (id) => {
-    setCurrentPage(id);
-  };
-
-  const closeModal = () => {
-    setShowModal(false);
-  };
-
-  const voucher = [
-    {
-      jenis: "Gratis Ongkir",
-      sisa: 1000,
-      mulai: "27 Mei 2023",
-      brakhir: "1 jan 2024",
-    },
-    {
-      jenis: "Diskon Belanja",
-      sisa: 1000,
-      mulai: "27 Mei 2023",
-      brakhir: "1 jan 2024",
-    },
-  ];
-
-  useEffect(() => {
-    setItemList(voucher);
-  }, []);
 
   return (
     <div className="flex-row px-5 py-10">
@@ -95,13 +137,16 @@ const Voucher = () => {
           className="flex flex-row gap-[13px] items-center rounded-full bg-green-500 py-[10px] pl-[21px] pr-4 hover:bg-green-600 duration-200"
         >
           <PlusSmallIcon className="w-[14px]  text-white " />
-          <p className=" text-p3 text-white">Tambah</p>
+          <p className=" text-p3 text-white">Tambah Voucher</p>
         </button>
       </div>
 
       {/* Button grub */}
       <div className="space-x-1 text-p3 mt-7 border-b-2 inline-flex border-b-green-500">
-        <ButtonGroup buttons={tabMenu} getData={getDataByStatus} />
+        <ButtonGroup
+          buttons={["Semua", "Gratis Ongkir", "Diskon Belanja"]}
+          getData={getDataByStatus}
+        />
       </div>
 
       {/* Table */}
@@ -109,71 +154,113 @@ const Voucher = () => {
         <table className="w-full min-w-[1000px] text-p4 text-left text-black">
           <thead className="bg-green-500 text-white">
             <tr>
-              {columns &&
-                columns.map((head, i) => (
-                  <th
-                    key={i}
-                    className="py-[14px] px-[10px] text-p2 font-medium text-center"
-                  >
-                    {head.header}
-                  </th>
-                ))}
+              {TABLE_COLUMS.map((head, i) => (
+                <th
+                  key={i}
+                  className="py-[14px] px-[10px] text-p2 font-medium text-center"
+                >
+                  {head.header}
+                </th>
+              ))}
             </tr>
           </thead>
-          <tbody>
-            {itemList &&
-              records.map((row, index) => (
-                <tr key={index} className="even:bg-gray-50 text-p4 text-center">
-                  <td className="py-[18px] px-[10px]">
-                    {firstIndex + index + 1}.
-                  </td>
-                  <td className="py-[18px] px-[10px] min-w-[150px] text-left">
-                    {row.jenis}
-                  </td>
-                  <td className="py-[18px] px-[10px] min-w-[70px]">
-                    {row.sisa}
-                  </td>
-                  <td className="py-[18px] px-[10px]">{row.mulai}</td>
-                  <td className="py-[18px] px-[10px]">{row.brakhir}</td>
-                  <td className="py-[18px] px-[10px] text-center flex space-x-2 justify-center">
-                    <div className="flex">
-                      <Link
-                        to="/admin/voucher/ubah"
-                        className="bg-green-50 rounded-full mx-2"
-                      >
-                        <PencilIcon className="w-5 h-5 text-green-500" />
-                      </Link>
-                      <div className="bg-green-50 rounded-full mx-2">
-                        <TrashIcon className="w-5 h-5 text-error-500" />
+          {isLoading ? (
+            <tbody>
+              <tr className="">
+                <td colSpan={6} className="mx-auto py-40">
+                  <img
+                    className="h-16 w-16 mx-auto"
+                    src="https://icons8.com/preloaders/preloaders/1488/Iphone-spinner-2.gif"
+                    alt=""
+                  />
+                </td>
+              </tr>
+            </tbody>
+          ) : (
+            <tbody>
+              {data && data.Status === 200 ? (
+                data.Vouchers.map((voucher, index) => (
+                  <tr
+                    key={index}
+                    className="even:bg-gray-50 text-p4 text-center"
+                  >
+                    <th
+                      scope="row"
+                      className="text-center font-normal w-[48px]"
+                    >
+                      {10 * (parseInt(data.Page) - 1) + index + 1}
+                    </th>
+                    <td className="py-[18px] px-[10px] min-w-[150px] text-left">
+                      {voucher.Type}
+                    </td>
+                    <td className="py-[18px] px-[10px] min-w-[70px]">
+                      {voucher.ClaimableUserCount}
+                    </td>
+                    <td className="py-[18px] px-[10px]">{voucher.StartDate}</td>
+                    <td className="py-[18px] px-[10px]">{voucher.EndDate}</td>
+                    <td className="py-[18px] px-[10px] text-center flex space-x-2 justify-center">
+                      <div className="flex">
+                        <Link
+                          to={`/admin/voucher/ubah/${voucher.VoucherId}`}
+                          className="bg-green-50 rounded-full mx-2"
+                        >
+                          <PencilIcon className="w-5 h-5 text-green-500" />
+                        </Link>
+                        <button
+                          className="bg-green-50 rounded-full mx-2"
+                          onClick={() =>
+                            openConfirmDelete(voucher.VoucherId, voucher.Type)
+                          }
+                        >
+                          <TrashIcon className="w-5 h-5 text-error-500" />
+                        </button>
                       </div>
-                    </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr className="row-span-3 w-full">
+                  <td colSpan={6}>
+                    <EmptyData image={Empty} message={data.Message} />
                   </td>
                 </tr>
-              ))}
-          </tbody>
+              )}
+            </tbody>
+          )}
         </table>
-
-        {/* Empty */}
-        {records.length == 0 && (
-          <EmptyData image={Empty} message="Belum ada list voucher" />
-        )}
       </div>
-      {/* Pagination */}
-      {records.length >= 1 && (
-        <Pagination
-          currentPage={currentPage}
-          totalPage={nPage}
-          onPrev={prevPage}
-          onChange={changePage}
-          onNext={nextPage}
-        />
+      {/* pagination */}
+      {isLoading ? (
+        ""
+      ) : (
+        <div className="mt-2">
+          {data.TotalPage >= 1 && (
+            <Pagination
+              currentPage={data.Page}
+              totalPage={data.TotalPage}
+              onPrev={prevPage}
+              onNext={nextPage}
+              onChange={changePage}
+            />
+          )}
+        </div>
       )}
 
-      <button className="bg-green-300" onClick={() => setShowModal(true)}>
-        Modal
-      </button>
-      {showModal && (
-        <Alert variant="danger" message="Halddddddddd Laert" onClose={closeModal} />
+      {/* Alert  */}
+      {isAlert && (
+        <Alert variant={variant} message={message} onClose={closeAlert} />
+      )}
+      {/* confirm delete */}
+      {showModalDelete && (
+        <ModalConfirm
+          title="Hapus Voucher yang dipilih?"
+          description={`Voucher dengan tipe ${typeSelectedVoucher} akan dihapus secara permanen`}
+          onCancel={closeConfirmDelete}
+          onConfirm={handleDelete}
+          labelCancel="batal"
+          labelConfirm="hapus"
+          variant="danger"
+        />
       )}
     </div>
   );
