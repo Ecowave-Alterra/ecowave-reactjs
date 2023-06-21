@@ -32,8 +32,6 @@ export default function DetailInformasi() {
 
     const { data, isLoading, error } = useGetData(swrKey);
     if (error) return <ErrorPage />;
-    console.log("data detail :");
-    console.log(data);
 
     return (
         <div>
