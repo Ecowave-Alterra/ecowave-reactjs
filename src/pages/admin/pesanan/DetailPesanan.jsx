@@ -1,64 +1,82 @@
-import Back from '../../../assets/img/Vector.png';
+import { useParams, Link } from 'react-router-dom';
+import { useGetData } from '../../../hooks/FetchDataMockServer';
+
 import {
   TruckIcon,
   MapPinIcon,
   BuildingStorefrontIcon,
   ShoppingBagIcon,
 } from '@heroicons/react/24/outline';
-import { Link } from 'react-router-dom';
+import Back from '../../../assets/img/Vector.png';
+import media from '../../../assets/img/media.png';
+
+import ErrorPage from '../../../components/ErrorPage';
 
 function DetailPesanan() {
-  const detail = {
-    informasi: {
-      tipe: 'Reguler',
-      ekspedisi: 'J&T Express : 251372563213',
-      status: 'Dikemas',
-    },
-    alamat: {
-      nama: 'Shinta Rachma Shintia',
-      nomer: '(+62) 81123456789',
-      lokasi: 'Jl Asia Afrika No 123 Kota Bandung 40526',
-    },
-    produk: {
-      img: '/src/assets/img/media.png',
-      namaProduk: 'Totebag Tas belanja serbaguna',
-      jumlah: 1,
-    },
-    pembayaran: {
-      harga: 'Rp.5.000',
-      ongkos: 'Rp.5.000',
-      promo: '-',
-      total: 'Rp.20.000',
-      metode: 'Bca Virtual Account',
-    },
-  };
+  let { id } = useParams();
 
+  //ganti
+  const swrKey = `admin/orders/${id}`;
+
+  const { data, isLoading, error } = useGetData(swrKey);
+  if (error) return <ErrorPage />;
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <img
+          className="h-16 w-16"
+          src="https://icons8.com/preloaders/preloaders/1488/Iphone-spinner-2.gif"
+          alt=""
+        />
+      </div>
+    );
+  console.log(data);
+
+  // Handle Status Pengiriman
   const statusPengiriman = () => {
-    const infoStatus = detail.informasi.status;
+    const infoStatus = data.Status;
 
     switch (infoStatus) {
       case 'Dikemas':
         return (
-          <p className="text-green-500">Pesanan sedang dikemas | Dikemas</p>
+          <p className="text-green-500">
+            Pesanan sedang dikemas |{' '}
+            <span className="font-semibold">Dikemas</span>
+          </p>
         );
       case 'Dikirim':
         return (
-          <p className="text-green-500">Pesanan dalam pengiriman | Dikirim</p>
+          <p className="text-green-500">
+            Pesanan dalam pengiriman |{' '}
+            <span className="font-semibold">Dikirim</span>
+          </p>
         );
       case 'Selesai':
         return (
           <p className="text-green-500">
-            Pesanan telah diterima oleh yang bersangkutan | Selesai
+            Pesanan telah diterima oleh yang bersangkutan |{' '}
+            <span className="font-semibold">Selesai</span>
           </p>
         );
-      case 'Belum Dibayar':
+      case 'Belum Bayar':
         return (
           <p className="text-error-500">
-            Pesanan menunggu pembayaran | Belum Bayar
+            Pesanan menunggu pembayaran |{' '}
+            <span className="font-semibold cursor-pointer">Belum Bayar</span>
+          </p>
+        );
+      case 'Dibatalkan':
+        return (
+          <p className="text-error-500">
+            <span className="font-semibold cursor-pointer">Dibatalkan</span>
           </p>
         );
       default:
-        return <p className="text-error-500">Dibatalkan</p>;
+        return (
+          <p className="text-error-500">
+            <span className="font-semibold">Data Eror</span>
+          </p>
+        );
     }
   };
 
@@ -79,10 +97,10 @@ function DetailPesanan() {
       </div>
       <div className="flex-row space-y-2 mb-14">
         <div className="flex justify-between">
-          <p>{detail.informasi.tipe}</p>
-          {statusPengiriman()}
+          <p>Reguler</p>
+          <div>{statusPengiriman()}</div>
         </div>
-        <p>{detail.informasi.ekspedisi}</p>
+        <p>J&T Express : 251372563213</p>
       </div>
 
       <div className="flex items-center mb-5">
@@ -90,9 +108,9 @@ function DetailPesanan() {
         <div className="text-p1 font-bold">Alamat Pengirim</div>
       </div>
       <div className="flex-row space-y-3 mb-14">
-        <p>{detail.alamat.nama}</p>
-        <p>{detail.alamat.nomer}</p>
-        <p>{detail.alamat.lokasi}</p>
+        <p>{data.Name}</p>
+        <p>(+62) 81123456789</p>
+        <p>Jl Asia Afrika No 123 Kota Bandung 40526</p>
       </div>
       <div className="flex items-center text-green-500 mb-7">
         <BuildingStorefrontIcon className="h-6 w-7 mr-2" />
@@ -100,10 +118,10 @@ function DetailPesanan() {
       </div>
       <div className="flex justify-between items-center border-b-2 border-b-gray-300 mb-7">
         <div className="flex items-center">
-          <img src={detail.produk.img} className="w-28" />
-          <p>{detail.produk.namaProduk}</p>
+          <img src={media} className="w-28" />
+          <p>Totebag Tas belanja serbaguna</p>
         </div>
-        <p>x{detail.produk.jumlah}</p>
+        <p>x1</p>
       </div>
 
       <div className="flex items-center mb-14">
@@ -113,26 +131,26 @@ function DetailPesanan() {
       <div className="flex-row border-b-2 border-gray-300 space-y-5 pb-5 mb-5 ">
         <div className="flex justify-between">
           <p>Harga</p>
-          <span>{detail.pembayaran.harga}</span>
+          <span>Rp.5.000</span>
         </div>
         <div className="flex justify-between">
           <p>Ongkos Kirim</p>
-          <span>{detail.pembayaran.ongkos}</span>
+          <span>Rp.5.000</span>
         </div>
         <div className="flex justify-between">
           <p>Promo yang digunakan</p>
-          <span>{detail.pembayaran.promo}</span>
+          <span>-</span>
         </div>
       </div>
       <div>
         <div className="flex justify-between text-p1 font-bold border-b-2 border-gray-300 pb-5 mb-5">
           <p>Total Pesanan</p>
-          <p>{detail.pembayaran.total}</p>
+          <p>Rp.20.000</p>
         </div>
       </div>
       <div className="flex justify-between">
         <p>Metode Pembayaran</p>
-        <p>{detail.pembayaran.metode}</p>
+        <p>Bca Virtual Account</p>
       </div>
     </div>
   );
