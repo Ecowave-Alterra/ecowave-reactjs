@@ -128,6 +128,9 @@ export default function UbahInformasi() {
 
     //validasi form input tidak kosong saat ingin kembali ke halaman sebelumnya
     const backToMain = () => {
+        // console.log(formik.values.konten == data.Information.Content);
+        // console.log(formik.values.konten);
+        // console.log(data.Information.Content);
         if (data.Status !== 404) {
             if (
                 formik.values.image == data.Information.PhotoContentUrl &&

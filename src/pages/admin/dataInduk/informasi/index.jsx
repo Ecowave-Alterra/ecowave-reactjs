@@ -6,7 +6,7 @@ import {
     PencilIcon,
     TrashIcon,
 } from "@heroicons/react/24/solid";
-
+import { useCSVDownloader } from "react-papaparse";
 import ButtonGroup from "../../../../components/ButtonGroup";
 import Search from "../../../../components/Search";
 import { useEffect, useState } from "react";
@@ -22,6 +22,7 @@ export default function Informasi() {
     let [searchParams, setSearchParams] = useSearchParams();
     const [searchChanges, setSearchChanges] = useState("");
     const navigate = useNavigate();
+    const { CSVDownloader, Type } = useCSVDownloader();
 
     //get query string
     const searchValue = searchParams.get("search") || "";
@@ -139,15 +140,15 @@ export default function Informasi() {
     ];
 
     const { data, isLoading, error } = useGetData(swrKey);
+    const {
+        data: dataCsv,
+        isLoading: loadingCsv,
+        error: errorCsv,
+    } = useGetData(`admin/informations/download-csv`);
+
     const { deleteData, isLoading: loading } =
         useDeleteData(`admin/informations/`);
     if (error) return <ErrorPage />;
-    // console.log("data baru :");
-    // console.log(data);
-
-    async function getCSVData() {
-        console.log("kurang csv");
-    }
 
     return (
         <div className="sm:ml-[44px] sm:mr-8 mx-4">
@@ -167,30 +168,42 @@ export default function Informasi() {
                         Lihat, tambah, ubah, dan hapus data informasi.
                     </p>
                 </div>
-                <div className="flex flex-row gap-2 ">
-                    <button
-                        onClick={getCSVData}
-                        className="flex flex-row gap-[13px] items-center rounded-full border-gray-300 border  py-[10px] pl-[21px] pr-4 hover:bg-gray-50 duration-200"
-                        id="btn_import_csv"
-                    >
-                        <ArrowDownTrayIcon className="w-[14px]  text-gray-500 " />
-                        <p className=" text-p3 text-gray-600 font-semibold">
-                            Import dari CSV
-                        </p>
-                    </button>
-                    <button
-                        onClick={() =>
-                            navigate("/admin/informasi/tambah", {
-                                state: backValues,
-                            })
-                        }
-                        className="flex flex-row gap-[13px] items-center rounded-full bg-green-500 py-[10px] pl-[21px] pr-4 hover:bg-green-600 duration-200"
-                        id="btn_to_tambahInformasi"
-                    >
-                        <PlusSmallIcon className="w-[14px]  text-white " />
-                        <p className=" text-p3 text-white">Tambah Informasi</p>
-                    </button>
-                </div>
+                {loadingCsv ? (
+                    ""
+                ) : (
+                    <div className="flex flex-row gap-2 ">
+                        <CSVDownloader
+                            type={Type.Button}
+                            className="flex flex-row gap-[13px] items-center rounded-full border-gray-300 border  py-[10px] pl-[21px] pr-4 hover:bg-gray-50 duration-200"
+                            filename={"information-data"}
+                            bom={true}
+                            config={{
+                                delimiter: ";",
+                            }}
+                            data={dataCsv.Data}
+                        >
+                            <ArrowDownTrayIcon className="w-[14px]  text-gray-500 " />
+                            <p className=" text-p3 text-gray-600 font-semibold">
+                                Import dari CSV
+                            </p>
+                        </CSVDownloader>
+
+                        <button
+                            onClick={() =>
+                                navigate("/admin/informasi/tambah", {
+                                    state: backValues,
+                                })
+                            }
+                            className="flex flex-row gap-[13px] items-center rounded-full bg-green-500 py-[10px] pl-[21px] pr-4 hover:bg-green-600 duration-200"
+                            id="btn_to_tambahInformasi"
+                        >
+                            <PlusSmallIcon className="w-[14px]  text-white " />
+                            <p className=" text-p3 text-white">
+                                Tambah Informasi
+                            </p>
+                        </button>
+                    </div>
+                )}
             </div>
             <div className="mt-8 mb-9">
                 <form onSubmit={handleSearch} className="flex flex-start">
