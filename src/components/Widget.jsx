@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 
 const Widget = (props) => {
   switch (props.type) {
-    case 'pendapatan':
+    case "pendapatan":
       return (
         <>
           <div className="p-8 max-w-[337px] h-[200px] rounded-xl border-[1px] border-gray-300 grid grid-rows-3 grid-flow-col gap-4">
@@ -24,13 +24,13 @@ const Widget = (props) => {
             </div>
             <p className="font-normal text-p1">Total Pendapatan</p>
             <p className="font-semibold text-h6">
-              {props.data ? `Rp.${props.data}` : '-'}
+              {props.data ? `Rp.${props.data}` : "-"}
             </p>
           </div>
         </>
       );
 
-    case 'pengguna':
+    case "pengguna":
       return (
         <>
           <div className="p-8 max-w-[337px] h-[200px] rounded-xl border-[1px] border-gray-300 grid grid-rows-3 grid-flow-col gap-4">
@@ -50,12 +50,12 @@ const Widget = (props) => {
             </div>
             <p className="font-normal text-p1">Total Pengguna</p>
             <p className="font-semibold text-h6">
-              {props.data ? props.data : '-'}
+              {props.data ? props.data : "-"}
             </p>
           </div>
         </>
       );
-    case 'pesanan':
+    case "pesanan":
       return (
         <>
           <div className="p-8 max-w-[337px] h-[200px] rounded-xl border-[1px] border-gray-300 grid grid-rows-3 grid-flow-col gap-4">
@@ -75,7 +75,60 @@ const Widget = (props) => {
             </div>
             <p className="font-normal text-p1">Total Pesanan</p>
             <p className="font-semibold text-h6">
-              {props.data ? props.data : '-'}
+              {props.data ? props.data : "-"}
+            </p>
+          </div>
+        </>
+      );
+
+    case "sisaproduk":
+      return (
+        <>
+          <div className="p-8 max-w-[337px] h-[200px] rounded-xl border-[1px] border-gray-300 grid grid-rows-3 grid-flow-col gap-4">
+            <div className="flex justify-end">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="#059669"
+                viewBox="0 0 24 24"
+                stroke="#059669"
+                class="w-6 h-6"
+              >
+                <path
+                  fill="#059669"
+                  d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.148 2.148A12.061 12.061 0 0116.5 7.605"
+                />
+              </svg>
+            </div>
+            <p className="font-normal text-p1">Sisa Produk</p>
+            <p className="font-semibold text-h6">
+              {props.data ? props.data : "-"}
+            </p>
+          </div>
+        </>
+      );
+
+    case "terjual":
+      return (
+        <>
+          <div className="p-8 max-w-[337px] h-[200px] rounded-xl border-[1px] border-gray-300 grid grid-rows-3 grid-flow-col gap-4">
+            <div className="flex justify-end">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="#059669"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="#059669"
+                class="w-6 h-6"
+              >
+                <path
+                  fill="#059669"
+                  d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6"
+                />
+              </svg>
+            </div>
+            <p className="font-normal text-p1">Produk Terjual</p>
+            <p className="font-semibold text-h6">
+              {props.data ? props.data : "-"}
             </p>
           </div>
         </>
