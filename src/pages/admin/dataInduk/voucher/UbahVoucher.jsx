@@ -176,7 +176,7 @@ const EditVoucher = observer(() => {
     onSubmit: async (e) => {
       openConfirmEdit();
       const datas = {
-        VoucherTypeId: e.VoucherTypeId,
+        // VoucherTypeId: e.VoucherTypeId,
         StartDate: getCurrentTime(e.StartDate),
         EndDate: getCurrentTime(e.EndDate),
         ...(state.dataInit.VoucherTypeId.get() == "Diskon Belanja" && {

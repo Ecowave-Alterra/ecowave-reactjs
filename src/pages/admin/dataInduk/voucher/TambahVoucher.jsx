@@ -296,7 +296,7 @@ const TambahVoucher = observer(() => {
               className="px-8 py-4 bg-green-500 font-semibold text-white rounded-full disabled:bg-green-300 duration-100 hover:bg-green-600"
               type="submit"
               data-te-ripple-init=""
-              // disabled={!(formik.isValid && formik.dirty)}
+              disabled={!(formik.isValid && formik.dirty)}
             >
               Tambah
             </button>
