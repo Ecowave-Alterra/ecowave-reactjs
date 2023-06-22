@@ -87,6 +87,26 @@ const TambahVoucher = observer(() => {
     }
   };
 
+  //validasi form input tidak kosong saat ingin kembali ke halaman sebelumnya
+  const backToMain = () => {
+    if (
+      formik.values.VoucherTypeId == "" &&
+      formik.values.StartDate == "" &&
+      formik.values.EndDate == "" &&
+      formik.values.ClaimableUserCount == 0 &&
+      formik.values.MaxClaimLimit == 0 &&
+      formik.values?.MinimumPurchase == 0 &&
+      formik.values?.MaximumDiscount == 0 &&
+      formik.values?.DiscountPercent == 0
+    ) {
+      navigate("/admin/voucher");
+      console.log("no change");
+    } else {
+      setShowModalBack(true);
+      console.log("change");
+    }
+  };
+
   // Formik
   const formik = useFormik({
     initialValues: {
@@ -112,10 +132,10 @@ const TambahVoucher = observer(() => {
         MaximumDiscount: Yup.string()
           .matches(/^[1-9][0-9]*$/, "Harap masukan angka")
           .required("Data yang diisi harus angka. Contoh: 10500"),
-        DiscountPercent: Yup.string()
-          .matches(/^[1-9][0-9]*$/, "Harap masukan angka")
+        DiscountPercent: Yup.number("Harap masukan angka")
+          // .matches(/^[a-zA-Z\s]+$/, "Harap masukan angka")
           .min(0)
-          .max(100)
+          .max(100, "Mohon maaf, entri Anda melebihi batas maksimum")
           .required("Data yang diisi harus angka. Contoh: 50"),
       }),
       ClaimableUserCount: Yup.string()
@@ -126,7 +146,7 @@ const TambahVoucher = observer(() => {
         .required("Data yang diisi harus angka. Contoh: 9"),
     }),
     onSubmit: async (e, { resetForm }) => {
-      openConfirmPost()
+      openConfirmPost();
       const datas = {
         VoucherTypeId: parseInt(e.VoucherTypeId),
         StartDate: getCurrentTime(e.StartDate),
@@ -160,9 +180,9 @@ const TambahVoucher = observer(() => {
     <>
       <div className="m-8">
         <div className="flex flex-row row-gap items-center gap-6">
-          <Link to="/admin/voucher/">
+          <button onClick={backToMain}>
             <ChevronLeftIcon className="w-5 h-5 text-green-500" />
-          </Link>
+          </button>
           <h6 className="text-h6 font-medium">Tambah Voucher</h6>
         </div>
 
@@ -195,7 +215,7 @@ const TambahVoucher = observer(() => {
             </div>
           )}
           {/* Date */}
-          <div className="grid grid-cols-2 gap-4 mt-4">
+          <div className="grid grid-cols-2 gap-4 mt-2">
             <InputField
               id="StartDate"
               type="date"
@@ -276,7 +296,7 @@ const TambahVoucher = observer(() => {
               className="px-8 py-4 bg-green-500 font-semibold text-white rounded-full disabled:bg-green-300 duration-100 hover:bg-green-600"
               type="submit"
               data-te-ripple-init=""
-              disabled={!(formik.isValid && formik.dirty)}
+              // disabled={!(formik.isValid && formik.dirty)}
             >
               Tambah
             </button>
@@ -297,6 +317,19 @@ const TambahVoucher = observer(() => {
           labelCancel="tidak"
           labelConfirm="iya"
           variant="success"
+        />
+      )}
+
+      {/* modal back */}
+      {showModalBack && (
+        <ModalConfirm
+          title="Keluar Halaman?"
+          description="Kamu akan membatalkan perubahan Tambah Voucher. Semua perubahan tidak akan disimpan"
+          onCancel={() => setShowModalBack(false)}
+          onConfirm={() => navigate("/admin/voucher")}
+          labelCancel="tidak"
+          labelConfirm="iya"
+          variant="danger"
         />
       )}
     </>

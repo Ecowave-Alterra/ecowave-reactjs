@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Widget from "../../../components/Widget";
 import BarChart from "../../../components/BarChart";
-import useCrud from "../../../hooks/FetchMockServer";
+import {useGetData} from "../../../hooks/FetchData";
 
 // Heroicons
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
@@ -12,25 +12,33 @@ import { observer } from "@legendapp/state/react";
 import { useSearchParams } from "react-router-dom";
 
 const state = observable({
-  chartFilter: "",
+  chartFilter: "mingguan",
 });
 
 const Dashboard = observer(() => {
   let [searchParams, setSearchParams] = useSearchParams();
 
-  const filterValue = searchParams.get("filter") || "";
+  const filterValue = searchParams.get("filter") || state.chartFilter.get();
 
   const swrKey = `admin/dashboard?filter=${filterValue}`;
-  const { data, isLoading, error } = useCrud(swrKey);
+  const { data, isLoading, error } = useGetData(swrKey);
 
   const handleChangeFilter = (newFilterValue) => {
+    state.chartFilter.set(newFilterValue.target.value);
     setSearchParams((params) => {
       const updatedParams = new URLSearchParams(params.toString());
-      updatedParams.set("filter", newFilterValue.target.value);
-      state.chartFilter.set(newFilterValue.target.value);
+      updatedParams.set("filter", state.chartFilter.get());
       return updatedParams;
     });
   };
+
+  useEffect(() => {
+    setSearchParams((params) => {
+      const updatedParams = new URLSearchParams(params.toString());
+      updatedParams.set("filter", "mingguan");
+      return updatedParams;
+    })
+  }, [])
   return (
     <>
       <h1 className="font-normal text-h4 m-8">Dashboard</h1>
@@ -40,7 +48,7 @@ const Dashboard = observer(() => {
           data={
             isLoading
               ? ""
-              : data.TotalIncome?.toLocaleString("en-US").replace(/,/g, ".")
+              : data.TotalRevenues?.toLocaleString("en-US").replace(/,/g, ".")
           }
         />
         <Widget
@@ -56,7 +64,7 @@ const Dashboard = observer(() => {
           data={
             isLoading
               ? ""
-              : data.TotalOrder?.toLocaleString("en-US").replace(/,/g, ".")
+              : data.TotalOrders?.toLocaleString("en-US").replace(/,/g, ".")
           }
         />
       </div>
@@ -67,7 +75,7 @@ const Dashboard = observer(() => {
           alt=""
         />
       ) : (
-        <BarChart detail={data?.CurrentMonthIncome}>
+        <BarChart detail={data?.ChartData}>
           <div className="flex justify-between">
             <h1 className="text-h6 font-semibold">Total Pendapatan</h1>
             <div className="w-1/3">
@@ -78,9 +86,9 @@ const Dashboard = observer(() => {
                   onChange={handleChangeFilter}
                   value={state.chartFilter.get()}
                 >
-                  <option value="">Mingguan</option>
-                  <option value="month">Bulanan</option>
-                  <option value="year">Tahunan</option>
+                  <option value="mingguan">Mingguan</option>
+                  <option value="bulanan">Bulanan</option>
+                  <option value="tahunan">Tahunan</option>
                 </select>
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                   <ChevronDownIcon className="w-5 h-5" />
@@ -122,12 +130,12 @@ const Dashboard = observer(() => {
               </tbody>
             ) : (
               <tbody>
-                {data?.FavoriteProducts &&
-                  data?.FavoriteProducts.map((product, index) => (
+                {data?.FavouriteProducts &&
+                  data?.FavouriteProducts.map((product, index) => (
                     <tr key={index} className="even:bg-gray-50 text-p4">
                       <td className="py-[18px] px-[10px]">{index + 1}.</td>
                       <td className="py-[18px] px-[10px]">{product.Name}</td>
-                      <td className="py-[18px] px-[10px]">{product.Order}</td>
+                      <td className="py-[18px] px-[10px]">{product.TotalOrders}</td>
                     </tr>
                   ))}
               </tbody>
@@ -135,7 +143,7 @@ const Dashboard = observer(() => {
           </table>
           {isLoading ? null : (
             <>
-              {data?.FavoriteProducts == null && (
+              {data?.FavouriteProducts == null && (
                 <p className="text-center text-gray-500 text-p3 font-semibold my-14 py-4 bg-gray-50">
                   Belum ada data tersedia
                 </p>
@@ -173,12 +181,12 @@ const Dashboard = observer(() => {
               </tbody>
             ) : (
               <tbody>
-                {data?.MostRatedProducts &&
-                  data?.MostRatedProducts.map((product, index) => (
+                {data?.TopReviewProducts &&
+                  data?.TopReviewProducts.map((product, index) => (
                     <tr key={index} className="even:bg-gray-50 text-p4">
                       <td className="py-[18px] px-[10px]">{index + 1}.</td>
                       <td className="py-[18px] px-[10px]">{product.Name}</td>
-                      <td className="py-[18px] px-[10px]">{product.Review}</td>
+                      <td className="py-[18px] px-[10px]">{product.TotalReviews}</td>
                     </tr>
                   ))}
               </tbody>
@@ -186,7 +194,7 @@ const Dashboard = observer(() => {
           </table>
           {isLoading ? null : (
             <>
-              {data?.MostRatedProducts == null && (
+              {data?.TopReviewProducts == null && (
                 <p className="text-center text-gray-500 text-p3 font-semibold my-14 py-4 bg-gray-50">
                   Belum ada data tersedia
                 </p>
