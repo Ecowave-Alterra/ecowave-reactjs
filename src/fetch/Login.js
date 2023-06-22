@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useObservable } from '@legendapp/state/react'
 
 export default function getLoginData() {
-    const [data,setData] = useState([])
+    const loginData = useObservable("")
 
     const postDataLogin = async (data) => {
         await fetch("https://ecowave-h64wmjjkza-uc.a.run.app/admin/login", {
@@ -14,11 +14,11 @@ export default function getLoginData() {
             })
             .then(async(response) => {
                 const json = await response.json();
-                setData(json.Data)
+                loginData.set(json.Data)
             })
             .catch((e) => {
                 console.error(e);
             });
     }
-    return [data,postDataLogin]
+    return {loginData,postDataLogin}
 }

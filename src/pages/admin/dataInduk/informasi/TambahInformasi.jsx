@@ -54,6 +54,7 @@ export default function TambahInformasi() {
             formData.append("Content", values.konten);
             formData.append("Status", "Terbit");
             formData.append("PhotoContentUrl", values.image);
+            console.log(values.image)
 
             const response = await postData(formData);
             if (response.Status === 201) {
