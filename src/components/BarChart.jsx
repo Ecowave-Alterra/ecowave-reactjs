@@ -25,9 +25,8 @@ ChartJS.register(
 );
 
 const BarChart = ({ children, detail }) => {
-  const incomeLabel = detail ? detail[0] : [];
-  const arrayLabels = detail ? Object.keys(incomeLabel) : [];
-  const valuePerLabel = detail ? Object.values(incomeLabel) : [];
+  const arrayLabels = detail ? detail.map((obj) => obj.Label) : [];
+  const valuePerLabel = detail ? detail.map((obj) => obj.Value) : [];
 
   const labels = arrayLabels;
   const data = {
@@ -37,6 +36,10 @@ const BarChart = ({ children, detail }) => {
         label: "Pendapatan",
         data: valuePerLabel,
         backgroundColor: "#14B885",
+        innerWidth: "24px",
+        barThickness: 100,
+        borderRadius: 20,
+        
       },
     ],
   };

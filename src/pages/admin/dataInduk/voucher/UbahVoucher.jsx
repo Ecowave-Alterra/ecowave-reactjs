@@ -96,7 +96,6 @@ const EditVoucher = observer(() => {
   };
 
   const handleEdit = async () => {
-    console.log("EDIT", state.dataUpdate.get());
     const response = await putData(state.dataUpdate.get(), voucherId);
     console.log(response);
     if (response.Status === 200) {
@@ -116,14 +115,23 @@ const EditVoucher = observer(() => {
   //validasi form input tidak kosong saat ingin kembali ke halaman sebelumnya
   const backToMain = () => {
     if (
-      getCurrentTime(formik.values.StartDate) ==
-        getCurrentTime(state.dataInit.StartDate.get()) &&
-      getCurrentTime(formik.values.EndDate) ==
-        getCurrentTime(state.dataInit.EndDate.get())
+      moment(formik.values.StartDate).format("YYYY-MM-DD") ==
+        moment(state.dataInit.StartDate.get()).format("YYYY-MM-DD") &&
+      moment(formik.values.EndDate).format("YYYY-MM-DD") ==
+        moment(state.dataInit.EndDate.get()).format("YYYY-MM-DD") &&
+      formik.values.ClaimableUserCount ==
+        state.dataInit.ClaimableUserCount.get() &&
+      formik.values.MaxClaimLimit == state.dataInit.MaxClaimLimit.get() &&
+      formik.values?.MinimumPurchase == state.dataInit?.MinimumPurchase.get() &&
+      formik.values?.MaximumDiscount == state.dataInit?.MaximumDiscount.get() &&
+      formik.values?.DiscountPercent == state.dataInit?.DiscountPercent.get()
     ) {
       navigate("/admin/voucher");
+      console.log("no change");
+      console.log(state.dataInit.VoucherTypeId.get());
     } else {
-      setShowModalBack(true)
+      setShowModalBack(true);
+      console.log("change");
     }
   };
 
@@ -152,10 +160,10 @@ const EditVoucher = observer(() => {
         MaximumDiscount: Yup.string()
           .matches(/^[1-9][0-9]*$/, "Harap masukan angka")
           .required("Data yang diisi harus angka. Contoh: 10500"),
-        DiscountPercent: Yup.string()
-          .matches(/^[1-9][0-9]*$/, "Harap masukan angka")
+        DiscountPercent: Yup.number()
+          // .matches(/^[1-9][0-9]*$/, "Harap masukan angka")
           .min(0)
-          .max(100)
+          .max(100, "Entri data melebihi batas 100%")
           .required("Data yang diisi harus angka. Contoh: 50"),
       }),
       ClaimableUserCount: Yup.string()
@@ -168,7 +176,7 @@ const EditVoucher = observer(() => {
     onSubmit: async (e) => {
       openConfirmEdit();
       const datas = {
-        // VoucherTypeId: e.VoucherTypeId,
+        VoucherTypeId: e.VoucherTypeId,
         StartDate: getCurrentTime(e.StartDate),
         EndDate: getCurrentTime(e.EndDate),
         ...(state.dataInit.VoucherTypeId.get() == "Diskon Belanja" && {
@@ -181,8 +189,8 @@ const EditVoucher = observer(() => {
       };
       state.dataUpdate.set(datas);
       state.submitClick.set(true);
-      // console.log(getCurrentTime(state.dataInit.StartDate.get()));
-      // console.log(getCurrentTime(e.StartDate));
+      // console.log(moment(state.dataInit.StartDate.get()).format("YYYY-MM-DD"));
+      // console.log(moment(e.StartDate).format("YYYY-MM-DD"));
     },
   });
 
@@ -331,7 +339,7 @@ const EditVoucher = observer(() => {
               data-te-ripple-init=""
               disabled={!(formik.isValid && formik.dirty)}
             >
-              Tambah
+              Ubah
             </button>
           </div>
         </form>
