@@ -76,6 +76,7 @@ export default function TambahInformasi() {
       }, 2000);
     } else {
       openAlert('danger', response.Message);
+      closeAddModal();
     }
   };
   //submit sebagai draft
