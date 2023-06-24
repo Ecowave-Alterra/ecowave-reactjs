@@ -15,6 +15,7 @@ import { useSearchParams } from "react-router-dom";
 import Alert from "../../../../components/Alert";
 import Pagination from "../../../../components/Pagination";
 import InformationNotFound from "../../../../components/InformationNotFound";
+import ModalConfirm from "../../../../components/ModalConfirm";
 
 export default function Produk() {
     // table setup
@@ -123,20 +124,26 @@ export default function Produk() {
     };
 
     //Handle delete
+    const [deleteModalId, setDeleteModalId] = useState(null);
+
+    const openDeleteModal = (id) => {
+        setDeleteModalId(id);
+      };
+    
+      const closeDeleteModal = () => {
+        setDeleteModalId(null);
+      };
+
     const handleDelete = async (id) => {
-        console.log(id)
-        const deleteConfirm = confirm(
-        "Apakah Anda yakin ingin menghapus kategori?"
-        );
-        if (deleteConfirm) {
         const response = await deleteData(id);
         if (response.Status === 200) {
             openAlert("success", response.Message);
             navigate("?search=&page=1");
+            closeDeleteModal();
             await mutate(swrKey);
         } else {
+            closeDeleteModal();
             openAlert("danger", response.Message);
-        }
         }
     };
 
@@ -283,8 +290,9 @@ export default function Produk() {
                             <PencilIcon className="w-5 h-5 text-green-500" />
                             </button>
                             <button
+                            id="btn_delete_product"
                             className="bg-green-50 rounded-full mx-2 py-[5px] px-[10px]"
-                            onClick={() => handleDelete(item.ProductId)}
+                            onClick={() => openDeleteModal(item.ProductId)}
                             >
                             <TrashIcon className="w-5 h-5 text-error-500" />
                             </button>
@@ -319,6 +327,18 @@ export default function Produk() {
             )}
             </div>
         )}
+              {/* Modals */}
+      {deleteModalId && (
+        <ModalConfirm
+          title="Hapus produk yang dipilih?"
+          description={`Produk dengan ID ${deleteModalId} yang dipilih akan dihapus secara permanen`}
+          labelCancel="Batal"
+          labelConfirm="Hapus"
+          variant="danger"
+          onCancel={closeDeleteModal}
+          onConfirm={() => handleDelete(deleteModalId)}
+        />
+      )}
         </div>
     );
 }

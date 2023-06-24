@@ -7,11 +7,14 @@ import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 import "react-quill/dist/quill.snow.css";
 import { useDropzone } from "react-dropzone";
 import { PencilIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
+// Fetch hooks
 import {
   usePostDataUsingFormData,
   useGetData,
 } from "../../../../hooks/FetchData";
+// Komponen
 import Alert from "../../../../components/Alert";
+import ModalConfirm from "../../../../components/ModalConfirm";
 
 let edit = false;
 let choosed = "";
@@ -42,7 +45,7 @@ export default function TambahProduk() {
       weight: "",
       price: "",
       stock: "",
-      description: "<h2>coba</h2>",
+      description: "",
     },
     validationSchema: Yup.object({
       displayImage: Yup.mixed().required("Gambar harus diunggah"),
@@ -60,30 +63,7 @@ export default function TambahProduk() {
       description: Yup.string().required("Stok Tidak Boleh Kosong"),
     }),
     onSubmit: async () => {
-      const formData = new FormData();
-      formData.append("ProductCategoryId", formik.values.category);
-      formData.append("Name", formik.values.productName);
-      formData.append("Stock", formik.values.stock);
-      formData.append("Price", formik.values.price);
-      formData.append("Weight", formik.values.weight);
-      formData.append("Description", formik.values.description);
-      formData.append("PhotoContentUrl1", formik.values.image[0]);
-      formData.append("PhotoContentUrl2", formik.values.image[1]);
-      formData.append("PhotoContentUrl3", formik.values.image[2]);
-      formData.append("PhotoContentUrl4", formik.values.image[3]);
-      formData.append("PhotoContentUrl5", formik.values.image[4]);
-
-      const response = await postData(formData);
-      if (response.Status === 201) {
-        console.log(response.Message);
-        openAlert("success", response.Message);
-
-        setTimeout(function () {
-          navigate("/admin/produk");
-        }, 2000);
-      } else {
-        openAlert("danger", response.Message);
-      }
+      openAddModal();
     },
   });
 
@@ -179,6 +159,16 @@ export default function TambahProduk() {
     }
   };
 
+  // handle back menu
+  const [backModal, setBackModal] = useState(false);
+
+  const openBackModal = () => {
+    setBackModal(true);
+  };
+  const closeBackModal = () => {
+    setBackModal(false);
+  };
+
   const backToMain = () => {
     if (
       formik.values.displayImage == "" &&
@@ -192,13 +182,48 @@ export default function TambahProduk() {
     ) {
       navigate("/admin/produk/");
     } else {
-      const back = confirm(
-        "Apakah Anda yakin ingin keluar tanpa menyimpan data Produk?"
-      );
-      if (back) {
-        const backLocation = `/admin/produk/`;
-        navigate(backLocation);
-      }
+      openBackModal();
+    }
+  };
+
+  const handleConfirmBack = () => {
+    navigate("/admin/produk/");
+  };
+  // Modal add
+  const [addModal, setAddModal] = useState(null);
+  const openAddModal = () => {
+    setAddModal(true);
+  };
+  const closeAddModal = () => {
+    setAddModal(false);
+  };
+
+  const handleConfrimAdd = async () => {
+    const formData = new FormData();
+    formData.append("ProductCategoryId", formik.values.category);
+    formData.append("Name", formik.values.productName);
+    formData.append("Stock", formik.values.stock);
+    formData.append("Price", formik.values.price);
+    formData.append("Weight", formik.values.weight);
+    formData.append("Description", formik.values.description);
+    formData.append("PhotoContentUrl1", formik.values.image[0]);
+    formData.append("PhotoContentUrl2", formik.values.image[1]);
+    formData.append("PhotoContentUrl3", formik.values.image[2]);
+    formData.append("PhotoContentUrl4", formik.values.image[3]);
+    formData.append("PhotoContentUrl5", formik.values.image[4]);
+
+    const response = await postData(formData);
+    if (response.Status === 201) {
+      console.log(response.Message);
+      closeAddModal();
+      openAlert("success", response.Message);
+
+      setTimeout(function () {
+        navigate("/admin/produk");
+      }, 2000);
+    } else {
+      openAlert("danger", response.Message);
+      closeAddModal();
     }
   };
 
@@ -226,6 +251,7 @@ export default function TambahProduk() {
         </label>
         <h6 className="text-h6 font-medium">Tambah Produk</h6>
       </div>
+
       <div className="flex w-full">
         {formik.values.displayImage.length == 0 ? (
           <div className="flex-wrap ms-3 w-5/12">
@@ -240,13 +266,13 @@ export default function TambahProduk() {
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
-                    stroke-width="1.5"
+                    strokeWidth="1.5"
                     stroke="currentColor"
-                    class="w-6 h-6"
+                    className="w-6 h-6"
                   >
                     <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                       d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"
                     />
                   </svg>
@@ -282,6 +308,7 @@ export default function TambahProduk() {
                 onClick={open}
               ></label>
               <label
+                id="btn_add_more"
                 className="flex cursor-pointer place-content-center items-center h-full w-16 mt-3 ms-3 border-2 border-green-500 rounded-2xl"
                 onClick={open}
               >
@@ -292,10 +319,12 @@ export default function TambahProduk() {
         ) : (
           <div className="flex-wrap relative ms-3 w-5/12">
             <PencilIcon
+              id="btn_edit_image"
               className="absolute right-20 top-4 align-self-end w-12 h-12 p-3 text-white bg-green-400 hover:bg-green-500 rounded-full"
               onClick={() => handleEditdisplayImage(open())}
             />
             <TrashIcon
+              id="btn_del_img"
               className="absolute right-4 top-4 w-12 h-12 p-3 text-white bg-error-400 hover:bg-error-500 rounded-full"
               onClick={() => handleDeletedisplayImage()}
             />
@@ -308,6 +337,8 @@ export default function TambahProduk() {
             <div className="flex h-16">
               {formik.values.displayImage?.map((file, index) => (
                 <img
+                  id="change"
+                  key={`iamge${index}`}
                   src={file}
                   alt=""
                   onClick={() => changeDisplay(index)}
@@ -316,6 +347,7 @@ export default function TambahProduk() {
               ))}
               {formik.values.displayImage.length <= 4 ? (
                 <label
+                  id="btn_add_more2"
                   className="flex cursor-pointer place-content-center items-center h-full w-16 mt-3 ms-3 border-2 border-green-500 rounded-2xl"
                   onClick={open}
                 >
@@ -326,7 +358,8 @@ export default function TambahProduk() {
           </div>
         )}
 
-        <label className="lg:w-7/12 items-center gap-3">
+        {/* Cuma ganti tag label ke div VANNNN */}
+        <div className="lg:w-7/12 items-center gap-3">
           <div className="sm:px-10 sm:mt-0 md:px-10 md:mt-52 lg:mt-0  w-full min-w-[300px]">
             <div className="md:mx-1 md:p-1">
               <form onSubmit={formik.handleSubmit}>
@@ -373,8 +406,10 @@ export default function TambahProduk() {
                       onChange={formik.handleChange}
                     >
                       <option value="">Masukkan Kategori Produk</option>
-                      {data?.ProductCategories.map((item) => (
-                        <option value={item.Id}>{item.Category}</option>
+                      {data?.ProductCategories.map((item, i) => (
+                        <option key={`option${i}`} value={item.Id}>
+                          {item.Category}
+                        </option>
                       ))}
                     </select>
                   </div>
@@ -507,17 +542,8 @@ export default function TambahProduk() {
                 <div className="flex w-full mt-16 justify-end float-right">
                   {/*Submit button*/}
                   <div className="text-center">
-                    <label
-                      className="text-p3 mb-3 px-6 w-fit inline-block border-green-500 border-solid border-2  text-green-500 rounded-full py-2 text-xs font-medium uppercase leading-normal shadow-[0_4px_9px_-4px_rgba(0,0,0,0.2)] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:outline-none focus:ring-0 active:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)]"
-                      data-te-ripple-init=""
-                      onClick={() => navigate("/admin/produk")}
-                    >
-                      Batal
-                    </label>
-                  </div>
-                  {/*Submit button*/}
-                  <div className="text-center">
                     <button
+                      id="btn_add_product"
                       className="text-p3 ms-3 mb-3 w-fit px-6 inline-block bg-green-500 rounded-full py-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_rgba(0,0,0,0.2)] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:outline-none focus:ring-0 active:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] disabled:bg-green-300"
                       type="submit"
                       data-te-ripple-init=""
@@ -530,8 +556,32 @@ export default function TambahProduk() {
               </form>
             </div>
           </div>
-        </label>
+        </div>
       </div>
+      {/* Modal Hapus */}
+      {backModal && (
+        <ModalConfirm
+          title="Keluar Halaman?"
+          description="Kamu akan membatalkan perubahan Tambah Produk. Semua perubahan data tidak akan disimpan"
+          labelCancel="Batal"
+          labelConfirm="Keluar"
+          variant="danger"
+          onCancel={closeBackModal}
+          onConfirm={handleConfirmBack}
+        />
+      )}
+
+      {/* Modal Add */}
+      {addModal && (
+        <ModalConfirm
+          title="Apakah produk yang ingin ditambahkan sudah benar?"
+          labelCancel="Tidak"
+          labelConfirm="Iya"
+          variant="success"
+          onCancel={closeAddModal}
+          onConfirm={() => handleConfrimAdd()}
+        />
+      )}
     </>
   );
 }
