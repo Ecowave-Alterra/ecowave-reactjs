@@ -4,16 +4,38 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import getLoginData from "../fetch/Login";
-import setAuthCookie, { getAuthCookieAdminId } from "../utils/cookies";
+import setAuthCookie, {
+  getAuthCookieAdminEmail,
+  getAuthCookieAdminName,
+  getAuthCookie,
+} from "../utils/cookies";
+import Alert from "../components/Alert";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  //alert fetching data
+  const [isAlert, setIsAlert] = useState(false);
+  const [message, setMessage] = useState("");
+  const [variant, setVariant] = useState("");
+
   const navigate = useNavigate();
   const { loginData, postDataLogin } = getLoginData();
 
   const handleShowPassword = (e) => {
     setShowPassword(!showPassword);
     e.preventDefault();
+  };
+
+  const openAlert = (variant, message) => {
+    setIsAlert(true);
+    setVariant(variant);
+    setMessage(message);
+    setTimeout(closeAlert, 2500);
+  };
+  const closeAlert = () => {
+    setIsAlert(false);
+    setVariant("");
+    setMessage("");
   };
 
   const formik = useFormik({
@@ -26,13 +48,22 @@ export default function Login() {
       passWord: Yup.string().required("Password Kosong"),
     }),
     onSubmit: async (e) => {
-      await postDataLogin(formik.values);
-      var login = loginData.get();
-      console.log(login);
-      if (login.Token) {
-        setAuthCookie(login.Token, login.Id);
-        alert("Id " + getAuthCookieAdminId() + " Berhasil disimpan Di Cookies");
+      const datas = {
+        email: e.email,
+        password: e.passWord,
+      };
+      const response = await postDataLogin(datas);
+      console.log(response);
+      if (response.Status === 200) {
+        setAuthCookie(
+          loginData.get().Token,
+          loginData.get().Email,
+          loginData.get().Name
+        );
+        openAlert("success", response.Message);
         window.location.reload();
+      } else {
+        openAlert("danger", "Email atau password tidak valid. Mohon coba lagi");
       }
     },
   });
@@ -128,6 +159,7 @@ export default function Login() {
                               Password
                             </label>
                             <label
+                              id="show_pass"
                               onClick={(e) => handleShowPassword(e)}
                               className="cursor-pointer absolute top-0 right-0 p-2.5 text-sm font-medium text-black border-transparent bg-transparent rounded-r-lg border"
                             >
@@ -176,17 +208,10 @@ export default function Login() {
                           </div>
                         )}
 
-                        {/*Forgot password link*/}
-                        <a
-                          href="#!"
-                          className="pb-4 float-right mt-6 text-green-500 text-p3"
-                        >
-                          Lupa Password?
-                        </a>
-
                         {/*Submit button*/}
-                        <div className="mb-12 text-center">
+                        <div className="mb-12 text-center mt-8">
                           <button
+                            id="btn_login"
                             className="text-p3 mb-3 inline-block bg-green-500 w-full rounded-full py-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_rgba(0,0,0,0.2)] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:outline-none focus:ring-0 active:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] disabled:bg-green-300"
                             type="submit"
                             data-te-ripple-init=""
@@ -204,6 +229,10 @@ export default function Login() {
           </div>
         </div>
       </section>
+      {/* Alert  */}
+      {isAlert && (
+        <Alert variant={variant} message={message} onClose={closeAlert} />
+      )}
     </>
   );
 }

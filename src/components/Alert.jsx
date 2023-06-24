@@ -36,7 +36,7 @@ const Alert = ({ variant, message, onClose }) => {
                     </div>
                     <p className="block sm:inline">{message}</p>
                 </div>
-                <XMarkIcon className="w-5 h-5 text-white mx-1" onClick={onClose} />
+                <XMarkIcon id="close_modal" className="w-5 h-5 text-white mx-1" onClick={onClose} />
             </div>
         </div>
     );
