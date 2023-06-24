@@ -1,6 +1,6 @@
 import React from "react";
 
-const Pagination = ({currentPage, totalPage, onPrev, onNext, onChange }) => {
+const Pagination = ({ currentPage, totalPage, onPrev, onNext, onChange }) => {
   return (
     <div className="flex justify-between w-full py-4">
       <div>
@@ -10,6 +10,7 @@ const Pagination = ({currentPage, totalPage, onPrev, onNext, onChange }) => {
         <ul className="list-style-none flex">
           <li>
             <a
+              id="btn_prev"
               className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold  ${
                 currentPage === 1 ? "text-gray-300" : "text-green-500"
               }`}
@@ -21,6 +22,7 @@ const Pagination = ({currentPage, totalPage, onPrev, onNext, onChange }) => {
           {[...Array(totalPage + 1).keys()].slice(1).map((n, i) => (
             <li key={i}>
               <p
+                id={`btn_choose_page${n}`}
                 className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold rounded-full text-green-500 ${
                   currentPage === n ? "bg-green-500 text-white" : "bg-green-50"
                 }`}
@@ -33,6 +35,7 @@ const Pagination = ({currentPage, totalPage, onPrev, onNext, onChange }) => {
 
           <li>
             <a
+              id="btn_next"
               className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold  ${
                 currentPage === totalPage ? "text-gray-300" : "text-green-500"
               }`}

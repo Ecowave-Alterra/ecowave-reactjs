@@ -1,35 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
-  useNavigate,
   Link,
   useSearchParams,
-  useLocation,
 } from "react-router-dom";
-import Cookies from "js-cookie";
-import { mutate } from "swr";
 
 // Komponen
 import Search from "../../../components/Search";
 import Pagination from "../../../components/Pagination";
 import EmptyData from "../../../components/EmptyData";
-import useCrud from "../../../hooks/FetchMockServer";
+import { useGetData } from "../../../hooks/FetchData";
 
 // Ikon & Gambar
 import { EyeIcon } from "@heroicons/react/24/outline";
 import Empty from "../../../assets/img/File Not Found.png";
 
 export default function Ulasan() {
+  // handle url params
   let [searchParams, setSearchParams] = useSearchParams();
-  const [searchChanges, setSearchChanges] = useState();
-  const navigate = useNavigate();
-  const location = useLocation();
-
   const searchValue = searchParams.get("search") || "";
   const pageValue = searchParams.get("page") || 1;
 
+  // Fetch data SWR
   const swrKey = `admin/reviews/search?search=${searchValue}&page=${pageValue}`;
-
-  const { data, isLoading, error } = useCrud(swrKey);
+  const { data, isLoading, error } = useGetData(swrKey);
   if (error) return <div>error</div>;
   console.log("data", data);
   console.log("error", error);
@@ -59,7 +52,6 @@ export default function Ulasan() {
     setSearchParams((params) => {
       const updatedParams = new URLSearchParams(params.toString());
       updatedParams.set("search", newSearchValue);
-      console.log("param", updatedParams)
       return updatedParams;
     });
   };
@@ -70,11 +62,6 @@ export default function Ulasan() {
       updateSearchQuery(event.target.value);
     }
   };
-
-  useEffect(() => {
-    
-  }, []);
-
   // Table Setup
   const TALBLE_COLUMNS = [
     { header: "No." },
@@ -94,7 +81,6 @@ export default function Ulasan() {
         <Search
           id="search-ulasan"
           placeholder="Cari item ID, nama produk"
-          // onChange={handleChange}
           handleKeyDown={handleKeyDown}
         />
       </div>
@@ -115,8 +101,17 @@ export default function Ulasan() {
             </tr>
           </thead>
           {isLoading ? (
-            // <tr>loading</tr>
-            null
+            <tbody>
+            <tr className="">
+              <td colSpan={6} className="mx-auto py-40">
+                <img
+                  className="h-16 w-16 mx-auto"
+                  src="https://icons8.com/preloaders/preloaders/1488/Iphone-spinner-2.gif"
+                  alt=""
+                />
+              </td>
+            </tr>
+          </tbody>
           ) : (
             <tbody>
               {data &&
@@ -127,7 +122,7 @@ export default function Ulasan() {
                       {10 * (parseInt(data.Page) - 1) + index + 1}.
                     </td>
                     <td className="py-[18px] px-[10px] min-w-[100px]">
-                      {review.ProductId}
+                      {review.ProductID}
                     </td>
                     <td className="py-[18px] px-[10px] min-w-[100px]">
                       {review.Name}
@@ -139,7 +134,7 @@ export default function Ulasan() {
                       {review.ReviewQty}
                     </td>
                     <td className="py-[18px] px-[10px] w-[100px] flex space-x-4 justify-center">
-                      <Link to={`/admin/ulasan/${review.ProductId}`}>
+                      <Link id="btn_view_ulasan" to={`/admin/ulasan/${review.ProductID}`}>
                         <EyeIcon className="w-5 h-5 text-green-500" />
                       </Link>
                     </td>
@@ -150,13 +145,12 @@ export default function Ulasan() {
         </table>
 
         {/* Empty */}
-        {!data ||
-          (error && (
+        {data && data.Status == 404 && (
             <EmptyData
               image={Empty}
               message="No. Resi yang Anda cari tidak ditemukan"
             />
-          ))}
+          )}
       </div>
       {/* Pagination */}
       {data && data.Status == 200 && (

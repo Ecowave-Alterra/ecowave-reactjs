@@ -25,9 +25,11 @@ ChartJS.register(
 );
 
 const BarChart = ({ children, detail }) => {
+  // label dan value untuk Bar Chart
   const arrayLabels = detail ? detail.map((obj) => obj.Label) : [];
   const valuePerLabel = detail ? detail.map((obj) => obj.Value) : [];
 
+  // Bar Chart Data
   const labels = arrayLabels;
   const data = {
     labels,
@@ -37,8 +39,8 @@ const BarChart = ({ children, detail }) => {
         data: valuePerLabel,
         backgroundColor: "#14B885",
         innerWidth: "24px",
-        barThickness: 100,
-        borderRadius: 20,
+        maxBarThickness: 100,
+        borderRadius: 10,
         
       },
     ],
@@ -86,7 +88,6 @@ const BarChart = ({ children, detail }) => {
         ) : (
           <Bar data={data} options={options} />
         )}
-        {/* <Bar data={data} options={options} /> */}
       </div>
       {/* End Chart Section */}
     </>

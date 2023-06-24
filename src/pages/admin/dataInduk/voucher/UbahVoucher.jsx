@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { observable } from "@legendapp/state";
@@ -43,7 +43,6 @@ const EditVoucher = observer(() => {
     const minutes = currentTime.getMinutes().toString();
     const seconds = currentTime.getSeconds().toString();
     const milliseconds = currentTime.getMilliseconds().toString();
-
     const timezoneOffset = currentTime.getTimezoneOffset();
     const timezoneOffsetHours = Math.floor(
       Math.abs(timezoneOffset) / 60
@@ -92,7 +91,6 @@ const EditVoucher = observer(() => {
 
   const closeConfirmEdit = () => {
     setShowModalEdit(false);
-    console.log("CANCEL");
   };
 
   const handleEdit = async () => {
@@ -127,11 +125,8 @@ const EditVoucher = observer(() => {
       formik.values?.DiscountPercent == state.dataInit?.DiscountPercent.get()
     ) {
       navigate("/admin/voucher");
-      console.log("no change");
-      console.log(state.dataInit.VoucherTypeId.get());
     } else {
       setShowModalBack(true);
-      console.log("change");
     }
   };
 
@@ -161,7 +156,6 @@ const EditVoucher = observer(() => {
           .matches(/^[1-9][0-9]*$/, "Harap masukan angka")
           .required("Data yang diisi harus angka. Contoh: 10500"),
         DiscountPercent: Yup.number()
-          // .matches(/^[1-9][0-9]*$/, "Harap masukan angka")
           .min(0)
           .max(100, "Entri data melebihi batas 100%")
           .required("Data yang diisi harus angka. Contoh: 50"),
@@ -189,11 +183,10 @@ const EditVoucher = observer(() => {
       };
       state.dataUpdate.set(datas);
       state.submitClick.set(true);
-      // console.log(moment(state.dataInit.StartDate.get()).format("YYYY-MM-DD"));
-      // console.log(moment(e.StartDate).format("YYYY-MM-DD"));
     },
   });
 
+  // inialisasi state
   useEffect(() => {
     if (data) {
       const dataInialisasi = {
@@ -218,7 +211,7 @@ const EditVoucher = observer(() => {
     <>
       <div className="m-8">
         <div className="flex flex-row row-gap items-center gap-6">
-          <button onClick={backToMain}>
+          <button id="btn_back" onClick={backToMain}>
             <ChevronLeftIcon className="w-5 h-5 text-green-500" />
           </button>
           <h6 className="text-h6 font-medium">Ubah Voucher</h6>
@@ -334,6 +327,7 @@ const EditVoucher = observer(() => {
           {/* submit button */}
           <div className="flex relative top-[72px] justify-end">
             <button
+              id="btn_submit"
               className="px-8 py-4 bg-green-500 font-semibold text-white rounded-full disabled:bg-green-300 duration-100 hover:bg-green-600"
               type="submit"
               data-te-ripple-init=""

@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 import { Link, useParams } from "react-router-dom";
-import Empty from "../../../assets/img/File Not Found.png";
+
+// Komponen
+import Empty from "../../../assets/img/Empty Voucher.png";
 import CardReview from "../../../components/CardReview";
 import Pagination from "../../../components/Pagination";
+import EmptyData from "../../../components/EmptyData";
 
-import useCrud from "../../../hooks/FetchMockServer";
-
+// Fetch
+import { useGetData } from "../../../hooks/FetchData";
 
 function DetailUlasan() {
+  // Get param id
   let { reviewId } = useParams();
 
-  const swrKey = `admin/reviews/9676644154`;
-
-  const { data, isLoading, error } = useCrud(swrKey);
-  if (error) return <div>error</div>;
-  if (isLoading) return <div>loading</div>;
-  console.log("DATA ulasan", data);
-  console.log("ID", reviewId);
+  // Fungsi fetch data SWR
+  const swrKey = `admin/reviews/${reviewId}`;
+  const { data, isLoading, error } = useGetData(swrKey);
 
   // Tabel Setup
   const TABLE_COLUMS = [
@@ -45,7 +45,7 @@ function DetailUlasan() {
     <div className="flex-row px-3 py-8">
       {/* header */}
       <div className="flex justify-start items-center">
-        <Link to={"/admin/ulasan"}>
+        <Link id="btn_back" to={"/admin/ulasan"}>
           <ChevronLeftIcon className="w-5 h-5 text-green-500 cursor-pointer mr-4" />
         </Link>
         <div className="text-h4 font-normal">Detail Ulasan</div>
@@ -68,7 +68,15 @@ function DetailUlasan() {
           </thead>
           {isLoading ? (
             <tbody>
-              <tr>loading</tr>
+              <tr className="">
+                <td colSpan={3} className="mx-auto py-40">
+                  <img
+                    className="h-16 w-16 mx-auto"
+                    src="https://icons8.com/preloaders/preloaders/1488/Iphone-spinner-2.gif"
+                    alt=""
+                  />
+                </td>
+              </tr>
             </tbody>
           ) : (
             <tbody>
@@ -76,11 +84,11 @@ function DetailUlasan() {
                 data.Status == 200 &&
                 data.Reviews?.map((review, i) => (
                   <CardReview
-                    key={review.TransactionId}
+                    key={review.TransactionID}
                     productName={review.ProductName}
                     reviewerName={review.Name}
                     reviewerPhoto={review.ProfilePhoto}
-                    transactionId={review.TransactionId}
+                    transactionId={review.TransactionID}
                     avgRating={review.AvgRating}
                     expeditionRating={review.ExpeditionRating}
                     productRating={review.ProductRating}
@@ -93,10 +101,10 @@ function DetailUlasan() {
           )}
         </table>
         {/* Empty */}
-        {!data || error && (
+        {data && data.Status == 404 && (
           <EmptyData
             image={Empty}
-            message="No. Resi yang Anda cari tidak ditemukan"
+            message="Belum ada ulasan untuk produk ini"
           />
         )}
       </div>

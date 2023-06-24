@@ -16,16 +16,17 @@ import {
   PlusSmallIcon,
 } from "@heroicons/react/24/outline";
 
+// hooks
 import { useGetData, useDeleteData } from "../../../../hooks/FetchData";
 
 const Voucher = () => {
+  // handle params URL
   let [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-
   const filterValue = searchParams.get("filter") || "";
   const pageValue = searchParams.get("page") || 1;
 
-  // Data request
+  // Data request SWR
   const swrKey = `admin/vouchers/filter?page=${pageValue}&type=${filterValue}`;
   const { data, isLoading, error } = useGetData(swrKey);
   const { deleteData, isLoading: loading } = useDeleteData(`admin/vouchers/`);
@@ -39,10 +40,7 @@ const Voucher = () => {
       return updatedParams;
     });
   };
-
   const getDataByStatus = async (event) => {
-    console.log(event.target.name);
-
     if (event.target.name === "Semua") {
       updateFilter("");
     } else {
@@ -58,7 +56,6 @@ const Voucher = () => {
       return updatedParams;
     });
   };
-
   const prevPage = () => {
     updatePagination(parseInt(pageValue) - 1);
   };
@@ -82,18 +79,15 @@ const Voucher = () => {
 
   const closeConfirmDelete = () => {
     setShowModalDelete(false);
-    console.log("CANCEL")
   };
 
   const handleDelete = async () => {
-    console.log("DELETE", voucherId);
     const response = await deleteData(voucherId);
-    console.log(response)
+    console.log(response);
     if (response.Status === 200) {
       openAlert("success", response.Message);
-      console.log(response.Message)
       setShowModalDelete(false);
-      changePage(1)
+      changePage(1);
     } else {
       openAlert("danger", response.Message);
     }
@@ -116,7 +110,7 @@ const Voucher = () => {
     setMessage("");
   };
 
-
+  // Table Setups
   const TABLE_COLUMS = [
     { header: "No." },
     { header: "Jenis Voucher" },
@@ -131,8 +125,9 @@ const Voucher = () => {
       <div className="flex justify-between items-center">
         {/* header */}
         <div className="text-h4 mb-2">Voucher</div>
-
         <button
+          id="tambah_voucher"
+          name="tambah_voucher"
           onClick={() => navigate("/admin/voucher/tambah")}
           className="flex flex-row gap-[13px] items-center rounded-full bg-green-500 py-[10px] pl-[21px] pr-4 hover:bg-green-600 duration-200"
         >
@@ -201,12 +196,14 @@ const Voucher = () => {
                     <td className="py-[18px] px-[10px] text-center flex space-x-2 justify-center">
                       <div className="flex">
                         <Link
+                          id="btn_ubah_voucher"
                           to={`/admin/voucher/ubah/${voucher.VoucherId}`}
                           className="bg-green-50 rounded-full mx-2"
                         >
                           <PencilIcon className="w-5 h-5 text-green-500" />
                         </Link>
                         <button
+                          id="btn_delete_voucher"
                           className="bg-green-50 rounded-full mx-2"
                           onClick={() =>
                             openConfirmDelete(voucher.VoucherId, voucher.Type)

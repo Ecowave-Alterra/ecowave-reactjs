@@ -1,16 +1,18 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import moment from "moment";
 import { observable } from "@legendapp/state";
 import { observer } from "@legendapp/state/react";
 
+// Komponen dan Icons
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 import InputField from "../../../../components/InputField";
 import Alert from "../../../../components/Alert";
 import ModalConfirm from "../../../../components/ModalConfirm";
 
+// hooks fetch
 import { usePostDataUsingJson } from "../../../../hooks/FetchData";
 
 // Legend State Management
@@ -20,10 +22,6 @@ const state = observable({
 
 const TambahVoucher = observer(() => {
   const navigate = useNavigate();
-  //alert fetching data
-  const [isAlert, setIsAlert] = useState(false);
-  const [message, setMessage] = useState("");
-  const [variant, setVariant] = useState("");
 
   // fetch data
   const { postData, isLoading } = usePostDataUsingJson(`admin/vouchers`);
@@ -59,8 +57,7 @@ const TambahVoucher = observer(() => {
     return formattedTime;
   };
 
-  // Handle Post data
-  // Fungsi handle Edit
+  // Fungsi handle Post Data
   const [showModalPost, setShowModalPost] = useState(false);
   const [showModalBack, setShowModalBack] = useState(false);
 
@@ -70,11 +67,11 @@ const TambahVoucher = observer(() => {
 
   const closeConfirmPost = () => {
     setShowModalPost(false);
-    console.log("CANCEL");
   };
 
   const hanndlePost = async () => {
     const response = await postData(state.postData.get());
+    console.log(state.postData.get());
     if (response.Status === 201) {
       openAlert("success", response.Message);
       setShowModalPost(false);
@@ -100,26 +97,42 @@ const TambahVoucher = observer(() => {
       formik.values?.DiscountPercent == 0
     ) {
       navigate("/admin/voucher");
-      console.log("no change");
     } else {
       setShowModalBack(true);
-      console.log("change");
     }
   };
 
-  // Formik
+  //alert fetching data
+  const [isAlert, setIsAlert] = useState(false);
+  const [message, setMessage] = useState("");
+  const [variant, setVariant] = useState("");
+
+  //handling alert fetching data
+  const openAlert = (variant, message) => {
+    setIsAlert(true);
+    setVariant(variant);
+    setMessage(message);
+    setTimeout(closeAlert, 2500);
+  };
+  const closeAlert = () => {
+    setIsAlert(false);
+    setVariant("");
+    setMessage("");
+  };
+
+  // Formik + yup
   const formik = useFormik({
     initialValues: {
       VoucherTypeId: "",
       StartDate: "",
       EndDate: "",
       ...(voucherCategory == "2" && {
-        MinimumPurchase: 0,
-        MaximumDiscount: 0,
-        DiscountPercent: 0,
+        MinimumPurchase: "",
+        MaximumDiscount: "",
+        DiscountPercent: "",
       }),
-      ClaimableUserCount: 0,
-      MaxClaimLimit: 0,
+      ClaimableUserCount: "",
+      MaxClaimLimit: "",
     },
     validationSchema: Yup.object({
       VoucherTypeId: Yup.string().required("Pilih Salah Satu VoucherTypeId"),
@@ -133,7 +146,6 @@ const TambahVoucher = observer(() => {
           .matches(/^[1-9][0-9]*$/, "Harap masukan angka")
           .required("Data yang diisi harus angka. Contoh: 10500"),
         DiscountPercent: Yup.number("Harap masukan angka")
-          // .matches(/^[a-zA-Z\s]+$/, "Harap masukan angka")
           .min(0)
           .max(100, "Mohon maaf, entri Anda melebihi batas maksimum")
           .required("Data yang diisi harus angka. Contoh: 50"),
@@ -145,7 +157,7 @@ const TambahVoucher = observer(() => {
         .matches(/^[1-9][0-9]*$/, "Harap masukan angka")
         .required("Data yang diisi harus angka. Contoh: 9"),
     }),
-    onSubmit: async (e, { resetForm }) => {
+    onSubmit: async (e) => {
       openConfirmPost();
       const datas = {
         VoucherTypeId: parseInt(e.VoucherTypeId),
@@ -162,25 +174,11 @@ const TambahVoucher = observer(() => {
       state.postData.set(datas);
     },
   });
-
-  //handling alert fetching data
-  const openAlert = (variant, message) => {
-    setIsAlert(true);
-    setVariant(variant);
-    setMessage(message);
-    setTimeout(closeAlert, 2500);
-  };
-  const closeAlert = () => {
-    setIsAlert(false);
-    setVariant("");
-    setMessage("");
-  };
-
   return (
     <>
       <div className="m-8">
         <div className="flex flex-row row-gap items-center gap-6">
-          <button onClick={backToMain}>
+          <button id="btn_back" onClick={backToMain}>
             <ChevronLeftIcon className="w-5 h-5 text-green-500" />
           </button>
           <h6 className="text-h6 font-medium">Tambah Voucher</h6>
@@ -243,6 +241,7 @@ const TambahVoucher = observer(() => {
               <InputField
                 id="MinimumPurchase"
                 label="Minimum Belanja"
+                placeholder="Masukan nilai"
                 touched={formik.touched.MinimumPurchase}
                 errors={formik.errors.MinimumPurchase}
                 values={formik.values.MinimumPurchase}
@@ -253,6 +252,7 @@ const TambahVoucher = observer(() => {
               <InputField
                 id="MaximumDiscount"
                 label="Maksimum Potongsn Harga"
+                placeholder="Masukan nilai"
                 touched={formik.touched.MaximumDiscount}
                 errors={formik.errors.MaximumDiscount}
                 values={formik.values.MaximumDiscount}
@@ -263,6 +263,7 @@ const TambahVoucher = observer(() => {
               <InputField
                 id="DiscountPercent"
                 label="Diskon"
+                placeholder="Masukan nilai"
                 touched={formik.touched.DiscountPercent}
                 errors={formik.errors.DiscountPercent}
                 values={formik.values.DiscountPercent}
@@ -275,6 +276,7 @@ const TambahVoucher = observer(() => {
           <InputField
             id="ClaimableUserCount"
             label="Jumlah voucher yang dapat diklaim"
+            placeholder="Masukan nilai"
             touched={formik.touched.ClaimableUserCount}
             errors={formik.errors.ClaimableUserCount}
             values={formik.values.ClaimableUserCount}
@@ -285,6 +287,7 @@ const TambahVoucher = observer(() => {
           <InputField
             id="MaxClaimLimit"
             label="Batas Klaim Pengguna"
+            placeholder="Masukan nilai"
             touched={formik.touched.MaxClaimLimit}
             errors={formik.errors.MaxClaimLimit}
             values={formik.values.MaxClaimLimit}
@@ -293,6 +296,7 @@ const TambahVoucher = observer(() => {
           {/* submit button */}
           <div className="flex relative top-[72px] justify-end">
             <button
+              id="btn_submit"
               className="px-8 py-4 bg-green-500 font-semibold text-white rounded-full disabled:bg-green-300 duration-100 hover:bg-green-600"
               type="submit"
               data-te-ripple-init=""

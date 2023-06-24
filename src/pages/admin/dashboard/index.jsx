@@ -1,4 +1,6 @@
 import React, { useEffect } from "react";
+
+// Komponen
 import Widget from "../../../components/Widget";
 import BarChart from "../../../components/BarChart";
 import {useGetData} from "../../../hooks/FetchData";
@@ -6,23 +8,28 @@ import {useGetData} from "../../../hooks/FetchData";
 // Heroicons
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
+// Legendapp
 import { observable } from "@legendapp/state";
 import { observer } from "@legendapp/state/react";
 
+// Router dom
 import { useSearchParams } from "react-router-dom";
 
+// management State menggunakan LegendApp
 const state = observable({
   chartFilter: "mingguan",
 });
 
 const Dashboard = observer(() => {
+  // Handle params url
   let [searchParams, setSearchParams] = useSearchParams();
-
   const filterValue = searchParams.get("filter") || state.chartFilter.get();
 
+  // fetch data SWR
   const swrKey = `admin/dashboard?filter=${filterValue}`;
   const { data, isLoading, error } = useGetData(swrKey);
 
+  // Fungsi handle filter untuk chart
   const handleChangeFilter = (newFilterValue) => {
     state.chartFilter.set(newFilterValue.target.value);
     setSearchParams((params) => {
@@ -32,7 +39,9 @@ const Dashboard = observer(() => {
     });
   };
 
+  // Kembali ke filter mingguan saat reload halaman
   useEffect(() => {
+    state.chartFilter.set("mingguan")
     setSearchParams((params) => {
       const updatedParams = new URLSearchParams(params.toString());
       updatedParams.set("filter", "mingguan");
