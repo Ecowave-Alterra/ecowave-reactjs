@@ -63,7 +63,7 @@ export default function Ulasan() {
     }
   };
   // Table Setup
-  const TALBLE_COLUMNS = [
+  const TABLE_COLUMS = [
     { header: "No." },
     { header: "Produk ID" },
     { header: "Nama Produk" },
@@ -73,7 +73,7 @@ export default function Ulasan() {
   ];
 
   return (
-    <div className="flex-row px-5 py-10">
+    <div className="flex-row sm:ml-[44px] sm:mr-8 mx-4 mt-10">
       {/* header */}
       <div className="text-h4 mb-2">Ulasan</div>
       {/* Search */}
@@ -89,8 +89,8 @@ export default function Ulasan() {
         <table className="w-full min-w-[1000px] text-p4 text-left text-black mt-4">
           <thead className="bg-green-500 text-white">
             <tr>
-              {TALBLE_COLUMNS &&
-                TALBLE_COLUMNS.map((head, i) => (
+              {TABLE_COLUMS &&
+                TABLE_COLUMS.map((head, i) => (
                   <th
                     key={i}
                     className="py-[14px] px-[10px] text-p2 font-medium"

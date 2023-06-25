@@ -121,7 +121,7 @@ const Voucher = () => {
   ];
 
   return (
-    <div className="flex-row px-5 py-10">
+    <div className="flex-row sm:ml-[44px] sm:mr-8 mx-4 mt-10">
       <div className="flex justify-between items-center">
         {/* header */}
         <div className="text-h4 mb-2">Voucher</div>

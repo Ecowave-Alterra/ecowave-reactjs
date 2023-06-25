@@ -19,7 +19,7 @@ import ModalConfirm from "../../../../components/ModalConfirm";
 
 export default function Produk() {
     // table setup
-    const columns = [
+    const TABLE_COLUMS = [
         { header: "No." },
         { header: "Produk ID" },
         { header: "Nama Produk" },
@@ -98,18 +98,13 @@ export default function Produk() {
         }
     };
 
-    //search handling
-    const handleChange = (e) => {
-        setSearchChanges(e.target.value);
-    };
 
-    const handleSearch = (event) => {
-        event.preventDefault();
-        if (searchChanges !== searchValue) {
-        updateSearchQuery(searchChanges);
+      // Handle Search on Enter
+    const handleKeyDown = (event) => {
+        if (event.key === "Enter") {
+        updateSearchQuery(event.target.value);
         }
     };
-
     //handling alert fetching data
     const openAlert = (variant, message) => {
         setIsAlert(true);
@@ -189,23 +184,13 @@ export default function Produk() {
             </div>
         </div>
         <div className="mt-8 mb-9">
-            <form onSubmit={handleSearch} className="flex flex-start">
             <div className="flex flex-row gap-2 flex-start">
                 <Search
                 id="search-input"
                 placeholder="Cari ID, Nama, atau kategori produk"
-                onChange={handleChange}
+                handleKeyDown={handleKeyDown}
                 />
-                <button
-                type="submit"
-                id="btn-input-search"
-                className="gap-[13px] items-center rounded-full bg-green-500 py-[10px]  px-6 hover:bg-green-600 duration-200  text-p3 text-white"
-                value={searchChanges}
-                >
-                Cari
-                </button>
             </div>
-            </form>
         </div>
 
         {/* filter table */}
@@ -221,7 +206,7 @@ export default function Produk() {
             <table className="w-full min-w-[1000px] text-p4 text-left  text-black">
             <thead className="text-p3 text-white bg-green-500 ">
                 <tr>
-                {columns.map((head, i) => (
+                {TABLE_COLUMS.map((head, i) => (
                     <th key={i} className="py-[14px] px-[10px] text-p2 font-medium">
                     {head.header}
                     </th>

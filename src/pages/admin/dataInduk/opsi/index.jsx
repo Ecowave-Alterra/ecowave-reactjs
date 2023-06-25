@@ -4,7 +4,7 @@ import Empty from '../../../../assets/img/emptyOpsi.png';
 import Search from '../../../../components/Search';
 
 export default function OpsiPengiriman() {
-  const columns = [
+  const TABLE_COLUMS = [
     { header: 'No.' },
     { header: 'Opsi Pengiriman' },
     { header: 'Status' },
@@ -94,7 +94,7 @@ export default function OpsiPengiriman() {
         <table className="w-full text-p4 text-left text-black">
           <thead className="text-p2 text-white bg-green-500 ">
             <tr>
-              {columns.map((head, i) => (
+              {TABLE_COLUMS.map((head, i) => (
                 <th
                   key={i}
                   className="py-[14px] px-[10px] text-p2 text-center font-medium"
@@ -122,7 +122,7 @@ export default function OpsiPengiriman() {
             {!isLoading &&
               records.map((item, i) => (
                 <tr key={i} className="even:bg-gray-50">
-                  <th scope="row" className="text-center font-normal w-[48px]">
+                  <th scope="row" className="text-left font-normal w-[48px]">
                     {firstIndex + i + 1}.
                   </th>
                   <td className="py-[18px] px-[10px] text-center">

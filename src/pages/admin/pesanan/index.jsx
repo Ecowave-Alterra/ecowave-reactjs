@@ -186,7 +186,7 @@ export default function Pesanan() {
   const options = { day: 'numeric', month: 'long', year: 'numeric' };
 
   return (
-    <div className="flex-row px-5 py-10">
+    <div className="flex-row sm:ml-[44px] sm:mr-8 mx-4 mt-10">
       {/* header */}
       <div className="text-h5 mb-2">Pesanan</div>
       <div className="text-p3 text-gray-500">
