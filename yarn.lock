@@ -465,10 +465,10 @@
   resolved "https://registry.yarnpkg.com/@kurkle/color/-/color-0.3.2.tgz#5acd38242e8bde4f9986e7913c8fdf49d3aa199f"
   integrity sha512-fuscdXJ9G1qb7W8VdHi+IwRqij3lBkosAm4ydQtEmbY58OzHXqQhvlxqEkoz0yssNVn38bcpRWgA9PP+OGoisw==
 
-"@legendapp/state@^1.2.8":
-  version "1.2.8"
-  resolved "https://registry.yarnpkg.com/@legendapp/state/-/state-1.2.8.tgz#b349b0ea98bb6d8e18b415ca3e55f9a4c30b8d3b"
-  integrity sha512-o2BaGb2ajy6oZbeRU9uQZN1qqUjK7DGiEqnULdQGCumXRQSs3PEgcipiqDuB/D68QPk5xL98JR82q49zxkMcCg==
+"@legendapp/state@^1.2.11":
+  version "1.2.11"
+  resolved "https://registry.yarnpkg.com/@legendapp/state/-/state-1.2.11.tgz#d738020a890a263cb83c3280deec26ab9e22ac56"
+  integrity sha512-N7nUDiippat/YQDv3WX08EZPJent5cyt7NLjcgNyxZDzOcXePOEkQ4AK+neRnTyvk0KqYu6/IK/99E9U721QZQ==
   dependencies:
     use-sync-external-store "^1.2.0"
 

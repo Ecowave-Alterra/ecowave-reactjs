@@ -51,57 +51,45 @@ import UbahVoucher from "./pages/admin/dataInduk/voucher/UbahVoucher";
 import MetodePembayaran from "./pages/admin/dataInduk/metodePembayaran";
 
 const router = createBrowserRouter(
-    createRoutesFromElements(
-        <Route>
-            <Route element={<LoggedIn />}>
-                <Route path="/" element={<LandingPage />} />
-                <Route path="/login" element={<Login />} />
-            </Route>
-            <Route element={<LoggedOut />}>
-                <Route path="/admin" element={<AdminRoot />}>
-                    <Route index element={<Dashboard />} />
-                    <Route path="pesanan" element={<Pesanan />} />
-                    <Route path="pesanan/detail" element={<DetailPesanan />} />
-                    <Route path="ulasan" element={<Ulasan />} />
-                    <Route path="ulasan/:reviewId" element={<DetailUlasan />} />
+  createRoutesFromElements(
+    <Route>
+      <Route element={<LoggedIn />}>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<Login />} />
+      </Route>
+      <Route element={<LoggedOut />}>
+        <Route path="/admin" element={<AdminRoot />}>
+          <Route index element={<Dashboard />} />
+          <Route path="pesanan" element={<Pesanan />} />
+          <Route path="pesanan/detail/:id" element={<DetailPesanan />} />
+          <Route path="ulasan" element={<Ulasan />} />
+          <Route path="ulasan/:reviewId" element={<DetailUlasan />} />
 
-                    {/* Route data induk */}
-                    <Route path="produk" element={<Produk />} />
-                    <Route path="produk/tambah" element={<TambahProduk />} />
-                    <Route path="produk/ubah/:productId" element={<UbahProduk />} />
-                    <Route path="produk/:productId" element={<DetailProduk />} />
-                    <Route path="informasi" element={<Informasi />} />
-                    <Route
-                        path="informasi/tambah"
-                        element={<TambahInformasi />}
-                    />
-                    <Route
-                        path="informasi/ubah/:userId"
-                        element={<UbahInformasi />}
-                    />
-                    <Route
-                        path="informasi/:userId"
-                        element={<DetailInformasi />}
-                    />
-                    <Route path="opsi" element={<OpsiPengiriman />} />
-                    <Route path="voucher" element={<Voucher />} />
-                    <Route path="voucher/tambah" element={<TambahVoucher />} />
-                    <Route path="voucher/ubah/:voucherId" element={<UbahVoucher />} />
-                    <Route
-                        path="metode-pembayaran"
-                        element={<MetodePembayaran />}
-                    />
-                    <Route path="kategori" element={<Kategori />} />
-                </Route>
-            </Route>
-
-            <Route path="*" element={<NotFound />} />
+          {/* Route data induk */}
+          <Route path="produk" element={<Produk />} />
+          <Route path="produk/tambah" element={<TambahProduk />} />
+          <Route path="produk/ubah/:productId" element={<UbahProduk />} />
+          <Route path="produk/:productId" element={<DetailProduk />} />
+          <Route path="informasi" element={<Informasi />} />
+          <Route path="informasi/tambah" element={<TambahInformasi />} />
+          <Route path="informasi/ubah/:userId" element={<UbahInformasi />} />
+          <Route path="informasi/:userId" element={<DetailInformasi />} />
+          <Route path="opsi" element={<OpsiPengiriman />} />
+          <Route path="voucher" element={<Voucher />} />
+          <Route path="voucher/tambah" element={<TambahVoucher />} />
+          <Route path="voucher/ubah/:voucherId" element={<UbahVoucher />} />
+          <Route path="metode-pembayaran" element={<MetodePembayaran />} />
+          <Route path="kategori" element={<Kategori />} />
         </Route>
-    )
+      </Route>
+
+      <Route path="*" element={<NotFound />} />
+    </Route>
+  )
 );
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-    <React.StrictMode>
-        <RouterProvider router={router} />
-    </React.StrictMode>
+  <React.StrictMode>
+    <RouterProvider router={router} />
+  </React.StrictMode>
 );
