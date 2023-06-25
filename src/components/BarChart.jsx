@@ -10,7 +10,6 @@ import {
   Legend,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
-import { faker } from "@faker-js/faker";
 
 // Gambar
 import Crane from "../assets/img/ChartEmpty.png";
@@ -26,10 +25,11 @@ ChartJS.register(
 );
 
 const BarChart = ({ children, detail }) => {
-  const incomeLabel = detail ? detail[0] : [];
-  const arrayLabels = detail ? Object.keys(incomeLabel) : [];
-  const valuePerLabel = detail ? Object.values(incomeLabel) : [];
+  // label dan value untuk Bar Chart
+  const arrayLabels = detail ? detail.map((obj) => obj.Label) : [];
+  const valuePerLabel = detail ? detail.map((obj) => obj.Value) : [];
 
+  // Bar Chart Data
   const labels = arrayLabels;
   const data = {
     labels,
@@ -38,6 +38,10 @@ const BarChart = ({ children, detail }) => {
         label: "Pendapatan",
         data: valuePerLabel,
         backgroundColor: "#14B885",
+        innerWidth: "24px",
+        maxBarThickness: 100,
+        borderRadius: 10,
+        
       },
     ],
   };
@@ -84,7 +88,6 @@ const BarChart = ({ children, detail }) => {
         ) : (
           <Bar data={data} options={options} />
         )}
-        {/* <Bar data={data} options={options} /> */}
       </div>
       {/* End Chart Section */}
     </>

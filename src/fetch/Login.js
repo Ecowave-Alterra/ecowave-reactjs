@@ -1,24 +1,26 @@
-import { useState } from "react";
+import { useObservable } from "@legendapp/state/react";
 
 export default function getLoginData() {
-    const [data,setData] = useState([])
+  const loginData = useObservable("");
 
-    const postDataLogin = async (data) => {
-        await fetch("https://ecowave-h64wmjjkza-uc.a.run.app/admin/login", {
-            method: 'POST',
-            mode:"cors",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-            })
-            .then(async(response) => {
-                const json = await response.json();
-                setData(json.Data)
-            })
-            .catch((e) => {
-                console.error(e);
-            });
+  const postDataLogin = async (data) => {
+    try {
+      const response = await fetch(
+        "https://ecowave-h64wmjjkza-uc.a.run.app/admin/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+      const responseData = await response.json();
+      loginData.set(responseData.Data);
+      return responseData;
+    } catch (error) {
+      return error.response;
     }
-    return [data,postDataLogin]
+  };
+  return { loginData, postDataLogin };
 }

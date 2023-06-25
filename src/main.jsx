@@ -32,10 +32,16 @@ import UbahInformasi from './pages/admin/dataInduk/informasi/UbahInformasi';
 import DetailInformasi from './pages/admin/dataInduk/informasi/DetailInformasi';
 
 //Produk
+
 import Produk from './pages/admin/dataInduk/produk';
 import TambahProduk from './pages/admin/dataInduk/produk/TambahProduk';
 import UbahProduk from './pages/admin/dataInduk/produk/UbahProduk';
 import DetailUlasan from './pages/admin/ulasan/DetailUlasan';
+import Produk from "./pages/admin/dataInduk/produk";
+import TambahProduk from "./pages/admin/dataInduk/produk/TambahProduk";
+import UbahProduk from "./pages/admin/dataInduk/produk/UbahProduk";
+import DetailProduk from "./pages/admin/dataInduk/produk/detailProduk";
+import DetailUlasan from "./pages/admin/ulasan/DetailUlasan";
 
 // Pengiriman
 import OpsiPengiriman from './pages/admin/dataInduk/opsi';
@@ -50,6 +56,7 @@ import UbahVoucher from './pages/admin/dataInduk/voucher/UbahVoucher';
 import MetodePembayaran from './pages/admin/dataInduk/metodePembayaran';
 import TambahMetodePembayaran from './pages/admin/dataInduk/metodePembayaran/TambahMetode';
 import UbahMetodePembayaran from './pages/admin/dataInduk/metodePembayaran/UbahMetode';
+import MetodePembayaran from "./pages/admin/dataInduk/metodePembayaran";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -88,6 +95,37 @@ const router = createBrowserRouter(
             element={<UbahMetodePembayaran />}
           />
           <Route path="kategori" element={<Kategori />} />
+                    {/* Route data induk */}
+                    <Route path="produk" element={<Produk />} />
+                    <Route path="produk/tambah" element={<TambahProduk />} />
+                    <Route path="produk/ubah/:productId" element={<UbahProduk />} />
+                    <Route path="produk/:productId" element={<DetailProduk />} />
+                    <Route path="informasi" element={<Informasi />} />
+                    <Route
+                        path="informasi/tambah"
+                        element={<TambahInformasi />}
+                    />
+                    <Route
+                        path="informasi/ubah/:userId"
+                        element={<UbahInformasi />}
+                    />
+                    <Route
+                        path="informasi/:userId"
+                        element={<DetailInformasi />}
+                    />
+                    <Route path="opsi" element={<OpsiPengiriman />} />
+                    <Route path="voucher" element={<Voucher />} />
+                    <Route path="voucher/tambah" element={<TambahVoucher />} />
+                    <Route path="voucher/ubah/:voucherId" element={<UbahVoucher />} />
+                    <Route
+                        path="metode-pembayaran"
+                        element={<MetodePembayaran />}
+                    />
+                    <Route path="kategori" element={<Kategori />} />
+                </Route>
+            </Route>
+
+            <Route path="*" element={<NotFound />} />
         </Route>
       </Route>
 
