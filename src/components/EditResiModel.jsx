@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { Dialog } from '@headlessui/react';
-import { usePutDataUsingJson } from '../hooks/FetchData';
+import { usePutDataUsingFormData } from '../hooks/FetchData';
 import { useSearchParams } from 'react-router-dom';
 import { mutate } from 'swr';
 
@@ -18,24 +18,22 @@ export default function EditResiModal({
   //ganti
   const swrKey = `admin/orders/search?name=${searchValue}&page=${pageValue}`;
 
-  const { putData, isLoading } = usePutDataUsingJson(`admin/orders/`);
+  const { putData, isLoading } = usePutDataUsingFormData(`admin/orders/`);
 
   const formik = useFormik({
     initialValues: {
       orders: '',
     },
     validationSchema: Yup.object({
-      orders: Yup.string()
-        .max(10, 'Mohon maaf, entri Anda melebihi batas maksimum 10 karakter')
-        .required('Field harus diisi'),
+      orders: Yup.string().required('Field harus diisi'),
     }),
     onSubmit: async (values, { resetForm }) => {
-      const datas = {
-        Resi: values.orders,
-        Status: 'Dikirim',
-      };
+      const formData = new FormData();
+      formData.append('ReceiptNumber', values.orders);
+      console.log(formData);
+      console.log(ordersId);
 
-      const response = await putData(datas, ordersId);
+      const response = await putData(formData, ordersId);
       if (response.Status === 200) {
         openAlert('success', response.Message);
         mutate(swrKey);
@@ -43,7 +41,6 @@ export default function EditResiModal({
         setIsOpen(false);
       } else {
         openAlert('danger', response.Message);
-        console.log('put gagal');
         console.log(response.Message);
       }
     },
@@ -58,7 +55,7 @@ export default function EditResiModal({
       <form onSubmit={formik.handleSubmit} className="mt-5 ">
         <Dialog.Panel>
           <Dialog.Title className="border-b-2 border-gray-300 text-gray-500 px-6 pt-2 pb-2 font-semibold text-p3">
-            Buat No. Resi untuk mengirim barang
+            Ubah Resi
           </Dialog.Title>
           <div className="py-3">
             {isLoading ? (
@@ -90,7 +87,7 @@ export default function EditResiModal({
                         : "before:content[' '] after:content[' '] before:text-p3 pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-green-500 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-green-400 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-green-400 after:transition-all peer-placeholder-shown:text-p3 peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-green-400 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-green-400 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-green-400 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500"
                     }
                   >
-                    No.Resi
+                    Resi
                   </label>
                 </div>
                 {formik.errors.orders && formik.touched.orders && (
@@ -114,7 +111,7 @@ export default function EditResiModal({
                 type="sumbit"
                 className="px-4 py-[10px] text-p3 text-white bg-[#059669] font-semibold rounded-full disabled:text-white  disabled:bg-green-300 duration-100 hover:bg-green-600 active:border-2 active:border-green-300"
               >
-                Kirim
+                Ubah
               </button>
             </div>
           )}

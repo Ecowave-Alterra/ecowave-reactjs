@@ -1,23 +1,22 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
-import { useGetData, useDeleteData } from '../../../hooks/FetchDataMockServer';
+import { useGetData } from '../../../hooks/FetchData';
 import { mutate } from 'swr';
 
 //Icon & Image
-import { EyeIcon, TrashIcon, TruckIcon } from '@heroicons/react/24/outline';
+import { EyeIcon, PencilIcon } from '@heroicons/react/24/outline';
 import Empty from '../../../assets/img/Empty Cart.png';
 
 //Component
-import ModalConfirm from '../../../components/ModalConfirm';
 import EditResiModal from '../../../components/EditResiModel';
 import ButtonGroup from '../../../components/ButtonGroup';
 import Search from '../../../components/Search';
 import Pagination from '../../../components/Pagination';
 import EmptyData from '../../../components/EmptyData';
 import ErrorPage from '../../../components/ErrorPage';
+import Alert from '../../../components/Alert';
 
 export default function Pesanan() {
-  const [deleteModalId, setDeleteModalId] = useState(null);
   const [SendModalId, setSendModalId] = useState(null);
   const [ordersId, setordersId] = useState('');
   const [filter, setFilter] = useState('');
@@ -52,6 +51,24 @@ export default function Pesanan() {
   const filterValue = searchParams.get('filter') || '';
   const pageValue = searchParams.get('page') || 1;
 
+  //alert fetching data
+  const [isAlert, setIsAlert] = useState(false);
+  const [message, setMessage] = useState('');
+  const [variant, setVariant] = useState('');
+
+  //handling alert fetching data
+  const openAlert = (variant, message) => {
+    setIsAlert(true);
+    setVariant(variant);
+    setMessage(message);
+    setTimeout(closeAlert, 2500);
+  };
+  const closeAlert = () => {
+    setIsAlert(false);
+    setVariant('');
+    setMessage('');
+  };
+
   //query string dikirim ke halaman tambah dan ubah
   const backValues = {
     search: searchValue,
@@ -59,11 +76,8 @@ export default function Pesanan() {
     page: pageValue,
   };
 
-  //ganti
-  // const swrKey = `admin/orders/search?search=${searchValue}&filter=${filterValue}&page=${pageValue}`;
-  const swrKey = `admin/orders`;
+  const swrKey = `admin/orders/search?search=${searchValue}&filter=${filterValue}&page=${pageValue}`;
   const { data, isLoading, error } = useGetData(swrKey);
-  const { deleteData, isLoading: loading } = useDeleteData(`admin/orders/`);
   if (error) return <ErrorPage />;
 
   // Search
@@ -100,7 +114,6 @@ export default function Pesanan() {
   };
 
   const getDataByStatus = async (event) => {
-    console.log(event.target.name);
     setFilter(event.target.name);
     if (event.target.name === 'Semua') {
       updateFilter('');
@@ -153,35 +166,24 @@ export default function Pesanan() {
     }
   }, [searchParams, swrKey, location.search]);
 
-  // Delete
-  const openDeleteModal = (id) => {
-    setDeleteModalId(id);
-  };
-
-  const closeDeleteModal = () => {
-    setDeleteModalId(null);
-  };
-
-  const handleDelete = async (id) => {
-    try {
-      const response = await deleteData(id);
-      if (response.Status === 200) {
-        await mutate(swrKey);
-        console.log(response.Message);
-      } else {
-        console.log(response.Message);
-      }
-      closeDeleteModal();
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   // Send
   const openModalEdit = (isOpenModal, idOrder) => {
     setSendModalId(isOpenModal);
     setordersId(idOrder);
   };
+
+  // Format angka menjadi format rupiah
+  const formatRupiah = (number) => {
+    const formattedNumber = Math.floor(number);
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0,
+    }).format(formattedNumber);
+  };
+
+  // Format Day
+  const options = { day: 'numeric', month: 'long', year: 'numeric' };
 
   return (
     <div className="flex-row px-5 py-10">
@@ -191,10 +193,15 @@ export default function Pesanan() {
         Pantau pesanan EcoWave di halaman ini
       </div>
 
+      {/* alert fetch api */}
+      {isAlert && (
+        <Alert variant={variant} message={message} onClose={closeAlert} />
+      )}
+
       {/* Search */}
       <div className="mt-7">
         <Search
-          id="search-pesanan"
+          id="search-input"
           placeholder="Cari resi atau nama item"
           onChange={handleChange}
           handleKeyDown={handleKeyDown}
@@ -219,7 +226,7 @@ export default function Pesanan() {
             </tr>
           </thead>
 
-          {isLoading || loading ? (
+          {isLoading ? (
             <tbody>
               <tr className="">
                 <td colSpan={10} className="mx-auto py-40">
@@ -232,7 +239,6 @@ export default function Pesanan() {
               </tr>
             </tbody>
           ) : (
-            // ganti
             <tbody>
               {data && data.Status === 200 ? (
                 data.Orders.map((item, i) => (
@@ -247,10 +253,19 @@ export default function Pesanan() {
                       {item.TransactionId}
                     </td>
                     <td className="py-[18px] px-[10px]">{item.Name}</td>
-                    <td className="py-[18px] px-[10px]">{item.ProductQty}</td>
-                    <td className="py-[18px] px-[10px]">{item.Total}</td>
-                    <td className="py-[18px] px-[10px]">{item.CreatedAt}</td>
-                    <td className="py-[18px] px-[10px]">Dikemas</td>
+                    <td className="py-[18px] px-[10px]">{item.Unit}</td>
+                    <td className="py-[18px] px-[10px]">
+                      {formatRupiah(item.TotalPrice)}
+                    </td>
+                    <td className="py-[18px] px-[10px]">
+                      {new Date(item.OrderDate).toLocaleDateString(
+                        'id-ID',
+                        options
+                      )}
+                    </td>
+                    <td className="py-[18px] px-[10px]">
+                      {item.StatusTransaction}
+                    </td>
                     <td className="py-[18px] px-[10px] text-center flex space-x-2 justify-center">
                       <button
                         onClick={() =>
@@ -267,18 +282,12 @@ export default function Pesanan() {
                         <EyeIcon className="w-7 h-7 p-1 text-green-500 bg-green-50 rounded-full cursor-pointer" />
                       </button>
                       {filter === 'Dikemas' && (
-                        //ganti
-                        <TruckIcon
+                        <PencilIcon
                           onClick={() =>
                             openModalEdit(true, item.TransactionId)
                           }
-                          className="w-7 h-7 p-1 text-green-500 bg-green-50 rounded-full cursor-pointer"
-                        />
-                      )}
-                      {filter === 'Belum Bayar' && (
-                        <TrashIcon
-                          onClick={() => openDeleteModal(item.TransactionId)}
-                          className="w-7 h-7 p-1 text-error-500 bg-green-50 rounded-full cursor-pointer"
+                          className="w-12 h-9 py-1 px-3 text-green-500 bg-green-50 rounded-full cursor-pointer"
+                          id="btn_edit_resi"
                         />
                       )}
                     </td>
@@ -317,21 +326,11 @@ export default function Pesanan() {
       )}
 
       {/* Modals */}
-      {deleteModalId && (
-        <ModalConfirm
-          title="Hapus pesanan yang dipilih?"
-          description="Pesanan yang dipilih akan dihapus secara permanen"
-          labelCancel="Cancel"
-          labelConfirm="Hapus"
-          variant="danger"
-          onCancel={closeDeleteModal}
-          onConfirm={() => handleDelete(deleteModalId)}
-        />
-      )}
       {SendModalId && (
         <EditResiModal
           isOpen={SendModalId}
           setIsOpen={setSendModalId}
+          openAlert={openAlert}
           ordersId={ordersId}
         />
       )}
