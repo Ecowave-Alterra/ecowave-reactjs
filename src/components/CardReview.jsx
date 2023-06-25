@@ -27,22 +27,31 @@ const CardReview = ({
           {/* Reviewer Sections */}
           <div className="flex mt-8 items-center">
             <img
-              src={reviewerPhoto}
+              src={
+                reviewerPhoto
+                  ? reviewerPhoto
+                  : "https://storage.googleapis.com/ecowave/img/users/profile/profile.png"
+              }
               alt="User Photo"
               className="w-[100%] max-w-[30px] h-[30px] mx-1 rounded-full object-cover"
             />
             <div className="ml-2 text-p4 font-medium">{reviewerName}</div>
           </div>
           <div className="flex my-4">
-            <img
-              src={productPhoto}
-              alt="Gambar Produk"
-              className="max-w-[190px] max-h-[166px] mx-1"
-            />
-            <video className="max-w-[190px] max-h-[166px]" controls >
-              <source src={productVideo} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
+            {productPhoto && (
+              <img
+                src={productPhoto}
+                alt="Gambar Produk"
+                className="max-w-[190px] max-h-[166px] mx-1"
+              />
+            )}
+
+            {productVideo && (
+              <video className="max-w-[190px] max-h-[166px]" controls>
+                <source src={productVideo} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            )}
           </div>
           {/* Comment section */}
           <h1 className="text-p2 font-medium w-[326px]">{comment}</h1>
