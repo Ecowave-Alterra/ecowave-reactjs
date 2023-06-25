@@ -89,17 +89,12 @@ export default function Informasi() {
     }
   };
 
-  //search handling
-  const handleChange = (e) => {
-    setSearchChanges(e.target.value);
-  };
-
-  const handleSearch = (event) => {
-    event.preventDefault();
-    if (searchChanges !== searchValue) {
-      updateSearchQuery(searchChanges);
-    }
-  };
+    // Handle Search on Enter
+    const handleKeyDown = (event) => {
+      if (event.key === "Enter") {
+        updateSearchQuery(event.target.value);
+      }
+    };
 
   //handling alert fetching data
   const openAlert = (variant, message) => {
@@ -185,7 +180,7 @@ export default function Informasi() {
             >
               <ArrowDownTrayIcon className="w-[14px]  text-gray-500 " />
               <p className=" text-p3 text-gray-600 font-semibold">
-                Import dari CSV
+                Download File
               </p>
             </CSVDownloader>
 
@@ -205,23 +200,13 @@ export default function Informasi() {
         )}
       </div>
       <div className="mt-8 mb-9">
-        <form onSubmit={handleSearch} className="flex flex-start">
           <div className="flex flex-row gap-2 flex-start">
             <Search
               id="search-input"
               placeholder="Cari ID atau nama informasi"
-              onChange={handleChange}
+              handleKeyDown={handleKeyDown}
             />
-            <button
-              type="submit"
-              id="btn-input-search"
-              className="gap-[13px] items-center rounded-full bg-green-500 py-[10px]  px-6 hover:bg-green-600 duration-200  text-p3 text-white"
-              value={searchChanges}
-            >
-              Cari
-            </button>
           </div>
-        </form>
       </div>
 
       {/* filter table */}

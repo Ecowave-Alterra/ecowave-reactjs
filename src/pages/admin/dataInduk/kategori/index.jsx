@@ -12,7 +12,7 @@ import Search from "../../../../components/Search";
 import InformationNotFound from "../../../../components/InformationNotFound";
 import Pagination from "../../../../components/Pagination";
 import Alert from "../../../../components/Alert";
-// import ModalConfirm from "../../../../components/ModalConfirm";
+import ModalConfirm from "../../../../components/ModalConfirm";
 import EditKategoriModal from "../../../../components/EditKategoriModel";
 import TambahKategoriModal from "../../../../components/TambahKategoriModal";
 import { useDeleteData, useGetData } from "../../../../hooks/FetchData";
@@ -30,10 +30,12 @@ export default function Kategori() {
     const [message, setMessage] = useState("");
     const [variant, setVariant] = useState("");
 
-    // const [isConfirmDelete, setIsConfirmDelete] = useState(false);
-    const [searchChanges, setSearchChanges] = useState("");
+    // Handle delete
+    const [showModalDelete, setShowModalDelete] = useState(false);
+    const [deleteId, setDeleteId] = useState();
+    const [categoryName, setCategoryName] = useState();
 
-    //query strings
+    //query strings for data fetching
     const [searchParams, setSearchParams] = useSearchParams();
     const searchValue = searchParams.get("search") || "";
     const pageValue = searchParams.get("page") || 1;
@@ -54,14 +56,10 @@ export default function Kategori() {
         });
     };
 
-    const handleChange = (e) => {
-        setSearchChanges(e.target.value);
-    };
-
-    const handleSearch = (event) => {
-        event.preventDefault();
-        if (searchChanges !== searchValue) {
-            updateSearchQuery(searchChanges);
+    // Handle Search on Enter
+    const handleKeyDown = (event) => {
+        if (event.key === "Enter") {
+        updateSearchQuery(event.target.value);
         }
     };
 
@@ -84,11 +82,23 @@ export default function Kategori() {
         updatePagination(id);
     };
 
+    // handle edit
     const openModalEdit = (isOpenModal, idCategory) => {
         setIsOpenEdit(isOpenModal);
         setCategoryId(idCategory);
     };
 
+    // handle delete
+    const openConfirmDelete = (id, category) => {
+        setShowModalDelete(true);
+        setDeleteId(id);
+        setCategoryName(category)
+      };
+    
+      const closeConfirmDelete = () => {
+        setShowModalDelete(false);
+      };
+    
     //handling alert fetching data
     const openAlert = (variant, message) => {
         setIsAlert(true);
@@ -102,56 +112,42 @@ export default function Kategori() {
         setMessage("");
     };
 
-    //handling confirm delete
-    // const openConfirmDelete = (id) => {
-    //     setIsConfirmDelete(true);
-    //     console.log("id adalah " + id);
-    // };
-
-    // const closeConfirmDelete = () => {
-    //     setIsConfirmDelete(false);
-    // };
-
-    const handleDelete = async (id) => {
-        const deleteConfirm = confirm(
-            "Apakah Anda yakin ingin menghapus kategori?"
-        );
-        if (deleteConfirm) {
-            const response = await deleteData(id);
-            if (response.Status === 200) {
-                openAlert("success", response.Message);
-                navigate("?search=&page=1");
-                await mutate(swrKey);
-            } else {
-                openAlert("danger", response.Message);
-            }
+    const handleDelete = async () => {
+        const response = await deleteData(deleteId);
+        if (response.Status === 200) {
+            openAlert("success", response.Message);
+            setShowModalDelete(false);
+            navigate("?search=&page=1");
+            await mutate(swrKey);
+        } else {
+            openAlert("danger", response.Message);
+            setShowModalDelete(false);
         }
     };
 
     // table header
-    const columns = [
+    const TABLE_COLUMS = [
         { header: "No." },
         { header: "Nama" },
         { header: "Action" },
     ];
 
     if (error) return <ErrorPage />;
-    // console.log(data);
 
     return (
         <div className="sm:ml-[44px] sm:mr-8 mx-4 relative">
             {/* confirm delete */}
-            {/* {isConfirmDelete && (
+            {showModalDelete && (
                 <ModalConfirm
-                    title="Apakah Anda ingin menghapus kategori produk?"
-                    description="anda tidak bisa mengembailkan apa yang tgelah anda hapus"
+                    title="Hapus kategori yang dipiih?"
+                    description={`Kategori dengan nama ${categoryName} akan dihapus secara permanen`}
                     onCancel={closeConfirmDelete}
-                    onConfirm={handleDelete()}
+                    onConfirm={handleDelete}
                     labelCancel="batal"
                     labelConfirm="hapus"
-                    variant="success"
+                    variant="danger"
                 />
-            )} */}
+            )}
             {/* alert fetch api */}
             {isAlert && (
                 <Alert
@@ -175,29 +171,19 @@ export default function Kategori() {
                 </button>
             </div>
             <div className="mt-8 mb-9">
-                <form onSubmit={handleSearch} className="flex flex-start">
                     <div className="flex flex-row gap-2 flex-start">
                         <Search
                             id="search-input"
                             placeholder="Cari nama kategori"
-                            onChange={handleChange}
+                            handleKeyDown={handleKeyDown}
                         />
-                        <button
-                            type="submit"
-                            id="input-button"
-                            className="gap-[13px] items-center rounded-full bg-green-500 py-[10px]  px-6 hover:bg-green-600 duration-200  text-p3 text-white"
-                            value={searchChanges}
-                        >
-                            Cari
-                        </button>
                     </div>
-                </form>
             </div>
             <div className="overflow-x-auto mt-3">
                 <table className="w-full min-w-[1000px] text-p4 text-left  text-black">
                     <thead className="text-p3 text-white bg-green-500 ">
                         <tr>
-                            {columns.map((head, i) => (
+                            {TABLE_COLUMS.map((head, i) => (
                                 <th
                                     key={i}
                                     className="py-[14px] px-[10px] text-p2 font-medium"
@@ -253,10 +239,8 @@ export default function Kategori() {
                                                     className="btn_handle_delete bg-green-50 rounded-full mx-2 py-[5px] px-[10px]"
                                                     id="btn_handle_delete"
                                                     onClick={() =>
-                                                        handleDelete(
-                                                            category.Id
-                                                        )
-                                                    }
+                                                        openConfirmDelete(category.Id, category.Category)
+                                                      }
                                                 >
                                                     <TrashIcon className="w-5 h-5 text-error-500" />
                                                 </button>
