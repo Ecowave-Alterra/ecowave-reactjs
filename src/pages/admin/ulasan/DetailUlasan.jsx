@@ -1,6 +1,6 @@
 import React from "react";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 
 // Komponen
 import Empty from "../../../assets/img/Empty Voucher.png";
@@ -14,10 +14,32 @@ import { useGetData } from "../../../hooks/FetchData";
 function DetailUlasan() {
   // Get param id
   let { reviewId } = useParams();
+  let [searchParams, setSearchParams] = useSearchParams();
+  const pageValue = searchParams.get("page") || 1;
 
   // Fungsi fetch data SWR
-  const swrKey = `admin/reviews/${reviewId}`;
+  const swrKey = `admin/reviews/${reviewId}?page=${pageValue}`;
   const { data, isLoading, error } = useGetData(swrKey);
+
+  // Fungsi untuk pagination
+  const updatePagination = (newPaginationValue) => {
+    setSearchParams((params) => {
+      const updatedParams = new URLSearchParams(params.toString());
+      updatedParams.set("page", newPaginationValue);
+      return updatedParams;
+    });
+  };
+
+  // pagination handling
+  const prevPage = () => {
+    updatePagination(parseInt(pageValue) - 1);
+  };
+  const nextPage = () => {
+    updatePagination(parseInt(pageValue) + 1);
+  };
+  const changePage = (id) => {
+    updatePagination(id);
+  };
 
   // Tabel Setup
   const TABLE_COLUMS = [
@@ -25,21 +47,6 @@ function DetailUlasan() {
     { header: "Rating" },
     { header: "Nama Produk" },
   ];
-
-  // Fungsi untuk pagination
-  const prevPage = () => {
-    if (currentPage !== firstIndex) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-  const nextPage = () => {
-    if (currentPage !== lastIndex) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-  const changePage = (id) => {
-    setCurrentPage(id);
-  };
 
   return (
     <div className="flex-row px-3 py-8">
