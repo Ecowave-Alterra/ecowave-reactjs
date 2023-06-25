@@ -1,5 +1,7 @@
 import React from "react";
 import ReactStars from "react-star-ratings";
+import { PhotoProvider, PhotoView } from "react-photo-view";
+import "react-photo-view/dist/react-photo-view.css";
 
 const CardReview = ({
   key,
@@ -39,11 +41,14 @@ const CardReview = ({
           </div>
           <div className="flex my-4">
             {productPhoto && (
-              <img
-                src={productPhoto}
-                alt="Gambar Produk"
-                className="max-w-[190px] max-h-[166px] mx-1"
-              />
+              <PhotoProvider>
+                <PhotoView
+                  src={productPhoto}
+                  
+                >
+                  <img src={productPhoto} alt="Gambar Produk" className="max-w-[190px] max-h-[166px] mx-1 cursor-pointer"/>
+                </PhotoView>
+              </PhotoProvider>
             )}
 
             {productVideo && (
