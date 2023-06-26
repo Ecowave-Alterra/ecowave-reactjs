@@ -193,7 +193,7 @@ export default function OpsiPengiriman() {
           <div className="py-20">
             <img src={Empty} className="h-56 mx-auto" />
             <p className="text-p3 mt-8 font-semibold text-gray-500 text-center">
-              Belum ada list Opsi Pengiriman
+              Belum ada list Metode Pengiriman
             </p>
           </div>
         )}
