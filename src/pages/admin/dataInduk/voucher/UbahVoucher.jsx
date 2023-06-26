@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { observable } from "@legendapp/state";
@@ -27,6 +27,7 @@ const EditVoucher = observer(() => {
   // Mengambil url id
   let { voucherId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation()
 
   // Handle category voucher
   const handleCategoryChange = (event) => {
@@ -124,7 +125,8 @@ const EditVoucher = observer(() => {
       formik.values?.MaximumDiscount == state.dataInit?.MaximumDiscount.get() &&
       formik.values?.DiscountPercent == state.dataInit?.DiscountPercent.get()
     ) {
-      navigate("/admin/voucher");
+      const backLocation = `/admin/voucher/?filter=${location.state.filter}&page=${location.state.page}`;
+      navigate(backLocation);
     } else {
       setShowModalBack(true);
     }
@@ -359,7 +361,7 @@ const EditVoucher = observer(() => {
           title="Keluar Halaman?"
           description="Kamu akan membatalkan perubahan Ubah Voucher. Semua perubahan tidak akan disimpan"
           onCancel={() => setShowModalBack(false)}
-          onConfirm={() => navigate("/admin/voucher")}
+          onConfirm={() => navigate(`/admin/voucher/?filter=${location.state.filter}&page=${location.state.page}`)}
           labelCancel="tidak"
           labelConfirm="iya"
           variant="danger"

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import moment from "moment";
@@ -22,6 +22,7 @@ const state = observable({
 
 const TambahVoucher = observer(() => {
   const navigate = useNavigate();
+  const location = useLocation()
 
   // fetch data
   const { postData, isLoading } = usePostDataUsingJson(`admin/vouchers`);
@@ -96,7 +97,8 @@ const TambahVoucher = observer(() => {
       formik.values?.MaximumDiscount == 0 &&
       formik.values?.DiscountPercent == 0
     ) {
-      navigate("/admin/voucher");
+      const backLocation = `/admin/voucher/?filter=${location.state.filter}&page=${location.state.page}`;
+      navigate(backLocation);
     } else {
       setShowModalBack(true);
     }
@@ -330,7 +332,7 @@ const TambahVoucher = observer(() => {
           title="Keluar Halaman?"
           description="Kamu akan membatalkan perubahan Tambah Voucher. Semua perubahan tidak akan disimpan"
           onCancel={() => setShowModalBack(false)}
-          onConfirm={() => navigate("/admin/voucher")}
+          onConfirm={() => navigate(`/admin/voucher/?filter=${location.state.filter}&page=${location.state.page}`)}
           labelCancel="tidak"
           labelConfirm="iya"
           variant="danger"

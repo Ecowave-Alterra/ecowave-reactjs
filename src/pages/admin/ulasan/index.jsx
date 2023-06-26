@@ -1,8 +1,5 @@
 import React from "react";
-import {
-  Link,
-  useSearchParams,
-} from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 
 // Komponen
 import Search from "../../../components/Search";
@@ -11,14 +8,21 @@ import EmptyData from "../../../components/EmptyData";
 import { useGetData } from "../../../hooks/FetchData";
 
 // Ikon & Gambar
-import { EyeIcon } from "@heroicons/react/24/outline";
+import { EyeIcon } from "@heroicons/react/24/solid";
 import Empty from "../../../assets/img/File Not Found.png";
 
 export default function Ulasan() {
+  const navigate = useNavigate();
   // handle url params
   let [searchParams, setSearchParams] = useSearchParams();
   const searchValue = searchParams.get("search") || "";
   const pageValue = searchParams.get("page") || 1;
+
+  //query string dikirim ke halaman detail
+  const backValues = {
+    search: searchValue,
+    page: pageValue,
+  };
 
   // Fetch data SWR
   const swrKey = `admin/reviews/search?search=${searchValue}&page=${pageValue}`;
@@ -52,6 +56,7 @@ export default function Ulasan() {
     setSearchParams((params) => {
       const updatedParams = new URLSearchParams(params.toString());
       updatedParams.set("search", newSearchValue);
+      updatedParams.set("page", '1');
       return updatedParams;
     });
   };
@@ -102,16 +107,16 @@ export default function Ulasan() {
           </thead>
           {isLoading ? (
             <tbody>
-            <tr className="">
-              <td colSpan={6} className="mx-auto py-40">
-                <img
-                  className="h-16 w-16 mx-auto"
-                  src="https://icons8.com/preloaders/preloaders/1488/Iphone-spinner-2.gif"
-                  alt=""
-                />
-              </td>
-            </tr>
-          </tbody>
+              <tr className="">
+                <td colSpan={6} className="mx-auto py-40">
+                  <img
+                    className="h-16 w-16 mx-auto"
+                    src="https://icons8.com/preloaders/preloaders/1488/Iphone-spinner-2.gif"
+                    alt=""
+                  />
+                </td>
+              </tr>
+            </tbody>
           ) : (
             <tbody>
               {data &&
@@ -134,9 +139,15 @@ export default function Ulasan() {
                       {review.ReviewQty}
                     </td>
                     <td className="py-[18px] px-[10px] w-[100px] flex space-x-4 justify-center">
-                      <Link id="btn_view_ulasan" to={`/admin/ulasan/${review.ProductID}`}>
+                      <button
+                        className="bg-green-50 rounded-full mx-2 py-[5px] px-[10px]"
+                        id="btn_view_ulasan"
+                        onClick={() =>
+                          navigate(`/admin/ulasan/${review.ProductID}`, {state: backValues})
+                        }
+                      >
                         <EyeIcon className="w-5 h-5 text-green-500" />
-                      </Link>
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -146,11 +157,11 @@ export default function Ulasan() {
 
         {/* Empty */}
         {data && data.Status == 404 && (
-            <EmptyData
-              image={Empty}
-              message="No. Resi yang Anda cari tidak ditemukan"
-            />
-          )}
+          <EmptyData
+            image={Empty}
+            message="No. Resi yang Anda cari tidak ditemukan"
+          />
+        )}
       </div>
       {/* Pagination */}
       {data && data.Status == 200 && (
