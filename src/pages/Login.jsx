@@ -1,34 +1,70 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Shopping from "../assets/img/Online shopping.png";
-import * as Yup from "yup"
+import * as Yup from "yup";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
-
-const user = {
-  email : "admin@gmail.com",
-  password : "12345678"
-}
+import getLoginData from "../fetch/Login";
+import setAuthCookie, {
+  getAuthCookieAdminEmail,
+  getAuthCookieAdminName,
+  getAuthCookie,
+} from "../utils/cookies";
+import Alert from "../components/Alert";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
-  const navigate = useNavigate()
+  //alert fetching data
+  const [isAlert, setIsAlert] = useState(false);
+  const [message, setMessage] = useState("");
+  const [variant, setVariant] = useState("");
+
+  const navigate = useNavigate();
+  const { loginData, postDataLogin } = getLoginData();
 
   const handleShowPassword = (e) => {
     setShowPassword(!showPassword);
     e.preventDefault();
   };
 
+  const openAlert = (variant, message) => {
+    setIsAlert(true);
+    setVariant(variant);
+    setMessage(message);
+    setTimeout(closeAlert, 2500);
+  };
+  const closeAlert = () => {
+    setIsAlert(false);
+    setVariant("");
+    setMessage("");
+  };
+
   const formik = useFormik({
     initialValues: {
-      email : "",
-      passWord : ""
+      email: "",
+      passWord: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string().required("Email Kosong").email("Email Tidak Valid").oneOf([user.email], "Email Tidak Terdaftar"),
-      passWord: Yup.string().required("Password Kosong").oneOf([user.password], "Password Tidak Terdaftar")
+      email: Yup.string().required("Email Kosong").email("Email Tidak Valid"),
+      passWord: Yup.string().required("Password Kosong"),
     }),
-    onSubmit: (e) => {
-      navigate("/admin")
+    onSubmit: async (e) => {
+      const datas = {
+        email: e.email,
+        password: e.passWord,
+      };
+      const response = await postDataLogin(datas);
+      console.log(response);
+      if (response.Status === 200) {
+        setAuthCookie(
+          loginData.get().Token,
+          loginData.get().Email,
+          loginData.get().Name
+        );
+        openAlert("success", response.Message);
+        window.location.reload();
+      } else {
+        openAlert("danger", "Email atau password tidak valid. Mohon coba lagi");
+      }
     },
   });
 
@@ -41,20 +77,15 @@ export default function Login() {
               <div className="h-screen w-screen block rounded-lg bg-white shadow-lg">
                 <div className="g-0 lg:flex lg:flex-wrap">
                   {/* Left column container*/}
-                  <div
-                    className="bg-green-50 h-screen flex items-center rounded-b-lg lg:w-5/12 lg:rounded-r-lg lg:rounded-bl-none"
-                    
-                  >
+                  <div className="bg-green-50 h-screen flex items-center rounded-b-lg lg:w-5/12 lg:rounded-r-lg lg:rounded-bl-none">
                     <div className="px-4 py-6 md:mx-6 md:p-12 bg-green-50">
-                      <img src={Shopping} alt="belum ada source"/>
+                      <img src={Shopping} alt="belum ada source" />
                     </div>
                   </div>
                   {/* Right column container login form*/}
                   <div className="sm:px-10 sm:mt-40 md:px-10 md:mt-52 lg:w-7/12 lg:px-10 lg:mt-0 place-self-center w-full min-w-[300px]">
                     <div className="md:mx-16 md:p-12">
-                      <p
-                        className="font-bold text-h4 text-green-500 mb-2"
-                      >
+                      <p className="font-bold text-h4 text-green-500 mb-2">
                         Log in
                       </p>
                       <form onSubmit={formik.handleSubmit}>
@@ -70,20 +101,30 @@ export default function Login() {
                           <div className="relative h-10 mt-3">
                             <input
                               id="email"
-                              className={formik.errors.email && formik.touched.email ?  "peer h-full w-full rounded-[7px] border border-error-500 border-t-transparent bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-green-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-error-500 placeholder-shown:border-t-error-500 focus:border-2 focus:border-error-500 focus:border-t-transparent focus:outline-0 " : "peer h-full w-full rounded-[7px] border border-green-400 border-t-transparent bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-green-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-green-400 placeholder-shown:border-t-green-400 focus:border-2 focus:border-green-400 focus:border-t-transparent focus:outline-0 "}
-                              placeholder=" "
+                              className={
+                                formik.errors.email && formik.touched.email
+                                  ? "peer h-full w-full rounded-[7px] border border-error-400 border-t-transparent bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-green-700 outline outline-0 transition-all placeholder-shown:border focus:border-2 focus:border-error-400 focus:border-t-transparent focus:outline-0 "
+                                  : "peer h-full w-full rounded-[7px] border border-green-400 border-t-transparent bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-green-700 outline outline-0 transition-all placeholder-shown:border focus:border-2 focus:border-green-400 focus:border-t-transparent focus:outline-0 "
+                              }
+                              placeholder="Masukkan Alamat Email Anda"
                               value={formik.values.email}
                               onChange={formik.handleChange}
                             />
-                            <label className={formik.errors.email && formik.touched.email ? "before:content[' '] after:content[' '] before:text-p3 pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-error-500 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-error-500 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-error-500 after:transition-all peer-placeholder-shown:text-p3 peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-error-500 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-error-500 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-error-500 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500" : "before:content[' '] after:content[' '] before:text-p3 pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-green-500 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-green-400 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-green-400 after:transition-all peer-placeholder-shown:text-p3 peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-green-400 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-green-400 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-green-400 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500" }>
+                            <label
+                              className={
+                                formik.errors.email && formik.touched.email
+                                  ? "before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none font-normal text-error-500 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-error-400 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-error-400 after:transition-all text-[11px] leading-tight peer-focus:text-error-400 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-error-400 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-error-400"
+                                  : "before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none font-normal text-green-500 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-green-400 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-green-400 after:transition-all text-[11px] leading-tight peer-focus:text-green-400 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-green-400 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-green-400"
+                              }
+                            >
                               Email
                             </label>
                           </div>
                         </div>
                         {formik.errors.email && formik.touched.email && (
-                        <div className="text-error-500 text-p4 ms-3 mt-1">
+                          <div className="text-error-500 text-p4 ms-3 mt-1">
                             {formik.errors.email}
-                        </div>
+                          </div>
                         )}
                         {/*Password input*/}
                         <div
@@ -92,19 +133,35 @@ export default function Login() {
                         >
                           <div className="relative w-full">
                             <input
-                              className={formik.errors.passWord && formik.touched.passWord ?  "peer h-full w-full rounded-[7px] border border-error-500 border-t-transparent bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-green-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-error-500 placeholder-shown:border-t-error-500 focus:border-2 focus:border-error-500 focus:border-t-transparent focus:outline-0 " : "peer h-full w-full rounded-[7px] border border-green-400 border-t-transparent bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-green-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-green-400 placeholder-shown:border-t-green-400 focus:border-2 focus:border-green-400 focus:border-t-transparent focus:outline-0 "}
-                              placeholder=" "
+                              className={
+                                formik.errors.passWord &&
+                                formik.touched.passWord
+                                  ? "peer h-full w-full rounded-[7px] border focus:ring-0 border-error-400 border-t-transparent bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-green-700 outline outline-0 transition-all placeholder-shown:border focus:border-2 focus:border-error-400 focus:border-t-transparent focus:outline-0 "
+                                  : "peer h-full w-full rounded-[7px] border focus:ring-0 border-green-400 border-t-transparent bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-green-700 outline outline-0 transition-all placeholder-shown:border focus:border-2 focus:border-green-400 focus:border-t-transparent focus:outline-0 "
+                              }
+                              placeholder="Masukkan Password Anda"
                               type={showPassword ? "text" : "password"}
+                              style={{
+                                "&:focus": { outline: "0px !important" },
+                              }}
                               id="passWord"
                               value={formik.values.passWord}
                               onChange={formik.handleChange}
                             />
-                            <label className={formik.errors.passWord && formik.touched.passWord ? "before:content[' '] after:content[' '] before:text-p3 pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-error-500 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-error-500 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-error-500 after:transition-all peer-placeholder-shown:text-p3 peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-error-500 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-error-500 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-error-500 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500" : "before:content[' '] after:content[' '] before:text-p3 pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-green-500 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-green-400 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-green-400 after:transition-all peer-placeholder-shown:text-p3 peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-green-400 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-green-400 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-green-400 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500" }>
+                            <label
+                              className={
+                                formik.errors.passWord &&
+                                formik.touched.passWord
+                                  ? "before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none font-normal text-error-500 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-error-400 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-error-400 after:transition-all text-[11px] leading-tight peer-focus:text-error-400 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-error-400 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-error-400"
+                                  : "before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none font-normal text-green-500 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-green-400 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-green-400 after:transition-all text-[11px] leading-tight peer-focus:text-green-400 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-green-400 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-green-400"
+                              }
+                            >
                               Password
                             </label>
-                            <button
+                            <label
+                              id="show_pass"
                               onClick={(e) => handleShowPassword(e)}
-                              className="absolute top-0 right-0 p-2.5 text-sm font-medium text-black border-transparent bg-transparent rounded-r-lg border"
+                              className="cursor-pointer absolute top-0 right-0 p-2.5 text-sm font-medium text-black border-transparent bg-transparent rounded-r-lg border"
                             >
                               {showPassword ? (
                                 <svg
@@ -142,30 +199,23 @@ export default function Login() {
                                   />
                                 </svg>
                               )}
-                            </button>
+                            </label>
                           </div>
                         </div>
                         {formik.errors.passWord && formik.touched.passWord && (
-                        <div className="text-error-500 text-p4 ms-3 mt-1">
+                          <div className="text-error-500 text-p4 ms-3 mt-1">
                             {formik.errors.passWord}
-                        </div>
+                          </div>
                         )}
 
-                        {/*Forgot password link*/}
-                        <a
-                          href="#!"
-                          className="pb-4 float-right mt-6 text-green-500 text-p3"
-                        >
-                          Lupa Password?
-                        </a>
-
                         {/*Submit button*/}
-                        <div className="mb-12 text-center">
+                        <div className="mb-12 text-center mt-8">
                           <button
+                            id="btn_login"
                             className="text-p3 mb-3 inline-block bg-green-500 w-full rounded-full py-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_rgba(0,0,0,0.2)] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] focus:outline-none focus:ring-0 active:shadow-[0_8px_9px_-4px_rgba(0,0,0,0.1),0_4px_18px_0_rgba(0,0,0,0.2)] disabled:bg-green-300"
                             type="submit"
                             data-te-ripple-init=""
-                            disabled={!(formik.dirty)}
+                            disabled={!formik.dirty}
                           >
                             Log in
                           </button>
@@ -179,6 +229,10 @@ export default function Login() {
           </div>
         </div>
       </section>
+      {/* Alert  */}
+      {isAlert && (
+        <Alert variant={variant} message={message} onClose={closeAlert} />
+      )}
     </>
   );
 }

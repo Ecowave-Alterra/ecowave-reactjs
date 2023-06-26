@@ -1,172 +1,132 @@
-import React, { useState, useEffect } from "react";
-import Back from "../../../assets/img/Vector.png";
-import { Link } from "react-router-dom";
-import { UserIcon } from "@heroicons/react/24/solid";
+import React from "react";
+import { ChevronLeftIcon } from "@heroicons/react/24/outline";
+import { Link, useParams, useSearchParams, useLocation, useNavigate } from "react-router-dom";
+
+// Komponen
+import Empty from "../../../assets/img/Empty Voucher.png";
 import CardReview from "../../../components/CardReview";
+import Pagination from "../../../components/Pagination";
+import EmptyData from "../../../components/EmptyData";
+
+// Fetch
+import { useGetData } from "../../../hooks/FetchData";
 
 function DetailUlasan() {
-  const [itemList, setItemList] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const recordPerPage = 3;
-  const lastIndex = currentPage * recordPerPage;
-  const firstIndex = lastIndex - recordPerPage;
-  const records = itemList.slice(firstIndex, lastIndex);
-  const nPage = Math.ceil(itemList.length / recordPerPage);
-  const numbers = [...Array(nPage + 1).keys()].slice(1);
+  // Get param id
+  let { reviewId } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+  let [searchParams, setSearchParams] = useSearchParams();
+  const pageValue = searchParams.get("page") || 1;
 
-  const data = [
-    {
-      nomer: "01032412123",
-      produk: "Totebag Tas Belanja Serbaguna",
-      reviewer: { nama: "Shinta Rahma", img: <UserIcon className="w-5 h-5" /> },
-      rating: 4.5,
-      imgs: ["/src/assets/img/media.png", "/src/assets/img/media.png"],
-      komentar: "sangat bagus sesuai gambar tapi lama nyampenyaa :)",
-    },
-    {
-      nomer: "01032412123",
-      produk: "Sendok",
-      reviewer: { nama: "Renaldo", img: <UserIcon className="w-5 h-5" /> },
-      rating: 4.0,
-      imgs: ["/src/assets/img/media.png", "/src/assets/img/media.png"],
-      komentar: "sangat bagus",
-    },
-    {
-      nomer: "01032412123",
-      produk: "Sendok",
-      reviewer: { nama: "Renaldo", img: <UserIcon className="w-5 h-5" /> },
-      rating: 4.0,
-      imgs: ["/src/assets/img/media.png", "/src/assets/img/media.png"],
-      komentar: "sangat bagus",
-    },
-    {
-      nomer: "01032412123",
-      produk: "Sendok",
-      reviewer: { nama: "Renaldo", img: <UserIcon className="w-5 h-5" /> },
-      rating: 4.0,
-      imgs: ["/src/assets/img/media.png", "/src/assets/img/media.png"],
-      komentar: "sangat bagus",
-    },
-    {
-      nomer: "01032412123",
-      produk: "Sendok",
-      reviewer: { nama: "Renaldo", img: <UserIcon className="w-5 h-5" /> },
-      rating: 4.0,
-      imgs: ["/src/assets/img/media.png", "/src/assets/img/media.png"],
-      komentar: "sangat bagus",
-    },
-  ];
-  const columns = [
+  // Fungsi fetch data SWR
+  const swrKey = `admin/reviews/${reviewId}?page=${pageValue}`;
+  const { data, isLoading, error } = useGetData(swrKey);
+
+  // Fungsi untuk pagination
+  const updatePagination = (newPaginationValue) => {
+    setSearchParams((params) => {
+      const updatedParams = new URLSearchParams(params.toString());
+      updatedParams.set("page", newPaginationValue);
+      return updatedParams;
+    });
+  };
+
+  // pagination handling
+  const prevPage = () => {
+    updatePagination(parseInt(pageValue) - 1);
+  };
+  const nextPage = () => {
+    updatePagination(parseInt(pageValue) + 1);
+  };
+  const changePage = (id) => {
+    updatePagination(id);
+  };
+
+  // Tabel Setup
+  const TABLE_COLUMS = [
     { header: "Konten" },
     { header: "Rating" },
     { header: "Nama Produk" },
   ];
 
-   // Fungsi untuk pagination
-   const prevPage = () => {
-    if (currentPage !== firstIndex) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-  const nextPage = () => {
-    if (currentPage !== lastIndex) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-  const changePage = (id) => {
-    setCurrentPage(id);
-  };
-
-  useEffect(() => {
-    setItemList(data);
-  }, []);
-
   return (
-    <div className="flex-row px-3 py-8">
+    <div className="flex-row sm:ml-[44px] mx-4 mt-10">
       {/* header */}
       <div className="flex justify-start items-center">
-        <Link to={"/admin/ulasan"}>
-          <img src={Back} className="h-5 mr-5 cursor-pointer" />
-        </Link>
+        <button id="btn_back" onClick={() => navigate(`/admin/ulasan?search=${location.state.search}&page=${location.state.page}`)}>
+          <ChevronLeftIcon className="w-6 h-6 text-green-500 cursor-pointer mr-4" />
+        </button>
         <div className="text-h4 font-normal">Detail Ulasan</div>
       </div>
 
-      <div className="relative overflow-x-auto border-[1px] border-gray-500 rounded-md mt-8">
-        <table className="w-full text-left table-auto ">
-          <thead className="text-p3 text-white bg-green-500 ">
+      <div className="overflow-x-auto mt-8">
+        <table className="w-full min-w-[1000px] text-p4 text-left text-black border-x-[1px] border-black">
+          <thead className="text-p3 text-white bg-green-500">
             <tr>
-              {columns &&
-                columns.map((head) => (
-                  <th className="py-[14px] px-[10px] text-p2 font-medium text-center">
+              {TABLE_COLUMS &&
+                TABLE_COLUMS.map((head, i) => (
+                  <th
+                    key={i}
+                    className="py-[14px] px-[10px] text-p2 font-medium text-center"
+                  >
                     {head.header}
                   </th>
                 ))}
             </tr>
           </thead>
-          <tbody>
-            {itemList &&
-              records.map((item) => (
-                <CardReview
-                  key={item.nomer}
-                  produk={item.produk}
-                  reviewer={item.reviewer}
-                  nomer={item.nomer}
-                  rating={item.rating}
-                  imgs={item.imgs}
-                  komentar={item.komentar}
-                />
-              ))}
-          </tbody>
-        </table>
-
-        {/* Pagination */}
-        {records.length >= 1 && (
-          <div className="flex justify-between w-full py-4">
-            <div>
-              <p className="text-p2 font-normal px-5 py-3 text-gray-500">{`Halaman ${currentPage} dari ${nPage}`}</p>
-            </div>
-            <nav>
-              <ul className="list-style-none flex">
-                <li>
-                  <a
-                    className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold  ${
-                      currentPage === 1 ? "text-gray-300" : "text-green-500"
-                    }`}
-                    onClick={currentPage === 1 ? null : prevPage}
-                  >
-                    Previous
-                  </a>
-                </li>
-                {numbers.map((n, i) => (
-                  <li key={i}>
-                    <p
-                      className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold rounded-full text-green-500 ${
-                        currentPage === n
-                          ? "bg-green-500 text-white"
-                          : "bg-green-50"
-                      }`}
-                      onClick={() => changePage(n)}
-                    >
-                      {n}
-                    </p>
-                  </li>
+          {isLoading ? (
+            <tbody>
+              <tr className="">
+                <td colSpan={3} className="mx-auto py-40">
+                  <img
+                    className="h-16 w-16 mx-auto"
+                    src="https://icons8.com/preloaders/preloaders/1488/Iphone-spinner-2.gif"
+                    alt=""
+                  />
+                </td>
+              </tr>
+            </tbody>
+          ) : (
+            <tbody>
+              {data &&
+                data.Status == 200 &&
+                data.Reviews?.map((review, i) => (
+                  <CardReview
+                    key={review.TransactionID}
+                    productName={review.ProductName}
+                    reviewerName={review.Name}
+                    reviewerPhoto={review.ProfilePhoto}
+                    transactionId={review.TransactionID}
+                    avgRating={review.AvgRating}
+                    expeditionRating={review.ExpeditionRating}
+                    productRating={review.ProductRating}
+                    productPhoto={review.PhotoUrl}
+                    productVideo={review.VideoUrl}
+                    comment={review.CommentUser}
+                  />
                 ))}
-
-                <li>
-                  <a
-                    className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold  ${
-                      currentPage === nPage ? "text-gray-300" : "text-green-500"
-                    }`}
-                    onClick={currentPage === nPage ? null : nextPage}
-                  >
-                    Next
-                  </a>
-                </li>
-              </ul>
-            </nav>
-          </div>
+            </tbody>
+          )}
+        </table>
+        {/* Empty */}
+        {data && data.Status == 404 && (
+          <EmptyData
+            image={Empty}
+            message="Belum ada ulasan untuk produk ini"
+          />
         )}
       </div>
+      {/* Pagination */}
+      {data && data.Status == 200 && (
+        <Pagination
+          currentPage={data.Page}
+          totalPage={data.TotalPage}
+          onPrev={prevPage}
+          onChange={changePage}
+          onNext={nextPage}
+        />
+      )}
     </div>
   );
 }

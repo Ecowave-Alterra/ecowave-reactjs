@@ -1,37 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
-    ArrowRightOnRectangleIcon,
-    XMarkIcon,
-    ChevronDownIcon,
-    Bars3Icon,
+  ArrowRightOnRectangleIcon,
+  XMarkIcon,
+  ChevronDownIcon,
+  Bars3Icon,
 } from "@heroicons/react/24/outline";
 import Logo from "../assets/img/logo.png";
 import { NavLink } from "react-router-dom";
-
+import {
+  removeAuthCookie,
+  getAuthCookieAdminEmail,
+  getAuthCookieAdminName,
+} from "../utils/cookies";
 
 export default function Sidebar({ children }) {
-
+  // lokal state
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isSubMenuActive, setSubMenuActive] = useState();
 
+  // sub menus setups
   const subMenus = [
-    { name: 'Produk', link: '/admin/produk' },
-    { name: 'Informasi', link: '/admin/informasi' },
-    { name: 'Opsi Pengiriman', link: '/admin/opsi' },
+    { name: "Produk", link: "/admin/produk" },
+    { name: "Informasi", link: "/admin/informasi" },
+    { name: "Opsi Pengiriman", link: "/admin/opsi" },
     { name: "Voucher", link: "/admin/voucher" },
-    { name: "Metode Pengiriman", link: "/admin/metode-pengiriman" },
+    { name: "Metode Pembayaran", link: "/admin/metode-pembayaran" },
     { name: "Kategori", link: "/admin/kategori" },
   ];
 
+  const toggleSidebar = () => {
+    setSidebarOpen(!isSidebarOpen);
+  };
 
-    const toggleSidebar = () => {
-        setSidebarOpen(!isSidebarOpen);
-    };
-
-    const toggleDropdown = () => {
-        setDropdownOpen(!isDropdownOpen);
-    };
+  const toggleDropdown = () => {
+    setDropdownOpen(!isDropdownOpen);
+  };
 
   const setAction = (stat) => {
     setSubMenuActive(stat);
@@ -39,9 +43,9 @@ export default function Sidebar({ children }) {
   };
 
   const handleLogout = () => {
-    console.log("Logout");
+    removeAuthCookie();
+    window.location.reload();
   };
-
 
   return (
     <>
@@ -68,6 +72,7 @@ export default function Sidebar({ children }) {
             {/* Dashboard */}
             <NavLink
               end
+              id="dashboard"
               onClick={() => setAction(false)}
               to="/admin"
               className={({ isActive }) =>
@@ -90,6 +95,7 @@ export default function Sidebar({ children }) {
 
             {/* Data Induk */}
             <div
+              id="dropdown_menu"
               className={`flex items-center rounded-md my-2 mx-8 p-3 duration-300 cursor-pointer text-gray-600 fill-gray-600 hover:fill-white hover:bg-green-500 hover:text-white hover:border-[1px] hover:border-black ${
                 isSubMenuActive &&
                 "fill-white bg-green-500 text-white border-[1px] border-black"
@@ -123,6 +129,8 @@ export default function Sidebar({ children }) {
             >
               {subMenus.map((menu) => (
                 <NavLink
+                  id={menu.name}
+                  key={menu.name + 1}
                   onClick={() => setAction(true)}
                   to={menu.link}
                   className={({ isActive }) =>
@@ -138,6 +146,7 @@ export default function Sidebar({ children }) {
 
             {/* Pesanan */}
             <NavLink
+              id="pesanan"
               onClick={() => setAction(false)}
               to="/admin/pesanan"
               className={({ isActive }) =>
@@ -161,6 +170,7 @@ export default function Sidebar({ children }) {
 
             {/* Ulasan */}
             <NavLink
+              id="ulasan"
               onClick={() => setAction(false)}
               to="/admin/ulasan"
               className={({ isActive }) =>
@@ -195,15 +205,16 @@ export default function Sidebar({ children }) {
                 />
               </div>
               <div className="flex justify-start flex-col items-start">
-                <p className="cursor-pointer text-black text-p4 font-medium">
-                  Renaldo Surya Saputra
+                <p className="cursor-pointer text-black text-p3 font-medium">
+                  {getAuthCookieAdminName()}
                 </p>
-                <p className="cursor-pointer text-black text-p5">
-                  dododo@gmail.com
+                <p className="cursor-pointer text-black text-p4">
+                  {getAuthCookieAdminEmail()}
                 </p>
               </div>
             </div>
             <div
+              id="logout"
               className="rounded-full text-green-500 cursor-pointer"
               onClick={handleLogout}
             >
@@ -222,6 +233,7 @@ export default function Sidebar({ children }) {
             isSidebarOpen && "hidden"
           }`}
           onClick={toggleSidebar}
+          id="hamburger"
         >
           <Bars3Icon className="w-6 h-6 m-2 bg-green-500 text-white rounded-sm hover:bg-green-600" />
         </span>
