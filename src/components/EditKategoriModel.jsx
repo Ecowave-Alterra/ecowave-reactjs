@@ -49,11 +49,19 @@ export default function EditKategoriModal({
     },
   });
 
+  const closeModal = () => {
+    formik.setValues({
+      kategori: "",
+    });
+
+    setIsOpen(false);
+  };
+
   return (
     <Dialog
       className="fixed w-[360px] rounded-[28px] top-2/4 left-2/4 translate-x-[-50%] translate-y-[-50%] mx-auto overflow-hidden shadow-2 bg-white z-50"
       open={isOpen}
-      onClose={() => setIsOpen(false)}
+      onClose={closeModal}
     >
       <form onSubmit={formik.handleSubmit} className="mt-5 ">
         <Dialog.Panel>
@@ -104,7 +112,7 @@ export default function EditKategoriModal({
           {!isLoading && (
             <div className="flex flex-row gap-2 items-center justify-end ml-auto p-3">
               <button
-                onClick={() => setIsOpen(false)}
+                onClick={closeModal}
                 className="btn_close_modal_edit px-4 py-[10px] text-p3 text-[#535A65] bg-white font-semibold rounded-full"
                 id="btn_close_modal_edit"
               >
