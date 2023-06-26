@@ -229,6 +229,14 @@ export default function DetailProduk() {
                       </div>
                     </div>
                   </form>
+                  <button
+                onClick={() => navigate("/admin/ulasan/"+productId)}
+                className="mt-12 mb-4 flex flex-row gap-[13px] items-center rounded-full border-green-500 border  py-[10px] pl-[21px] pr-4 hover:bg-gray-50 duration-200"
+            >
+                <p className=" text-p3 text-green-500 font-semibold">
+                Lihat Review
+                </p>
+            </button>
                 </div>
               </div>
             </label>
