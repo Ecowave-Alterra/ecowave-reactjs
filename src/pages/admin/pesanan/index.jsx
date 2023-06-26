@@ -43,7 +43,6 @@ export default function Pesanan() {
   ];
 
   let [searchParams, setSearchParams] = useSearchParams();
-  const [searchChanges, setSearchChanges] = useState();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -89,17 +88,9 @@ export default function Pesanan() {
     });
   };
 
-  const handleChange = (e) => {
-    setSearchChanges(e.target.value);
-  };
-
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
-      if (searchChanges !== searchValue) {
-        updateSearchQuery(searchChanges);
-      } else {
-        alert('sama');
-      }
+        updateSearchQuery(event.target.value);
     }
   };
 
@@ -203,7 +194,6 @@ export default function Pesanan() {
         <Search
           id="search-input"
           placeholder="Cari resi atau nama item"
-          onChange={handleChange}
           handleKeyDown={handleKeyDown}
         />
       </div>

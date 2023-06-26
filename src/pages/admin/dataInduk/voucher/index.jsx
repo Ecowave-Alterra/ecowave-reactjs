@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import {mutate} from 'swr'
 
 // Komponen
 import ButtonGroup from "../../../../components/ButtonGroup";
@@ -14,7 +15,7 @@ import {
   PencilIcon,
   TrashIcon,
   PlusSmallIcon,
-} from "@heroicons/react/24/outline";
+} from "@heroicons/react/24/solid";
 
 // hooks
 import { useGetData, useDeleteData } from "../../../../hooks/FetchData";
@@ -25,6 +26,11 @@ const Voucher = () => {
   const navigate = useNavigate();
   const filterValue = searchParams.get("filter") || "";
   const pageValue = searchParams.get("page") || 1;
+  //query string dikirim ke halaman detail
+  const backValues = {
+    filter: filterValue,
+    page: pageValue,
+  };
 
   // Data request SWR
   const swrKey = `admin/vouchers/filter?page=${pageValue}&type=${filterValue}`;
@@ -87,7 +93,7 @@ const Voucher = () => {
     if (response.Status === 200) {
       openAlert("success", response.Message);
       setShowModalDelete(false);
-      changePage(1);
+      await mutate(swrKey);
     } else {
       openAlert("danger", response.Message);
     }
@@ -128,7 +134,9 @@ const Voucher = () => {
         <button
           id="tambah_voucher"
           name="tambah_voucher"
-          onClick={() => navigate("/admin/voucher/tambah")}
+          onClick={() =>
+            navigate("/admin/voucher/tambah", { state: backValues })
+          }
           className="flex flex-row gap-[13px] items-center rounded-full bg-green-500 py-[10px] pl-[21px] pr-4 hover:bg-green-600 duration-200"
         >
           <PlusSmallIcon className="w-[14px]  text-white " />
@@ -195,16 +203,23 @@ const Voucher = () => {
                     <td className="py-[18px] px-[10px]">{voucher.EndDate}</td>
                     <td className="py-[18px] px-[10px] text-center flex space-x-2 justify-center">
                       <div className="flex">
-                        <Link
+                        <button
                           id="btn_ubah_voucher"
-                          to={`/admin/voucher/ubah/${voucher.VoucherId}`}
-                          className="bg-green-50 rounded-full mx-2"
+                          onClick={() =>
+                            navigate(
+                              `/admin/voucher/ubah/${voucher.VoucherId}`,
+                              {
+                                state: backValues,
+                              }
+                            )
+                          }
+                          className="bg-green-50 rounded-full mx-2 py-[5px] px-[10px]"
                         >
                           <PencilIcon className="w-5 h-5 text-green-500" />
-                        </Link>
+                        </button>
                         <button
                           id="btn_delete_voucher"
-                          className="bg-green-50 rounded-full mx-2"
+                          className="bg-green-50 rounded-full mx-2 py-[5px] px-[10px]"
                           onClick={() =>
                             openConfirmDelete(voucher.VoucherId, voucher.Type)
                           }

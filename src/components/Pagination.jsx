@@ -23,7 +23,7 @@ const Pagination = ({ currentPage, totalPage, onPrev, onNext, onChange }) => {
             <li key={i}>
               <p
                 id={`btn_choose_page${n}`}
-                className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold rounded-full text-green-500 ${
+                className={`cursor-pointer relative block mx-1 px-5 py-3 text-p2 font-semibold rounded-full text-green-500 ${
                   currentPage === n ? "bg-green-500 text-white" : "bg-green-50"
                 }`}
                 onClick={() => onChange(n)}

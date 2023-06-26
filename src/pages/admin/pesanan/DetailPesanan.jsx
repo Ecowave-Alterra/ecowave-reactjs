@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useGetData } from '../../../hooks/FetchData';
 
 import {
@@ -13,6 +13,8 @@ import ErrorPage from '../../../components/ErrorPage';
 
 function DetailPesanan() {
   let { id } = useParams();
+  const navigate = useNavigate()
+  const location = useLocation()
 
   const swrKey = `admin/orders/${id}`;
 
@@ -95,9 +97,9 @@ function DetailPesanan() {
     <div className="py-12 px-10">
       {/* Back */}
       <div className="flex justify-start items-center mb-14 ">
-        <Link to={'/admin/pesanan'}>
+        <button onClick={() => navigate(`/admin/pesanan?search=${location.state.search}&filter=${location.state.filter}&page=${location.state.page}`)}>
           <img src={Back} className="h-3 mr-7 cursor-pointer" />
-        </Link>
+        </button>
         <div className="text-h6 font-medium">Detail Pemesanan</div>
       </div>
 

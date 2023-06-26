@@ -1,6 +1,6 @@
 import React from "react";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import { Link, useParams, useSearchParams, useLocation, useNavigate } from "react-router-dom";
 
 // Komponen
 import Empty from "../../../assets/img/Empty Voucher.png";
@@ -14,6 +14,8 @@ import { useGetData } from "../../../hooks/FetchData";
 function DetailUlasan() {
   // Get param id
   let { reviewId } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
   let [searchParams, setSearchParams] = useSearchParams();
   const pageValue = searchParams.get("page") || 1;
 
@@ -49,12 +51,12 @@ function DetailUlasan() {
   ];
 
   return (
-    <div className="flex-row px-3 py-8">
+    <div className="flex-row sm:ml-[44px] mx-4 mt-10">
       {/* header */}
       <div className="flex justify-start items-center">
-        <Link id="btn_back" to={"/admin/ulasan"}>
-          <ChevronLeftIcon className="w-5 h-5 text-green-500 cursor-pointer mr-4" />
-        </Link>
+        <button id="btn_back" onClick={() => navigate(`/admin/ulasan?search=${location.state.search}&page=${location.state.page}`)}>
+          <ChevronLeftIcon className="w-6 h-6 text-green-500 cursor-pointer mr-4" />
+        </button>
         <div className="text-h4 font-normal">Detail Ulasan</div>
       </div>
 
