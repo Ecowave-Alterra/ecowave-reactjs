@@ -85,7 +85,7 @@ export default function TambahProduk() {
         reader.onerror = () => console.log("file reading has failed");
         reader.onload = (e) => {
           if (isThereSamedisplayImage(e.target.result) == true) {
-            alert("ada gambar yang sama");
+            openAlert("danger", "ada gambar yang Sama");
           } else {
             formik.values.image.push(file);
             formik.values.displayImage.push(e.target.result);
@@ -103,7 +103,7 @@ export default function TambahProduk() {
         reader.onerror = () => console.log("file reading has failed");
         reader.onload = (e) => {
           if (isThereSamedisplayImage(e.target.result) == true) {
-            alert("ada gambar yang sama");
+            openAlert("danger", "ada gambar yang Sama");
           } else {
             var index = formik.values.displayImage?.findIndex(
               (item) => item == choosed
@@ -130,7 +130,7 @@ export default function TambahProduk() {
     multiple: true,
     maxFiles: 5,
     onDropRejected: () => {
-      alert("file tidak memenuhi standard yang diberikan");
+      openAlert("danger", "file tidak memenuhi standard yang diberikan")
     },
   });
 
@@ -239,6 +239,7 @@ export default function TambahProduk() {
     setVariant("");
     setMessage("");
   };
+
   return (
     <>
       {/* alert fetch api */}
@@ -358,13 +359,12 @@ export default function TambahProduk() {
           </div>
         )}
 
-        {/* Cuma ganti tag label ke div VANNNN */}
         <div className="lg:w-7/12 items-center gap-3">
           <div className="sm:px-10 sm:mt-0 md:px-10 md:mt-52 lg:mt-0  w-full min-w-[300px]">
             <div className="md:mx-1 md:p-1">
               <form onSubmit={formik.handleSubmit}>
                 {/*Product Name input*/}
-                <div className="relative" data-te-input-wrapper-init="">
+                <div className="relative">
                   <div className="relative h-10">
                     <input
                       id="productName"
@@ -518,7 +518,7 @@ export default function TambahProduk() {
                           ? "text-p2 text-error-500 mb-3"
                           : "text-p2 text-green-500 mb-3"
                       }
-                      htmlFor="description"
+                      htmlFor=""
                     >
                       Deskripsi
                     </label>
