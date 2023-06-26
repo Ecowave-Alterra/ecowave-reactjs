@@ -1,46 +1,47 @@
-import Search from "../../../../components/Search";
-import { useState } from "react";
-import { useEffect } from "react";
+import Search from '../../../../components/Search';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import Empty from '../../../../assets/img/emptyOpsi.png';
 
 export default function MetodePembayaran() {
   const TABLE_COLUMS = [
-    { header: "No." },
-    { header: "Metode Pembayaran" },
-    { header: "Kategori" },
+    { header: 'No.' },
+    { header: 'Metode Pembayaran' },
+    { header: 'Kategori' },
   ];
 
   const MetodePembayaran = [
     {
-      Method: "OVO",
-      Category: "QRIS",
+      Method: 'OVO',
+      Category: 'QRIS',
     },
     {
-      Method: "Gopay",
-      Category: "QRIS",
+      Method: 'Gopay',
+      Category: 'QRIS',
     },
     {
-      Method: "Dana",
-      Category: "QRIS",
+      Method: 'Dana',
+      Category: 'QRIS',
     },
     {
-      Method: "Shopee Pay",
-      Category: "QRIS",
+      Method: 'Shopee Pay',
+      Category: 'QRIS',
     },
     {
-      Method: "BCA",
-      Category: "Bank",
+      Method: 'BCA',
+      Category: 'Bank',
     },
     {
-      Method: "BRI",
-      Category: "Bank",
+      Method: 'BRI',
+      Category: 'Bank',
     },
     {
-      Method: "BNI",
-      Category: "Bank",
+      Method: 'BNI',
+      Category: 'Bank',
     },
     {
-      Method: "Mandiri",
-      Category: "Bank",
+      Method: 'Mandiri',
+      Category: 'Bank',
     },
   ];
 
@@ -52,7 +53,7 @@ export default function MetodePembayaran() {
   const records = itemList.slice(firstIndex, lastIndex);
   const nPage = Math.ceil(itemList.length / recordPerPage);
   const numbers = [...Array(nPage + 1).keys()].slice(1);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
   // Handle Pagination
@@ -72,7 +73,7 @@ export default function MetodePembayaran() {
 
   // Handle Search on Enter
   const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       setIsLoading(true);
       setTimeout(() => {
         setIsLoading(false);
@@ -143,8 +144,12 @@ export default function MetodePembayaran() {
                   <th scope="row" className="text-center font-normal">
                     {i + 1}
                   </th>
-                  <td className="py-[18px] px-[10px] text-center">{item.Method}</td>
-                  <td className="py-[18px] px-[10px] text-center">{item.Category}</td>
+                  <td className="py-[18px] px-[10px] text-center">
+                    {item.Method}
+                  </td>
+                  <td className="py-[18px] px-[10px] text-center">
+                    {item.Category}
+                  </td>
                 </tr>
               ))}
           </tbody>
@@ -162,7 +167,7 @@ export default function MetodePembayaran() {
               <li>
                 <button
                   className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold  ${
-                    currentPage === 1 ? "text-gray-300" : "text-green-500"
+                    currentPage === 1 ? 'text-gray-300' : 'text-green-500'
                   }`}
                   onClick={prevPage}
                   disabled={currentPage === 1}
@@ -175,8 +180,8 @@ export default function MetodePembayaran() {
                   <p
                     className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold rounded-full text-green-500 ${
                       currentPage === n
-                        ? "bg-green-500 text-white"
-                        : "bg-green-50"
+                        ? 'bg-green-500 text-white'
+                        : 'bg-green-50'
                     }`}
                     onClick={() => changePage(n)}
                   >
@@ -189,8 +194,8 @@ export default function MetodePembayaran() {
                 <button
                   className={`cursor-pointer relative block px-5 py-3 text-p2 font-semibold  ${
                     currentPage === numbers.length
-                      ? "text-gray-300"
-                      : "text-green-500"
+                      ? 'text-gray-300'
+                      : 'text-green-500'
                   }`}
                   onClick={nextPage}
                   disabled={currentPage === numbers.length}
@@ -200,6 +205,16 @@ export default function MetodePembayaran() {
               </li>
             </ul>
           </nav>
+        </div>
+      )}
+
+      {/* Empty */}
+      {!isLoading && records.length == 0 && (
+        <div className="py-20">
+          <img src={Empty} className="h-56 mx-auto" />
+          <p className="text-p3 mt-8 font-semibold text-gray-500 text-center">
+            Belum ada list Opsi Pengiriman
+          </p>
         </div>
       )}
     </div>

@@ -1,29 +1,29 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 
 // Komponen
-import Widget from "../../../components/Widget";
-import BarChart from "../../../components/BarChart";
-import {useGetData} from "../../../hooks/FetchData";
+import Widget from '../../../components/Widget';
+import BarChart from '../../../components/BarChart';
+import { useGetData } from '../../../hooks/FetchData';
 
 // Heroicons
-import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import { ChevronDownIcon } from '@heroicons/react/24/outline';
 
 // Legendapp
-import { observable } from "@legendapp/state";
-import { observer } from "@legendapp/state/react";
+import { observable } from '@legendapp/state';
+import { observer } from '@legendapp/state/react';
 
 // Router dom
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from 'react-router-dom';
 
 // management State menggunakan LegendApp
 const state = observable({
-  chartFilter: "mingguan",
+  chartFilter: 'mingguan',
 });
 
 const Dashboard = observer(() => {
   // Handle params url
   let [searchParams, setSearchParams] = useSearchParams();
-  const filterValue = searchParams.get("filter") || state.chartFilter.get();
+  const filterValue = searchParams.get('filter') || state.chartFilter.get();
 
   // fetch data SWR
   const swrKey = `admin/dashboard?filter=${filterValue}`;
@@ -34,20 +34,20 @@ const Dashboard = observer(() => {
     state.chartFilter.set(newFilterValue.target.value);
     setSearchParams((params) => {
       const updatedParams = new URLSearchParams(params.toString());
-      updatedParams.set("filter", state.chartFilter.get());
+      updatedParams.set('filter', state.chartFilter.get());
       return updatedParams;
     });
   };
 
   // Kembali ke filter mingguan saat reload halaman
   useEffect(() => {
-    state.chartFilter.set("mingguan")
+    state.chartFilter.set('mingguan');
     setSearchParams((params) => {
       const updatedParams = new URLSearchParams(params.toString());
-      updatedParams.set("filter", "mingguan");
+      updatedParams.set('filter', 'mingguan');
       return updatedParams;
-    })
-  }, [])
+    });
+  }, []);
   return (
     <>
       <h1 className="font-normal text-h4 m-8">Dashboard</h1>
@@ -56,24 +56,24 @@ const Dashboard = observer(() => {
           type="pendapatan"
           data={
             isLoading
-              ? ""
-              : data.TotalRevenues?.toLocaleString("en-US").replace(/,/g, ".")
+              ? ''
+              : data.TotalRevenues?.toLocaleString('en-US').replace(/,/g, '.')
           }
         />
         <Widget
           type="pengguna"
           data={
             isLoading
-              ? ""
-              : data.TotalUsers?.toLocaleString("en-US").replace(/,/g, ".")
+              ? ''
+              : data.TotalUsers?.toLocaleString('en-US').replace(/,/g, '.')
           }
         />
         <Widget
           type="pesanan"
           data={
             isLoading
-              ? ""
-              : data.TotalOrders?.toLocaleString("en-US").replace(/,/g, ".")
+              ? ''
+              : data.TotalOrders?.toLocaleString('en-US').replace(/,/g, '.')
           }
         />
       </div>
@@ -144,7 +144,9 @@ const Dashboard = observer(() => {
                     <tr key={index} className="even:bg-gray-50 text-p4">
                       <td className="py-[18px] px-[10px]">{index + 1}.</td>
                       <td className="py-[18px] px-[10px]">{product.Name}</td>
-                      <td className="py-[18px] px-[10px]">{product.TotalOrders}</td>
+                      <td className="py-[18px] px-[10px]">
+                        {product.TotalOrders}
+                      </td>
                     </tr>
                   ))}
               </tbody>
@@ -195,7 +197,9 @@ const Dashboard = observer(() => {
                     <tr key={index} className="even:bg-gray-50 text-p4">
                       <td className="py-[18px] px-[10px]">{index + 1}.</td>
                       <td className="py-[18px] px-[10px]">{product.Name}</td>
-                      <td className="py-[18px] px-[10px]">{product.TotalReviews}</td>
+                      <td className="py-[18px] px-[10px]">
+                        {product.TotalReviews}
+                      </td>
                     </tr>
                   ))}
               </tbody>

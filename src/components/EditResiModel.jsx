@@ -48,7 +48,7 @@ export default function EditResiModal({
 
   return (
     <Dialog
-      className="absolute w-[360px] rounded-[28px] top-2/4 left-2/4 translate-x-[-50%] translate-y-[-50%] mx-auto overflow-hidden shadow-2 bg-white z-50"
+      className="fixed w-[360px] rounded-[28px] top-2/4 left-2/4 translate-x-[-50%] translate-y-[-50%] mx-auto overflow-hidden shadow-2 bg-white z-50"
       open={isOpen}
       onClose={() => setIsOpen(false)}
     >

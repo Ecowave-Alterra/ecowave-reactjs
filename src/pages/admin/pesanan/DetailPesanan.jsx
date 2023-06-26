@@ -8,7 +8,6 @@ import {
   ShoppingBagIcon,
 } from '@heroicons/react/24/outline';
 import Back from '../../../assets/img/Vector.png';
-import media from '../../../assets/img/media.png';
 
 import ErrorPage from '../../../components/ErrorPage';
 
@@ -112,7 +111,13 @@ function DetailPesanan() {
           <p>Reguler</p>
           <div>{statusPengiriman()}</div>
         </div>
-        <p>{detailTransaction.ExpeditionName}</p>
+        <p>
+          {detailTransaction.ReceiptNumber
+            ? `${
+                detailTransaction.ExpeditionName
+              } : ${detailTransaction.ReceiptNumber.replace(/\D/g, '')}`
+            : detailTransaction.ExpeditionName}
+        </p>
       </div>
 
       <div className="flex items-center mb-5">
