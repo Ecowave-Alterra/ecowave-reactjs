@@ -6,6 +6,7 @@ import {
   ArrowDownTrayIcon,
   TrashIcon,
 } from "@heroicons/react/24/solid";
+import { useCSVDownloader } from "react-papaparse";
 
 import ButtonGroup from "../../../../components/ButtonGroup";
 import Search from "../../../../components/Search";
@@ -33,6 +34,7 @@ export default function Produk() {
   let [searchParams, setSearchParams] = useSearchParams();
   const [searchChanges, setSearchChanges] = useState("");
   const navigate = useNavigate();
+  const { CSVDownloader, Type } = useCSVDownloader();
 
   //get query string
   const searchValue = searchParams.get("search") || "";
@@ -142,12 +144,13 @@ export default function Produk() {
   };
 
   const { data, isLoading, error } = useGetData(swrKey);
+  const {
+    data: dataCsv,
+    isLoading: loadingCsv,
+    error: errorCsv,
+  } = useGetData(`admin/products/download-csv`);
   const { deleteData, isLoading: loading } = useDeleteData(`admin/products/`);
   if (error) return <ErrorPage />;
-
-  async function getCSVData() {
-    alert("kurang csv");
-  }
 
   return (
     <div className="sm:ml-[44px] sm:mr-8 mx-4">
@@ -162,24 +165,34 @@ export default function Produk() {
             Lihat, tambah, ubah, dan hapus Data Produk.
           </p>
         </div>
-        <div className="flex flex-row gap-2 ">
-          <button
-            onClick={getCSVData}
-            className="flex flex-row gap-[13px] items-center rounded-full border-gray-300 border  py-[10px] pl-[21px] pr-4 hover:bg-gray-50 duration-200"
-          >
-            <ArrowDownTrayIcon className="w-[14px]  text-gray-500 " />
-            <p className=" text-p3 text-gray-600 font-semibold">
-              Import dari CSV
-            </p>
-          </button>
-          <button
-            onClick={() => navigate("/admin/produk/tambah")}
-            className="flex flex-row gap-[13px] items-center rounded-full bg-green-500 py-[10px] pl-[21px] pr-4 hover:bg-green-600 duration-200"
-          >
-            <PlusSmallIcon className="w-[14px] text-white " />
-            <p className=" text-p3 text-white">Tambah Produk</p>
-          </button>
-        </div>
+        {isLoading ? (
+          ""
+        ) : (
+          <div className="flex flex-row gap-2 ">
+            <CSVDownloader
+              type={Type.Button}
+              className="flex flex-row gap-[13px] items-center rounded-full border-gray-300 border  py-[10px] pl-[21px] pr-4 hover:bg-gray-50 duration-200"
+              filename={"produk-data"}
+              bom={true}
+              config={{
+                delimiter: ";",
+              }}
+              data={dataCsv.Data}
+            >
+              <ArrowDownTrayIcon className="w-[14px]  text-gray-500 " />
+              <p className=" text-p3 text-gray-600 font-semibold">
+                Download File
+              </p>
+            </CSVDownloader>
+            <button
+              onClick={() => navigate("/admin/produk/tambah")}
+              className="flex flex-row gap-[13px] items-center rounded-full bg-green-500 py-[10px] pl-[21px] pr-4 hover:bg-green-600 duration-200"
+            >
+              <PlusSmallIcon className="w-[14px] text-white " />
+              <p className=" text-p3 text-white">Tambah Produk</p>
+            </button>
+          </div>
+        )}
       </div>
       <div className="mt-8 mb-9">
         <div className="flex flex-row gap-2 flex-start">
