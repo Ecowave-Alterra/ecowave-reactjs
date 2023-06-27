@@ -122,7 +122,7 @@ export default function OpsiPengiriman() {
             {!isLoading &&
               records.map((item, i) => (
                 <tr key={i} className="even:bg-gray-50">
-                  <th scope="row" className="text-left font-normal w-[48px]">
+                  <th scope="row" className="text-center font-normal w-[48px]">
                     {firstIndex + i + 1}.
                   </th>
                   <td className="py-[18px] px-[10px] text-center">
