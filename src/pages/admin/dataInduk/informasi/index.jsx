@@ -133,7 +133,7 @@ export default function Informasi() {
   // table header
   const columns = [
     { header: 'No.' },
-    { header: 'Id' },
+    { header: 'Informasi Id' },
     { header: 'Judul' },
     { header: 'Status' },
     { header: 'Action' },
