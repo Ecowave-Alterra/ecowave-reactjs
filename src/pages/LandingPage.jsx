@@ -58,8 +58,9 @@ function LandingPage() {
                     </p>
 
                     <a
-                        to="#"
+                        href="https://play.google.com/store/apps/details?id=com.ecowave.ecowave"
                         className="flex sm:mx-0 mx-auto  mt-10 text-left cursor-pointer px-4 py-3 sm:w-48 space-x-4 items-center shadow-1 bg-black rounded-lg "
+                        target="_blank"
                     >
                         <img src={google} className="h-10 w-10" />
                         <div className="flex-row text-white">
@@ -247,8 +248,9 @@ function LandingPage() {
                             </p>
 
                             <a
-                                to="#"
-                                className="flex sm:mx-0 self-start  text-left cursor-pointer px-4 py-3 sm:w-48 space-x-4 items-center shadow-1 bg-black rounded-lg "
+                                href="https://play.google.com/store/apps/details?id=com.ecowave.ecowave"
+                                target="_blank"
+                                className="flex sm:mx-0 self-start text-left cursor-pointer px-4 py-3 sm:w-48 space-x-4 items-center shadow-1 bg-black rounded-lg "
                             >
                                 <img src={google} className="h-10 w-10" />
                                 <div className="flex-row text-white">
