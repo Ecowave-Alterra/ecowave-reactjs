@@ -145,6 +145,7 @@ export default function Informasi() {
     isLoading: loadingCsv,
     error: errorCsv,
   } = useGetData(`admin/informations/download-csv`);
+  console.log("dataCSV", dataCsv)
 
   const { deleteData, isLoading: loading } =
     useDeleteData(`admin/informations/`);
