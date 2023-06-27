@@ -133,7 +133,7 @@ export default function Informasi() {
   // table header
   const columns = [
     { header: 'No.' },
-    { header: 'Id' },
+    { header: 'Informasi Id' },
     { header: 'Judul' },
     { header: 'Status' },
     { header: 'Action' },
@@ -145,6 +145,7 @@ export default function Informasi() {
     isLoading: loadingCsv,
     error: errorCsv,
   } = useGetData(`admin/informations/download-csv`);
+  console.log("dataCSV", dataCsv)
 
   const { deleteData, isLoading: loading } =
     useDeleteData(`admin/informations/`);

@@ -159,7 +159,7 @@ export default function Ulasan() {
         {data && data.Status == 404 && (
           <EmptyData
             image={Empty}
-            message="No. Resi yang Anda cari tidak ditemukan"
+            message="Ulasan yang anda cari tidak ditemukan"
           />
         )}
       </div>

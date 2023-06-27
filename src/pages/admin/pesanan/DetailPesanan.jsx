@@ -13,8 +13,8 @@ import ErrorPage from '../../../components/ErrorPage';
 
 function DetailPesanan() {
   let { id } = useParams();
-  const navigate = useNavigate()
-  const location = useLocation()
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const swrKey = `admin/orders/${id}`;
 
@@ -30,7 +30,6 @@ function DetailPesanan() {
         />
       </div>
     );
-  console.log(data);
 
   // Handle Status Pengiriman
   const statusPengiriman = () => {
@@ -90,14 +89,19 @@ function DetailPesanan() {
     }).format(formattedNumber);
   };
 
-  // const detailProduct = data.Orders.Products[0];
   const detailTransaction = data.Orders.Transaction;
 
   return (
     <div className="py-12 px-10">
       {/* Back */}
       <div className="flex justify-start items-center mb-14 ">
-        <button onClick={() => navigate(`/admin/pesanan?search=${location.state.search}&filter=${location.state.filter}&page=${location.state.page}`)}>
+        <button
+          onClick={() =>
+            navigate(
+              `/admin/pesanan?search=${location.state.search}&filter=${location.state.filter}&page=${location.state.page}`
+            )
+          }
+        >
           <img src={Back} className="h-3 mr-7 cursor-pointer" />
         </button>
         <div className="text-h6 font-medium">Detail Pemesanan</div>
@@ -135,16 +139,22 @@ function DetailPesanan() {
         <BuildingStorefrontIcon className="h-6 w-7 mr-2" />
         <div className="text-p2">EcoShop</div>
       </div>
-      <div className="flex justify-between items-center border-b-2 border-b-gray-300 mb-7">
-        <div className="flex items-center">
-          <img
-            src={data.Orders.Products[0].ProductImageUrl}
-            className="w-28 m-3"
-          />
-          <p>{data.Orders.Products[0].ProductName}</p>
+      {data.Orders.Products.map((item, i) => (
+        <div
+          key={i}
+          className="flex justify-between items-center border-b-2 border-b-gray-300 mb-7"
+        >
+          <div className="flex items-center">
+            <img
+              src={item.ProductImageUrl}
+              className="w-28 m-3"
+              alt="Product Image"
+            />
+            <p>{item.ProductName}</p>
+          </div>
+          <p>x{item.Qty}</p>
         </div>
-        <p>x{data.Orders.Products[0].Qty}</p>
-      </div>
+      ))}
 
       <div className="flex items-center mb-14">
         <ShoppingBagIcon className="h-6 w-7 mr-3" />

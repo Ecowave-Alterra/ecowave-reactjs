@@ -90,7 +90,7 @@ export default function Pesanan() {
 
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
-        updateSearchQuery(event.target.value);
+      updateSearchQuery(event.target.value);
     }
   };
 
@@ -193,7 +193,7 @@ export default function Pesanan() {
       <div className="mt-7">
         <Search
           id="search-input"
-          placeholder="Cari resi atau nama item"
+          placeholder="Cari resi atau transaksi id"
           handleKeyDown={handleKeyDown}
         />
       </div>
@@ -271,7 +271,7 @@ export default function Pesanan() {
                       >
                         <EyeIcon className="w-7 h-7 p-1 text-green-500 bg-green-50 rounded-full cursor-pointer" />
                       </button>
-                      {filter === 'Dikemas' && (
+                      {filterValue === 'Dikemas' && (
                         <PencilIcon
                           onClick={() =>
                             openModalEdit(true, item.TransactionId)
