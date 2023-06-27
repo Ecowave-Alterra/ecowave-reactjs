@@ -165,7 +165,7 @@ export default function Produk() {
             Lihat, tambah, ubah, dan hapus Data Produk.
           </p>
         </div>
-        {isLoading ? (
+        {loadingCsv ? (
           ""
         ) : (
           <div className="flex flex-row gap-2 ">
