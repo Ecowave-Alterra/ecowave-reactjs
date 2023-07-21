@@ -6,7 +6,7 @@ export default function getLoginData() {
   const postDataLogin = async (data) => {
     try {
       const response = await fetch(
-        "https://ecowave-h64wmjjkza-uc.a.run.app/admin/login",
+        "https://ecowave-4gk3tp7c3a-uc.a.run.app/admin/login",
         {
           method: "POST",
           headers: {
