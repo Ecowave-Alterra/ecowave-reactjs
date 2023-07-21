@@ -4,11 +4,7 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import getLoginData from "../fetch/Login";
-import setAuthCookie, {
-  getAuthCookieAdminEmail,
-  getAuthCookieAdminName,
-  getAuthCookie,
-} from "../utils/cookies";
+import setAuthCookie from "../utils/cookies";
 import Alert from "../components/Alert";
 
 export default function Login() {
@@ -58,7 +54,7 @@ export default function Login() {
         setAuthCookie(
           loginData.get().Token,
           loginData.get().Email,
-          loginData.get().Name
+          loginData.get().Username
         );
         openAlert("success", response.Message);
         window.location.reload();
